@@ -43,7 +43,7 @@ class DetectClickOutside extends Component {
 }
 
 DetectClickOutside.propTypes = {
-  children: PropTypes.element.isRequired,
+  children: PropTypes.any.isRequired,
   onClickOutside: PropTypes.func.isRequired,
   className: PropTypes.string,
 };

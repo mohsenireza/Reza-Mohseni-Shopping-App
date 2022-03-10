@@ -1,46 +1,92 @@
 import { Component } from 'react';
-import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import './Header.scss';
 import logo from '../../assets/images/logo.svg';
 import cart from '../../assets/images/cart.svg';
 import { CurrencySwitcher } from '..';
+import { history } from '../../config';
+import { categorySelected } from '../../features/categories/categoriesSlice';
 
-class Header extends Component {
+class HeaderComp extends Component {
+  constructor(props) {
+    super(props);
+
+    // Bind methods
+    this.handleOnCategorySelect = this.handleOnCategorySelect.bind(this);
+    this.getDataFromUrl = this.getDataFromUrl.bind(this);
+  }
+
+  // Fill store with URL on startup and on every URL change
+  componentDidMount() {
+    this.getDataFromUrl();
+    this.unlistenHistory = history.listen(this.getDataFromUrl);
+  }
+
+  componentWillUnmount() {
+    this.unlistenHistory();
+  }
+
+  // Fill store with URL
+  // Because we get store data from URL,
+  // even after reloading, our app can hold its old state,
+  // like selected category and currency
+  getDataFromUrl() {
+    const queryString = history.location.search;
+    const selectedCategoryFromQueryString = new URLSearchParams(
+      queryString
+    ).get('category');
+    const categories = this.props.categories;
+    if (!categories.length) return;
+    let selectedCategory = '';
+    // If the category from URL exists in the store, we can use it as the selected category
+    if (categories.includes(selectedCategoryFromQueryString)) {
+      selectedCategory = selectedCategoryFromQueryString;
+    }
+    // Otherwise we select the first category Item in store as the selected category
+    else {
+      selectedCategory = categories[0];
+    }
+    // Finally dispatch the validated selected category to the store
+    this.props.dispatchCategorySelected(selectedCategory);
+  }
+
+  handleOnCategorySelect(category) {
+    history.push(`/products?category=${category}`);
+  }
+
   render() {
+    const renderedCategories = this.props.categories.map((category) => {
+      // If the selected category from store is equal to thi category Item
+      // the it means this category is the selected one
+      // so we add '-selected' className to make it highlighted
+      const isCategorySelected = this.props.selectedCategory === category;
+      return (
+        <li key={category} className="header__category">
+          <button
+            onClick={() => this.handleOnCategorySelect(category)}
+            className={`header__categoryLink ${
+              isCategorySelected ? '-selected' : ''
+            }`}
+          >
+            {category}
+          </button>
+        </li>
+      );
+    });
+
     return (
       <header className="header">
         <div className="header__container container">
           <div className="header__column header__categoriesContainer">
-            <ul className="header__categories">
-              <li className="header__category">
-                <Link
-                  to="/products?category=1"
-                  className="header__categoryLink -active"
-                >
-                  WOMEN
-                </Link>
-              </li>
-              <li className="header__category">
-                <Link
-                  to="/products?category=2"
-                  className="header__categoryLink"
-                >
-                  MEN
-                </Link>
-              </li>
-              <li className="header__category">
-                <Link
-                  to="/products?category=3"
-                  className="header__categoryLink"
-                >
-                  KIDS
-                </Link>
-              </li>
-            </ul>
+            <ul className="header__categories">{renderedCategories}</ul>
           </div>
-          <Link to="/" className="header__column header__logoContainer">
+          <button
+            onClick={() => history.push('/products')}
+            className="header__column header__logoContainer"
+          >
             <img alt="Logo" className="header__logo" src={logo} />
-          </Link>
+          </button>
           <div className="header__column header__cartAndCurrencyContainer">
             <CurrencySwitcher />
             <button className="header__cart">
@@ -55,5 +101,22 @@ class Header extends Component {
     );
   }
 }
+
+HeaderComp.propTypes = {
+  categories: PropTypes.array.isRequired,
+  selectedCategory: PropTypes.string.isRequired,
+  dispatchCategorySelected: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  categories: state.categories.categories,
+  selectedCategory: state.categories.selectedCategory,
+});
+
+const mapDispatchToProps = {
+  dispatchCategorySelected: categorySelected,
+};
+
+const Header = connect(mapStateToProps, mapDispatchToProps)(HeaderComp);
 
 export { Header };
