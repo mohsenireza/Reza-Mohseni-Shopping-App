@@ -1641,10 +1641,10 @@
     "@testing-library/dom" "^8.0.0"
     "@types/react-dom" "*"
 
-"@testing-library/user-event@^13.2.1":
-  version "13.5.0"
-  resolved "https://registry.yarnpkg.com/@testing-library/user-event/-/user-event-13.5.0.tgz#69d77007f1e124d55314a2b73fd204b333b13295"
-  integrity sha512-5Kwtbo3Y/NowpkbRuSepbyMFkZmHgD+vPzYB/RJ4oxt5Gj/avFFBYjhw27cqSVPVw/3a67NK1PbiIr9k4Gwmdg==
+"@testing-library/user-event@^14.0.0-beta":
+  version "14.0.0-beta.13"
+  resolved "https://registry.yarnpkg.com/@testing-library/user-event/-/user-event-14.0.0-beta.13.tgz#dd7d819588ac28e96b7e7af6d6d61b6f0a99f1a5"
+  integrity sha512-KjgkzbV3TmVOU6rUvNs7coezsPEVZKAcejG+GjxpmzB4JszyX9S6hyN729bIPFE7hl/5/LbfSn9KChUaTxd22Q==
   dependencies:
     "@babel/runtime" "^7.12.5"
 

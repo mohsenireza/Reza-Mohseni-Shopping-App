@@ -71,6 +71,7 @@ class CurrencySwitcherComp extends Component {
         className={`currencySwitcher ${this.state.isOpen ? '-open' : ''}`}
       >
         <button
+          data-testid="currencySwitcherHeader"
           onClick={() => this.handleOnToggle({ auto: true })}
           className="currencySwitcher__header"
         >
