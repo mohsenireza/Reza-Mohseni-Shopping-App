@@ -1,9 +1,13 @@
 import { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import './CurrencySwitcher.scss';
 import arrowDown from '../../assets/images/arrowDown.svg';
 import { DetectClickOutside } from '..';
+import { currencySelected } from '../../features/currencies/currenciesSlice';
+import { storage } from '../../utils';
 
-class CurrencySwitcher extends Component {
+class CurrencySwitcherComp extends Component {
   constructor(props) {
     super(props);
 
@@ -15,6 +19,25 @@ class CurrencySwitcher extends Component {
     this.handleOnCurrencyClick = this.handleOnCurrencyClick.bind(this);
   }
 
+  componentDidMount() {
+    // Check if a valid currency exists in localStorage
+    const savedCurrency = storage.load('currency');
+    const isSavedCurrencyValid =
+      savedCurrency &&
+      this.props.currencies.some(
+        (currency) => currency.label === savedCurrency.label
+      );
+    // If a valid currency exists in localStorage, then put it inside store as selectedCurrency
+    if (isSavedCurrencyValid) {
+      this.props.dispatchCurrencySelected(savedCurrency);
+    }
+    // If a valid currency doesn't exist in localStorage, then get the first currency item from store and save it as selectedCurrency in store
+    else {
+      const defaultCurrency = this.props.currencies[0];
+      this.props.dispatchCurrencySelected(defaultCurrency);
+    }
+  }
+
   // Show and hide available currencies
   handleOnToggle({ shouldOpen, shouldClose, auto }) {
     shouldOpen && this.setState({ isOpen: true });
@@ -22,13 +45,26 @@ class CurrencySwitcher extends Component {
     auto && this.setState((state) => ({ isOpen: !state.isOpen }));
   }
 
-  // Will fire when user selects a currency
-  handleOnCurrencyClick() {
-    alert('Clicked');
+  // Puts selected currency in store and localstorage
+  handleOnCurrencyClick(currency) {
+    this.props.dispatchCurrencySelected(currency);
+    storage.save('currency', currency);
     this.handleOnToggle({ shouldClose: true });
   }
 
   render() {
+    // Render currencies based on the store
+    const renderedCurrencies = this.props.currencies.map((currency) => (
+      <li key={currency.label} className="currencySwitcher__currencyItem">
+        <button
+          className="currencySwitcher__currency"
+          onClick={() => this.handleOnCurrencyClick(currency)}
+        >
+          {currency.symbol} {currency.label}
+        </button>
+      </li>
+    ));
+
     return (
       <DetectClickOutside
         onClickOutside={() => this.handleOnToggle({ shouldClose: true })}
@@ -38,7 +74,11 @@ class CurrencySwitcher extends Component {
           onClick={() => this.handleOnToggle({ auto: true })}
           className="currencySwitcher__header"
         >
-          <span className="currencySwitcher__symbol">$</span>
+          <span className="currencySwitcher__symbol">
+            {this.props.selectedCurrency
+              ? this.props.selectedCurrency.symbol
+              : ''}
+          </span>
           {/* TODO: Use icomoon instead of img for icons */}
           <img
             alt="Currency Arrow Icon"
@@ -47,36 +87,31 @@ class CurrencySwitcher extends Component {
           />
         </button>
         {this.state.isOpen && (
-          <ul className="currencySwitcher__content">
-            <li className="currencySwitcher__currencyItem">
-              <button
-                className="currencySwitcher__currency"
-                onClick={this.handleOnCurrencyClick}
-              >
-                $ USD
-              </button>
-            </li>
-            <li className="currencySwitcher__currencyItem">
-              <button
-                className="currencySwitcher__currency"
-                onClick={this.handleOnCurrencyClick}
-              >
-                € EUR
-              </button>
-            </li>
-            <li className="currencySwitcher__currencyItem">
-              <button
-                className="currencySwitcher__currency"
-                onClick={this.handleOnCurrencyClick}
-              >
-                ¥ JPY
-              </button>
-            </li>
-          </ul>
+          <ul className="currencySwitcher__content">{renderedCurrencies}</ul>
         )}
       </DetectClickOutside>
     );
   }
 }
+
+CurrencySwitcherComp.propTypes = {
+  currencies: PropTypes.array.isRequired,
+  selectedCurrency: PropTypes.object,
+  dispatchCurrencySelected: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  currencies: state.currencies.currencies,
+  selectedCurrency: state.currencies.selectedCurrency,
+});
+
+const mapDispatchToProps = {
+  dispatchCurrencySelected: currencySelected,
+};
+
+const CurrencySwitcher = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CurrencySwitcherComp);
 
 export { CurrencySwitcher };

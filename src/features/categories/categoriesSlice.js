@@ -6,7 +6,7 @@ const initialState = {
   categories: [],
   status: 'idle',
   error: null,
-  selectedCategory: '',
+  selectedCategory: null,
 };
 
 export const fetchCategories = createAsyncThunk(

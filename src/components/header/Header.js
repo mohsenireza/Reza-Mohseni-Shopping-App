@@ -33,22 +33,21 @@ class HeaderComp extends Component {
   // like selected category and currency
   getDataFromUrl() {
     const queryString = history.location.search;
+    // TODO: support URLSearchParams in IE
     const selectedCategoryFromQueryString = new URLSearchParams(
       queryString
     ).get('category');
     const categories = this.props.categories;
     if (!categories.length) return;
-    let selectedCategory = '';
     // If the category from URL exists in the store, we can use it as the selected category
     if (categories.includes(selectedCategoryFromQueryString)) {
-      selectedCategory = selectedCategoryFromQueryString;
+      this.props.dispatchCategorySelected(selectedCategoryFromQueryString);
     }
     // Otherwise we select the first category Item in store as the selected category
     else {
-      selectedCategory = categories[0];
+      const defaultCategory = categories[0];
+      this.props.dispatchCategorySelected(defaultCategory);
     }
-    // Finally dispatch the validated selected category to the store
-    this.props.dispatchCategorySelected(selectedCategory);
   }
 
   handleOnCategorySelect(category) {
