@@ -35,7 +35,11 @@ class DetectClickOutside extends Component {
 
   render() {
     return (
-      <div ref={this.wrapperRef} className={this.props.className}>
+      <div
+        data-testid="detectClickOutsideContainer"
+        ref={this.wrapperRef}
+        className={this.props.className}
+      >
         {this.props.children}
       </div>
     );
