@@ -236,7 +236,6 @@ test('should show symbol of selected currency', async () => {
   const dispatchCurrencySelected = jest.fn();
 
   // Render component
-  const user = userEvent.setup();
   render(
     <CurrencySwitcher
       currencies={currencies}
@@ -264,7 +263,6 @@ test('should load selected currency from localStorage', () => {
   const dispatchCurrencySelected = jest.fn();
 
   // Render component
-  const user = userEvent.setup();
   render(
     <CurrencySwitcher
       currencies={currencies}

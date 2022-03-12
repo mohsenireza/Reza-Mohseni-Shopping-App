@@ -103,7 +103,7 @@ class HeaderComp extends Component {
 
 HeaderComp.propTypes = {
   categories: PropTypes.array.isRequired,
-  selectedCategory: PropTypes.string.isRequired,
+  selectedCategory: PropTypes.string,
   dispatchCategorySelected: PropTypes.func.isRequired,
 };
 
