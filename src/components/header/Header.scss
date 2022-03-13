@@ -38,11 +38,11 @@
       &.header__logoContainer {
         flex: initial;
         align-items: center;
+        padding: 0 rem(16px);
         .header__logo {
           position: relative;
           top: rem(5px);
           width: rem(33px);
-          padding: 0 rem(16px);
         }
       }
       &.header__cartAndCurrencyContainer {

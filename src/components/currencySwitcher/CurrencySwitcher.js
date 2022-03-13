@@ -82,6 +82,7 @@ class CurrencySwitcherComp extends Component {
           </span>
           {/* TODO: Use icomoon instead of img for icons */}
           <img
+            loading="lazy"
             alt="Currency Arrow Icon"
             className="currencySwitcher__arrowIcon"
             src={arrowDown}

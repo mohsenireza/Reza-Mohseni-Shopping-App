@@ -1,1 +1,1 @@
-export * from './withRouter/withRouter';
+export * from './withRouter/withRouter.js';

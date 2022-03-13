@@ -79,13 +79,18 @@ class HeaderComp extends Component {
             <ul className="header__categories">{renderedCategories}</ul>
           </div>
           <Link to="/products" className="header__column header__logoContainer">
-            <img alt="Logo" className="header__logo" src={logo} />
+            <img
+              loading="lazy"
+              alt="Logo"
+              className="header__logo"
+              src={logo}
+            />
           </Link>
           <div className="header__column header__cartAndCurrencyContainer">
             <CurrencySwitcher />
             <button className="header__cart">
               <div className="header__cartIconContainer">
-                <img alt="Cart Icon" src={cart} />
+                <img loading="lazy" alt="Cart Icon" src={cart} />
                 {/* <span className="header__cartBadge">2</span> */}
               </div>
             </button>
