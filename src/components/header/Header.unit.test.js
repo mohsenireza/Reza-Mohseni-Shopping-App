@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen } from '../../test/utils/utils';
 import userEvent from '@testing-library/user-event';
 import { history } from '../../config';
 import { Header } from './Header';
@@ -44,7 +44,7 @@ test('selected category should get -selected class, to have different UI', () =>
   );
 
   // Expect selected category item to have -selected class
-  expect(screen.getByRole('button', { name: 'cars' })).toHaveClass('-selected');
+  expect(screen.getByRole('link', { name: 'cars' })).toHaveClass('-selected');
 });
 
 test('should change url when a category gets selected', async () => {
@@ -62,10 +62,10 @@ test('should change url when a category gets selected', async () => {
   );
 
   // Click on a cetegory to select it
-  await user.click(screen.getByRole('button', { name: 'cars' }));
+  await user.click(screen.getByRole('link', { name: 'cars' }));
 
   // Expect query string in the URL to have "category=cars"
-  expect(history.location.search.includes('category=cars')).toBeTruthy();
+  expect(window.location.search.includes('category=cars')).toBeTruthy();
 });
 
 test('should save selected category to store', async () => {
@@ -83,7 +83,7 @@ test('should save selected category to store', async () => {
   );
 
   // Click on a cetegory to select it
-  await user.click(screen.getByRole('button', { name: 'cars' }));
+  await user.click(screen.getByRole('link', { name: 'cars' }));
 
   // Expect the selected category to be saved to the store
   expect(dispatchCategorySelected).toBeCalled();
@@ -129,6 +129,6 @@ test('should redirect to /products page when the logo gets clicked', async () =>
   await user.click(screen.getByAltText('Logo'));
 
   // The URL should be '/products'
-  expect(history.location.pathname).toBe('/products');
-  expect(history.location.search).toBe('');
+  expect(window.location.pathname).toBe('/products');
+  expect(window.location.search).toBe('');
 });

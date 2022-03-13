@@ -1,30 +1,32 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import './Header.scss';
 import logo from '../../assets/images/logo.svg';
 import cart from '../../assets/images/cart.svg';
 import { CurrencySwitcher } from '..';
-import { history } from '../../config';
 import { categorySelected } from '../../features/categories/categoriesSlice';
+import { withRouter } from '../../hoc';
 
 class HeaderComp extends Component {
   constructor(props) {
     super(props);
 
     // Bind methods
-    this.handleOnCategorySelect = this.handleOnCategorySelect.bind(this);
     this.getDataFromUrl = this.getDataFromUrl.bind(this);
   }
 
-  // Fill store with URL on startup and on every URL change
+  // Fill store with URL on startup
   componentDidMount() {
     this.getDataFromUrl();
-    this.unlistenHistory = history.listen(this.getDataFromUrl);
   }
 
-  componentWillUnmount() {
-    this.unlistenHistory();
+  // Fill store with URL on every URL change
+  componentDidUpdate(prevProps) {
+    if (prevProps.router.location !== this.props.router.location) {
+      this.getDataFromUrl();
+    }
   }
 
   // Fill store with URL
@@ -32,7 +34,7 @@ class HeaderComp extends Component {
   // even after reloading, our app can hold its old state,
   // like selected category and currency
   getDataFromUrl() {
-    const queryString = history.location.search;
+    const queryString = this.props.router.location.search;
     // TODO: support URLSearchParams in IE
     const selectedCategoryFromQueryString = new URLSearchParams(
       queryString
@@ -50,10 +52,6 @@ class HeaderComp extends Component {
     }
   }
 
-  handleOnCategorySelect(category) {
-    history.push(`/products?category=${category}`);
-  }
-
   render() {
     const renderedCategories = this.props.categories.map((category) => {
       // If the selected category from store is equal to thi category Item
@@ -62,14 +60,14 @@ class HeaderComp extends Component {
       const isCategorySelected = this.props.selectedCategory === category;
       return (
         <li key={category} className="header__category">
-          <button
-            onClick={() => this.handleOnCategorySelect(category)}
+          <Link
+            to={`/products?category=${category}`}
             className={`header__categoryLink ${
               isCategorySelected ? '-selected' : ''
             }`}
           >
             {category}
-          </button>
+          </Link>
         </li>
       );
     });
@@ -80,18 +78,15 @@ class HeaderComp extends Component {
           <div className="header__column header__categoriesContainer">
             <ul className="header__categories">{renderedCategories}</ul>
           </div>
-          <button
-            onClick={() => history.push('/products')}
-            className="header__column header__logoContainer"
-          >
+          <Link to="/products" className="header__column header__logoContainer">
             <img alt="Logo" className="header__logo" src={logo} />
-          </button>
+          </Link>
           <div className="header__column header__cartAndCurrencyContainer">
             <CurrencySwitcher />
             <button className="header__cart">
               <div className="header__cartIconContainer">
                 <img alt="Cart Icon" src={cart} />
-                <span className="header__cartBadge">2</span>
+                {/* <span className="header__cartBadge">2</span> */}
               </div>
             </button>
           </div>
@@ -105,6 +100,7 @@ HeaderComp.propTypes = {
   categories: PropTypes.array.isRequired,
   selectedCategory: PropTypes.string,
   dispatchCategorySelected: PropTypes.func.isRequired,
+  router: PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({
@@ -116,6 +112,8 @@ const mapDispatchToProps = {
   dispatchCategorySelected: categorySelected,
 };
 
-const Header = connect(mapStateToProps, mapDispatchToProps)(HeaderComp);
+const Header = withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(HeaderComp)
+);
 
 export { Header };
