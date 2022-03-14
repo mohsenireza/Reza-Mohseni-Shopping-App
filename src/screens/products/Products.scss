@@ -3,6 +3,7 @@
 .products {
   .container {
     .products__categoryName {
+      display: inline-block;
       font-weight: 400;
       font-size: rem(42px);
       margin: rem(90px) 0 rem(115px);

@@ -1,63 +1,70 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import './ProductCard.scss';
 import cartWithBackground from '../../assets/images/cartWithBackground.svg';
+import { selectProductById } from '../../features/products/productsSlice';
 
-class ProductCard extends Component {
+class ProductCardComp extends Component {
   constructor(props) {
     super(props);
+
+    // Select the product from store based on its id
+    this.product = this.props.selectProductById(this.props.productId);
   }
 
   render() {
+    const { id, name, gallery, inStock, prices } = this.product;
+    // Get price based on the selected currency
+    const price = prices.find(
+      (price) => price.currency.label === this.props.selectedCurrency.label
+    );
+
     return (
       <article
         tabIndex="0"
-        className={`productCard ${
-          this.props.isOutOfStock ? '-outOfStock' : ''
-        }`}
+        className={`productCard ${inStock ? '' : '-outOfStock'}`}
       >
         <div className="productCard__imageContainer">
-          <Link
-            to={`/product/${this.props.id}`}
-            className="productCard__imageWrapper"
-          >
+          <Link to={`/product/${id}`} className="productCard__imageWrapper">
             <img
               className="productCard__image"
               loading="lazy"
-              alt={`Product Image - ${this.props.name}`}
-              src={this.props.image}
+              alt={name}
+              src={gallery.length && gallery[0]}
             />
           </Link>
-          {this.props.isOutOfStock ? (
-            <span className="productCard__outOfStock">OUT OF STOCK</span>
-          ) : (
+          {inStock ? (
             <button className="productCard__addToCart">
               <img alt="Add Product to Cart" src={cartWithBackground} />
             </button>
+          ) : (
+            <span className="productCard__outOfStock">OUT OF STOCK</span>
           )}
         </div>
-        <Link className="productCard__name" to={`/product/${this.props.id}`}>
-          {this.props.name}
+        <Link className="productCard__name" to={`/product/${id}`}>
+          {name}
         </Link>
         <span tabIndex="0" className="productCard__price">
-          {this.props.price}
+          {`${price.currency.symbol}${price.amount}`}
         </span>
       </article>
     );
   }
 }
 
-ProductCard.propTypes = {
-  id: PropTypes.string.isRequired,
-  image: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  price: PropTypes.string.isRequired,
-  isOutOfStock: PropTypes.bool.isRequired,
+ProductCardComp.propTypes = {
+  productId: PropTypes.string.isRequired,
+  selectProductById: PropTypes.func.isRequired,
+  selectedCurrency: PropTypes.object.isRequired,
 };
 
-PropTypes.defaultProps = {
-  isOutOfStock: false,
-};
+const mapStateToProps = (state) => ({
+  selectProductById: selectProductById.bind(this, state),
+  selectedCurrency: state.currencies.selectedCurrency,
+});
+
+const ProductCard = connect(mapStateToProps)(ProductCardComp);
 
 export { ProductCard };
