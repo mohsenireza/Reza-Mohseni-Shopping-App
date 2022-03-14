@@ -25,7 +25,7 @@ test('currency list should not be open by default', () => {
   expect(screen.queryByText('£ GBP')).not.toBeInTheDocument();
 });
 
-test('should open currency list by user click', async () => {
+test('should open currency list by click', async () => {
   // Declare component props
   const currencies = [
     { label: 'USD', symbol: '$' },
