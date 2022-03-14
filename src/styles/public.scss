@@ -1,0 +1,52 @@
+@import './config.scss';
+
+// Prevent UI from stretching in big screens
+.container {
+  width: 100%;
+  max-width: rem(1238px);
+  padding: 0 rem(16px);
+  box-sizing: content-box;
+  margin: 0 auto;
+}
+
+// Set default text styles
+body,
+a,
+button {
+  font-family: raleway;
+  color: $firstDark-color;
+}
+
+// Set default styles
+* {
+  box-sizing: border-box;
+}
+
+button {
+  cursor: pointer;
+  background: transparent;
+  border: 0 none;
+}
+
+// Responsive UI (Because we use rem instead of px, we can take advantage of this code)
+html {
+  font-size: 100%;
+}
+
+@media (max-width: $lg-width) {
+  html {
+    font-size: 91%;
+  }
+}
+
+@media (max-width: $tablet-width) {
+  html {
+    font-size: 90%;
+  }
+}
+
+@media (max-width: $sm-width) {
+  html {
+    font-size: 100%;
+  }
+}

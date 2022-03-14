@@ -1,0 +1,40 @@
+@import '../../styles/config.scss';
+
+.products {
+  .container {
+    .products__categoryName {
+      display: inline-block;
+      font-weight: 400;
+      font-size: rem(42px);
+      margin: rem(90px) 0 rem(115px);
+    }
+    .products__productList {
+      display: flex;
+      flex-wrap: wrap;
+      .products__productWrapper {
+        display: flex;
+        width: 33.33%;
+        margin-bottom: rem(103px);
+        &:nth-child(3n + 2) {
+          justify-content: center;
+        }
+        &:nth-child(3n + 3) {
+          justify-content: flex-end;
+        }
+        @include breakpoint(sm) {
+          width: 50%;
+          justify-content: center;
+          &:nth-child(3n + 2) {
+            justify-content: center;
+          }
+          &:nth-child(3n + 3) {
+            justify-content: center;
+          }
+        }
+        @include breakpoint(xxsm) {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
