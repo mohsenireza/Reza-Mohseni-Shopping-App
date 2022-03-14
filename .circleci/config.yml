@@ -47,9 +47,9 @@ workflows:
   build_and_test:
     jobs:
       - build
-      - test:
-          # Uncomment these two lines for sequential workflow
-          # requires:
-          #   - build
+      - test
+        # Uncomment these two lines for sequential workflow and put : in front of -test
+        # requires:
+        #   - build
       # For running simple node tests, you could optionally instead use the node/test job from the orb to replicate and replace the manually defined "test" job above in fewer lines.
       # - node/test
