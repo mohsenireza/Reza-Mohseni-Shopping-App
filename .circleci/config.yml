@@ -48,7 +48,7 @@ workflows:
     jobs:
       - build
       - test
-        requires:
-          -build
+          requires:
+            -build
       # For running simple node tests, you could optionally instead use the node/test job from the orb to replicate and replace the manually defined "test" job above in fewer lines.
       # - node/test
