@@ -68,7 +68,7 @@ test('should change url when a category gets selected', async () => {
   expect(window.location.search.includes('category=cars')).toBeTruthy();
 });
 
-test('should save selected category to store', async () => {
+test('should save selected category to the store', async () => {
   // Declare component props
   const categories = ['all', 'clothes', 'cars'];
   const dispatchCategorySelected = jest.fn();
