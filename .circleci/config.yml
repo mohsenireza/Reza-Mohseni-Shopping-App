@@ -9,6 +9,16 @@ orbs:
   node: circleci/node@5.0.1
 
 jobs:
+  build:
+    docker:
+      - image: cimg/node:16.14.0
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: yarn
+      - run:
+          name: Build
+          command: yarn run build
   # Below is the definition of your job to test your Node app. You can rename and customize it as you want.
   test:
     # These next lines define a docker executor: https://circleci.com/docs/2.0/executor-types/
@@ -34,8 +44,11 @@ workflows:
   # Inside the workflow, you provide the jobs you want to run, e.g this workflow runs the build-and-test job above.
   # CircleCI will run this workflow on every commit.
   # For more details on extending your workflow, see the configuration docs: https://circleci.com/docs/2.0/configuration-reference/#workflows
-  sample:
+  build_and_test:
     jobs:
+      - build
       - test
+        requires:
+          -build
       # For running simple node tests, you could optionally instead use the node/test job from the orb to replicate and replace the manually defined "test" job above in fewer lines.
       # - node/test
