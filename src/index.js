@@ -6,15 +6,6 @@ import './styles/app.scss';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { store } from './config/store';
-import { fetchCategories } from './features/categories/categoriesSlice';
-import { fetchCurrencies } from './features/currencies/currenciesSlice';
-
-const fetchInitialData = () => {
-  store.dispatch(fetchCategories());
-  store.dispatch(fetchCurrencies());
-};
-
-fetchInitialData();
 
 ReactDOM.render(
   <React.StrictMode>

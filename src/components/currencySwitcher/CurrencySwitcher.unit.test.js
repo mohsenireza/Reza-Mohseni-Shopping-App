@@ -1,5 +1,4 @@
 import { render, screen } from '../../test/utils/utils';
-import userEvent from '@testing-library/user-event';
 import { CurrencySwitcher } from './CurrencySwitcher';
 
 test('currency list should not be open by default', () => {
@@ -35,8 +34,7 @@ test('should open currency list by click', async () => {
   const dispatchCurrencySelected = jest.fn();
 
   // Render component
-  const user = userEvent.setup();
-  render(
+  const { user } = render(
     <CurrencySwitcher
       currencies={currencies}
       dispatchCurrencySelected={dispatchCurrencySelected}
@@ -62,8 +60,7 @@ test('should close currency list after user selected a currency', async () => {
   const dispatchCurrencySelected = jest.fn();
 
   // Render component
-  const user = userEvent.setup();
-  render(
+  const { user } = render(
     <CurrencySwitcher
       currencies={currencies}
       dispatchCurrencySelected={dispatchCurrencySelected}
@@ -91,8 +88,7 @@ test('should close currency list by clicking outside of the component', async ()
   const dispatchCurrencySelected = jest.fn();
 
   // Render component
-  const user = userEvent.setup();
-  render(
+  const { user } = render(
     <>
       <span>outside of component</span>
       <CurrencySwitcher
@@ -129,8 +125,7 @@ test('should close the curreny list by clicking on the component header', async 
   const dispatchCurrencySelected = jest.fn();
 
   // Render component
-  const user = userEvent.setup();
-  render(
+  const { user } = render(
     <>
       <span>outside of component</span>
       <CurrencySwitcher
@@ -167,8 +162,7 @@ test('should save selected currency in store', async () => {
   const dispatchCurrencySelected = jest.fn();
 
   // Render component
-  const user = userEvent.setup();
-  render(
+  const { user } = render(
     <CurrencySwitcher
       currencies={currencies}
       dispatchCurrencySelected={dispatchCurrencySelected}
@@ -201,8 +195,7 @@ test('should save selected currency in localStorage', async () => {
   const dispatchCurrencySelected = jest.fn();
 
   // Render component
-  const user = userEvent.setup();
-  render(
+  const { user } = render(
     <CurrencySwitcher
       currencies={currencies}
       dispatchCurrencySelected={dispatchCurrencySelected}

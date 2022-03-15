@@ -1,5 +1,4 @@
 import { render, screen } from '../../test/utils/utils';
-import userEvent from '@testing-library/user-event';
 import { history } from '../../config';
 import { Header } from './Header';
 
@@ -53,8 +52,7 @@ test('should change url when a category gets selected', async () => {
   const dispatchCategorySelected = jest.fn();
 
   // Render the component
-  const user = userEvent.setup();
-  render(
+  const { user } = render(
     <Header
       categories={categories}
       dispatchCategorySelected={dispatchCategorySelected}
@@ -68,14 +66,13 @@ test('should change url when a category gets selected', async () => {
   expect(window.location.search.includes('category=cars')).toBeTruthy();
 });
 
-test('should save selected category to store', async () => {
+test('should save selected category to the store', async () => {
   // Declare component props
   const categories = ['all', 'clothes', 'cars'];
   const dispatchCategorySelected = jest.fn();
 
   // Render the component
-  const user = userEvent.setup();
-  render(
+  const { user } = render(
     <Header
       categories={categories}
       dispatchCategorySelected={dispatchCategorySelected}
@@ -117,8 +114,7 @@ test('should redirect to /products page when the logo gets clicked', async () =>
   const dispatchCategorySelected = jest.fn();
 
   // Render the component
-  const user = userEvent.setup();
-  render(
+  const { user } = render(
     <Header
       categories={categories}
       dispatchCategorySelected={dispatchCategorySelected}
