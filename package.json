@@ -21,6 +21,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:unit": "react-scripts test unit.test.js",
+    "test:integration": "react-scripts test integration.test.js",
     "eject": "react-scripts eject",
     "lint": "eslint .",
     "format": "prettier --write ."
@@ -47,6 +49,7 @@
     "eslint": "^8.10.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-react": "^7.29.3",
+    "msw": "^0.39.2",
     "prettier": "2.5.1"
   }
 }

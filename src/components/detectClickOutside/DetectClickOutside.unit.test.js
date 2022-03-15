@@ -1,5 +1,4 @@
 import { render, screen } from '../../test/utils/utils';
-import userEvent from '@testing-library/user-event';
 import { DetectClickOutside } from './DetectClickOutside';
 
 test('should detect click outside of the component', async () => {
@@ -7,8 +6,7 @@ test('should detect click outside of the component', async () => {
   const onClickOutside = jest.fn();
 
   // Render the component
-  const user = userEvent.setup();
-  render(
+  const { user } = render(
     <div>
       <button>outside</button>
       <DetectClickOutside onClickOutside={onClickOutside}>
@@ -31,7 +29,6 @@ test('should accept a class for its container element', () => {
   const className = 'detectClickOutside__container';
 
   // Render the component
-  const user = userEvent.setup();
   render(
     <DetectClickOutside className={className} onClickOutside={onClickOutside}>
       <button>inside</button>

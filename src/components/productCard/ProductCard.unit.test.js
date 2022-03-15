@@ -1,5 +1,4 @@
 import { render, screen } from '../../test/utils/utils';
-import userEvent from '@testing-library/user-event';
 import { ProductCard } from './ProductCard';
 
 // Declare global data
@@ -54,8 +53,7 @@ test('should render product data', () => {
 
 test('should redirect to product page by clicking on the product image', async () => {
   // Render the component
-  const user = userEvent.setup();
-  render(
+  const { user } = render(
     <ProductCard
       productId={fakeProduct.id}
       selectProductById={selectProductById}
@@ -72,8 +70,7 @@ test('should redirect to product page by clicking on the product image', async (
 
 test('should redirect to product page by clicking on the product name', async () => {
   // Render the component
-  const user = userEvent.setup();
-  render(
+  const { user } = render(
     <ProductCard
       productId={fakeProduct.id}
       selectProductById={selectProductById}
