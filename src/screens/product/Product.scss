@@ -1,0 +1,93 @@
+@import '../../styles/config.scss';
+
+.product {
+  .container {
+    .product__content {
+      display: flex;
+      margin: rem(82px) 0 rem(72px);
+      @include breakpoint(sm) {
+        flex-direction: column;
+      }
+      .product__gallery {
+        width: 58.5%;
+        display: flex;
+        @include breakpoint(sm) {
+          width: 100%;
+        }
+        .product__gallerySmallImagesContainer {
+          margin-right: rem(40px);
+          .product__gallerySmallImageContainer {
+            .product__gallerySmallImage {
+              display: flex;
+              width: rem(80px);
+              height: rem(80px);
+              margin-bottom: rem(40px);
+            }
+          }
+        }
+        .product__galleryMainImageContainer {
+          width: 100%;
+          .product__galleryMainImage {
+            display: flex;
+            width: 100%;
+          }
+        }
+      }
+      .product__infoContainer {
+        width: 41.5%;
+        padding-left: rem(100px);
+        @include breakpoint(md) {
+          display: flex;
+          justify-content: center;
+          padding-left: 0;
+        }
+        @include breakpoint(sm) {
+          width: 100%;
+          margin-top: rem(40px);
+        }
+        .product__info {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          width: rem(292px);
+          @include breakpoint(sm) {
+            width: 100%;
+            align-items: center;
+            text-align: center;
+          }
+          .product__name {
+            font-weight: 600;
+            font-size: rem(30px);
+            margin-bottom: rem(10px);
+          }
+          .product__brand {
+            font-size: rem(30px);
+            margin-bottom: rem(35px);
+          }
+          .produc__attribute {
+            margin-bottom: rem(32px);
+          }
+          .product__priceTitle {
+            font-family: roboto-condensed;
+            font-weight: 700;
+            font-size: rem(18px);
+            margin-bottom: rem(17px);
+          }
+          .product__price {
+            font-weight: 700;
+            font-size: rem(24px);
+            margin-bottom: rem(30px);
+          }
+          .product__addToCartButton {
+            width: 100%;
+            margin-bottom: rem(40px);
+          }
+          .product__description {
+            font-family: roboto;
+            font-size: rem(16px);
+          }
+        }
+      }
+    }
+  }
+}
