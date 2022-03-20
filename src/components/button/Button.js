@@ -8,14 +8,15 @@ class Button extends Component {
   }
 
   render() {
-    const { title, size, theme, className, onClick } = this.props;
+    const { title, size, theme, className, children, ...otherProps } =
+      this.props;
 
     return (
       <button
         className={`button -${size} -${theme} ${className}`}
-        onClick={onClick}
+        {...otherProps}
       >
-        {title}
+        {children || title}
       </button>
     );
   }
@@ -26,13 +27,12 @@ Button.propTypes = {
   size: PropTypes.oneOf(['big', 'small']),
   theme: PropTypes.oneOf(['green', 'dark', 'light']),
   className: PropTypes.string,
-  onClick: PropTypes.func,
+  children: PropTypes.any,
 };
 
 Button.defaultProps = {
   size: 'big',
   theme: 'green',
-  onClick: () => {},
 };
 
 export { Button };

@@ -34,13 +34,14 @@ class ProductCardComp extends Component {
               alt={name}
               src={gallery.length && gallery[0]}
             />
+            {!inStock && (
+              <span className="productCard__outOfStock">OUT OF STOCK</span>
+            )}
           </Link>
-          {inStock ? (
+          {inStock && (
             <button className="productCard__addToCart">
               <img alt="Add Product to Cart" src={cartWithBackground} />
             </button>
-          ) : (
-            <span className="productCard__outOfStock">OUT OF STOCK</span>
           )}
         </div>
         <Link className="productCard__name" to={`/product/${id}`}>

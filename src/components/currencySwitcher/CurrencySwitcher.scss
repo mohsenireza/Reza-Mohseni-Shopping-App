@@ -34,6 +34,7 @@
     left: -20%;
     width: rem(114px);
     box-shadow: 0 rem(5px) rem(40px) 0 rgba(0, 0, 0, 0.07);
+    background-color: $white-color;
     .currencySwitcher__currencyItem {
       &:first-child {
         .currencySwitcher__currency {
