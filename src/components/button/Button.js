@@ -23,7 +23,7 @@ class Button extends Component {
 }
 
 Button.propTypes = {
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
   size: PropTypes.oneOf(['big', 'small']),
   theme: PropTypes.oneOf(['green', 'dark', 'light']),
   className: PropTypes.string,
