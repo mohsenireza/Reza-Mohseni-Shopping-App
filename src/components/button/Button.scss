@@ -1,0 +1,35 @@
+@import '../../styles/config.scss';
+
+.button {
+  transition: 0.3s;
+  &.-big {
+    font-family: raleway;
+    font-weight: 600;
+    font-size: rem(16px);
+    padding: rem(16px);
+  }
+  &.-small {
+    font-family: source-sans-pro;
+    font-weight: 400;
+    font-size: rem(16px);
+    padding: rem(13px) rem(25px);
+  }
+  &.-green {
+    background-color: $green-color;
+    border: rem(1px) solid $green-color;
+    color: $white-color;
+    &:hover {
+      background-color: $white-color;
+      color: $green-color;
+    }
+  }
+  &.-light {
+    background-color: $white-color;
+    border: rem(1px) solid $firstDark-color;
+    color: $firstDark-color;
+  }
+  &.-dark {
+    background-color: $firstDark-color;
+    color: $white-color;
+  }
+}

@@ -1,6 +1,7 @@
-import { render, screen, within } from '../utils';
+import { render, screen, within, waitForLoadingToFinish } from '../utils';
 import { setupServer } from 'msw/node';
 import { handlers, fakeCurrencies, fakeTechProducts } from '../../mocks';
+import { client } from '../../config';
 import App from '../../App';
 
 // Unmock 'react-redux' to ignore the manual mock
@@ -10,26 +11,32 @@ jest.unmock('react-redux');
 const server = setupServer(...handlers);
 
 beforeAll(() => server.listen());
-afterEach(() => server.resetHandlers());
+
+afterEach(async () => {
+  server.resetHandlers();
+  // Clear ApolloClient cache
+  await client.clearStore();
+});
+
 afterAll(() => server.close());
 
 test('should fetch categories and show them in the UI', async () => {
-  render(<App />);
+  await render(<App />);
 
   // Fetched categories should be in the UI
-  const firstCategory = await screen.findByRole('link', { name: 'all' });
-  const secondCategory = await screen.findByRole('link', { name: 'clothes' });
-  const thirdCategory = await screen.findByRole('link', { name: 'tech' });
+  const firstCategory = screen.getByRole('link', { name: 'all' });
+  const secondCategory = screen.getByRole('link', { name: 'clothes' });
+  const thirdCategory = screen.getByRole('link', { name: 'tech' });
   expect(firstCategory).toBeInTheDocument();
   expect(secondCategory).toBeInTheDocument();
   expect(thirdCategory).toBeInTheDocument();
 });
 
 test('should fetch currencies and show them in the UI', async () => {
-  const { user } = render(<App />);
+  const { user } = await render(<App />);
 
   // Click on the currency selector menu to open it
-  await user.click(await screen.findByTestId('currencySwitcherHeader'));
+  await user.click(screen.getByTestId('currencySwitcherHeader'));
 
   // Fetched currencies should be in the UI
   const firstCurrency = screen.getByRole('button', { name: '$ USD' });
@@ -41,43 +48,45 @@ test('should fetch currencies and show them in the UI', async () => {
 });
 
 test('some products should be fetched and rendered when app loads', async () => {
-  render(<App />);
+  await render(<App />);
 
   // Find product cards in the UI
-  const productCards = await screen.findAllByRole('article');
+  const productCards = screen.getAllByRole('article');
   productCards.forEach((productCard) =>
     expect(productCard).toBeInTheDocument()
   );
 });
 
 test('should fetch products when category changes', async () => {
-  const { user } = render(<App />);
+  const { user } = await render(<App />);
 
   // Click on a category
-  const categoryElement = await screen.findByRole('link', {
+  const categoryElement = screen.getByRole('link', {
     name: 'tech',
   });
   await user.click(categoryElement);
 
+  await waitForLoadingToFinish();
+
   // New products based on the selected category should be rendered
-  await screen.findByText(fakeTechProducts[0].name);
-  await screen.findByText(fakeTechProducts[1].name);
+  screen.getByText(fakeTechProducts[0].name);
+  screen.getByText(fakeTechProducts[1].name);
 });
 
 test('should show price of product cards based on the selected currency', async () => {
-  const { user } = render(<App />);
+  const { user } = await render(<App />);
 
   const currencyToSelect = fakeCurrencies[1];
   // Click on the currency selector menu to open it
-  await user.click(await screen.findByTestId('currencySwitcherHeader'));
+  await user.click(screen.getByTestId('currencySwitcherHeader'));
   // Select a currency
-  const currencyElement = await screen.findByRole('button', {
+  const currencyElement = screen.getByRole('button', {
     name: `${currencyToSelect.symbol} ${currencyToSelect.label}`,
   });
   await user.click(currencyElement);
 
   // Each product card should show the price based on the selected currency
-  const productCards = await screen.findAllByRole('article');
+  const productCards = screen.getAllByRole('article');
   productCards.forEach((productCard) => {
     const pattern = new RegExp(currencyToSelect.symbol);
     within(productCard).getByText(pattern);

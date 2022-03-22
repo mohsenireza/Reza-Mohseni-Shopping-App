@@ -26,6 +26,11 @@ class ProductsComp extends Component {
   }
 
   render() {
+    // TODO: handle loading
+    const status = this.props.fetchProductsStatus;
+    if (status === 'loading' || status === 'idle')
+      return <span>Loading...</span>;
+
     return (
       <div className="products">
         <div className="container">
@@ -46,14 +51,16 @@ class ProductsComp extends Component {
 }
 
 ProductsComp.propTypes = {
-  selectedCategory: PropTypes.string.isRequired,
+  selectedCategory: PropTypes.string,
   productIds: PropTypes.array.isRequired,
+  fetchProductsStatus: PropTypes.string.isRequired,
   dispatchFetchProducts: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   selectedCategory: state.categories.selectedCategory,
   productIds: selectProductIds(state),
+  fetchProductsStatus: state.products.status,
 });
 
 const mapDispatchToProps = {

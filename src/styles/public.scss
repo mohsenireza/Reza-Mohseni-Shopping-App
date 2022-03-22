@@ -3,9 +3,8 @@
 // Prevent UI from stretching in big screens
 .container {
   width: 100%;
-  max-width: rem(1238px);
+  max-width: calc(rem(32px) + rem(1238px));
   padding: 0 rem(16px);
-  box-sizing: content-box;
   margin: 0 auto;
 }
 
@@ -26,6 +25,7 @@ button {
   cursor: pointer;
   background: transparent;
   border: 0 none;
+  padding: 0;
 }
 
 // Responsive UI (Because we use rem instead of px, we can take advantage of this code)

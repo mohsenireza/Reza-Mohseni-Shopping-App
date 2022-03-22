@@ -32,9 +32,9 @@ const selectedCurrency = {
 };
 const selectProductById = () => fakeProduct;
 
-test('should render product data', () => {
+test('should render product data', async () => {
   // Render the component
-  render(
+  await render(
     <ProductCard
       productId={fakeProduct.id}
       selectProductById={selectProductById}
@@ -53,7 +53,7 @@ test('should render product data', () => {
 
 test('should redirect to product page by clicking on the product image', async () => {
   // Render the component
-  const { user } = render(
+  const { user } = await render(
     <ProductCard
       productId={fakeProduct.id}
       selectProductById={selectProductById}
@@ -70,7 +70,7 @@ test('should redirect to product page by clicking on the product image', async (
 
 test('should redirect to product page by clicking on the product name', async () => {
   // Render the component
-  const { user } = render(
+  const { user } = await render(
     <ProductCard
       productId={fakeProduct.id}
       selectProductById={selectProductById}
@@ -85,9 +85,9 @@ test('should redirect to product page by clicking on the product name', async ()
   expect(window.location.pathname).toBe(`/product/${fakeProduct.id}`);
 });
 
-test('should show price based on the selected currency', () => {
+test('should show price based on the selected currency', async () => {
   // Render the component
-  const { rerender } = render(
+  const { rerender } = await render(
     <ProductCard
       productId={fakeProduct.id}
       selectProductById={selectProductById}
@@ -115,10 +115,10 @@ test('should show price based on the selected currency', () => {
   expect(screen.getByText('£104')).toBeInTheDocument();
 });
 
-test('should show out of stock message', () => {
+test('should show out of stock message', async () => {
   // Render the component with an out of stock product
   const outOfStockProduct = { ...fakeProduct, inStock: false };
-  render(
+  await render(
     <ProductCard
       productId={outOfStockProduct.id}
       selectProductById={() => outOfStockProduct}
@@ -130,10 +130,10 @@ test('should show out of stock message', () => {
   expect(screen.getByText('OUT OF STOCK')).toBeInTheDocument();
 });
 
-test('should not render add to cart button for an out of stock product', () => {
+test('should not render add to cart button for an out of stock product', async () => {
   // Render the component with an out of stock product
   const outOfStockProduct = { ...fakeProduct, inStock: false };
-  render(
+  await render(
     <ProductCard
       productId={outOfStockProduct.id}
       selectProductById={() => outOfStockProduct}
