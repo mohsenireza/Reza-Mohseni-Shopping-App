@@ -36,7 +36,7 @@ class App extends Component {
         <Routes />
       </div>
     ) : (
-      <div>Loading Global Data...</div>
+      <span>Loading Global Data...</span>
     );
   }
 }
