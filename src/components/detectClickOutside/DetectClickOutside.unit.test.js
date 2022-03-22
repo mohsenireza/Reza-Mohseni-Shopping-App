@@ -6,7 +6,7 @@ test('should detect click outside of the component', async () => {
   const onClickOutside = jest.fn();
 
   // Render the component
-  const { user } = render(
+  const { user } = await render(
     <div>
       <button>outside</button>
       <DetectClickOutside onClickOutside={onClickOutside}>
@@ -23,13 +23,13 @@ test('should detect click outside of the component', async () => {
   expect(onClickOutside).toBeCalledTimes(1);
 });
 
-test('should accept a class for its container element', () => {
+test('should accept a class for its container element', async () => {
   // Declare component props
   const onClickOutside = jest.fn();
   const className = 'detectClickOutside__container';
 
   // Render the component
-  render(
+  await render(
     <DetectClickOutside className={className} onClickOutside={onClickOutside}>
       <button>inside</button>
     </DetectClickOutside>

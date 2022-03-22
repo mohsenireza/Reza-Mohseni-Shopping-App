@@ -6,8 +6,8 @@ import { rgbTohex } from '../../utils';
 const textAttribute = fakeAttributes[0];
 const colorAttribute = fakeAttributes[1];
 
-test('should render text attribute items', () => {
-  render(<Attribute {...textAttribute} />);
+test('should render text attribute items', async () => {
+  await render(<Attribute {...textAttribute} />);
 
   // Attribute items should be rendered
   textAttribute.items.forEach((item) => {
@@ -18,7 +18,7 @@ test('should render text attribute items', () => {
 });
 
 test('should be able to select a text attribute item', async () => {
-  const { user } = render(<Attribute {...textAttribute} />);
+  const { user } = await render(<Attribute {...textAttribute} />);
 
   const attributeItemElement = screen.getAllByRole('button')[1];
 
@@ -32,8 +32,8 @@ test('should be able to select a text attribute item', async () => {
   expect(attributeItemElement).toHaveClass('-dark');
 });
 
-test('should render color attribute items', () => {
-  render(<Attribute {...colorAttribute} />);
+test('should render color attribute items', async () => {
+  await render(<Attribute {...colorAttribute} />);
 
   // Attribute items should be rendered
   const attributeItemElements = screen.getAllByRole('button');
@@ -48,7 +48,7 @@ test('should render color attribute items', () => {
 });
 
 test('should be able to select a color attribute item', async () => {
-  const { user } = render(<Attribute {...colorAttribute} />);
+  const { user } = await render(<Attribute {...colorAttribute} />);
 
   const attributeItemElement = screen.getAllByRole('button')[1];
 
@@ -66,8 +66,8 @@ test('should be able to select a color attribute item', async () => {
   ).toBeInTheDocument();
 });
 
-test('attribute item should have a tooltip', () => {
-  render(<Attribute {...colorAttribute} />);
+test('attribute item should have a tooltip', async () => {
+  await render(<Attribute {...colorAttribute} />);
 
   // Find tooltip elements in the document
   colorAttribute.items.forEach((item) => {
@@ -76,7 +76,9 @@ test('attribute item should have a tooltip', () => {
 });
 
 test('user cant select text attribute when "isDisabled" prop is true', async () => {
-  const { user } = render(<Attribute isDisabled={true} {...textAttribute} />);
+  const { user } = await render(
+    <Attribute isDisabled={true} {...textAttribute} />
+  );
 
   const attributeItemElement = screen.getByRole('button', {
     name: textAttribute.items[1].value,
@@ -90,7 +92,9 @@ test('user cant select text attribute when "isDisabled" prop is true', async () 
 });
 
 test('user cant select color attribute when "isDisabled" prop is true', async () => {
-  const { user } = render(<Attribute isDisabled={true} {...colorAttribute} />);
+  const { user } = await render(
+    <Attribute isDisabled={true} {...colorAttribute} />
+  );
 
   const attributeItemElement = screen.getAllByRole('button')[1];
 

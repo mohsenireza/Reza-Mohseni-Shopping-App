@@ -30,7 +30,9 @@ class ProductComp extends Component {
 
   render() {
     // TODO: handle loading
-    if (!this.props.product) return null;
+    const status = this.props.fetchProductStatus;
+    if (status === 'idle' || status === 'loading')
+      return <h1>Loading product...</h1>;
 
     const {
       selectedCurrency,
@@ -78,6 +80,7 @@ class ProductComp extends Component {
               )}
               <figure className="product__gallerySelectedImageContainer">
                 <img
+                  data-testid="productGallerySelectedImage"
                   className="product__gallerySelectedImage"
                   src={selectedImage}
                   alt={`${brand} - ${name}`}
@@ -123,7 +126,8 @@ class ProductComp extends Component {
 ProductComp.propTypes = {
   router: PropTypes.object.isRequired,
   product: PropTypes.object,
-  selectedCurrency: PropTypes.object.isRequired,
+  fetchProductStatus: PropTypes.string.isRequired,
+  selectedCurrency: PropTypes.object,
   selectedImage: PropTypes.string,
   dispatchFetchProduct: PropTypes.func.isRequired,
   dispatchImageSelected: PropTypes.func.isRequired,
@@ -131,6 +135,7 @@ ProductComp.propTypes = {
 
 const mapStateToProps = (state) => ({
   product: state.product.product,
+  fetchProductStatus: state.product.status,
   selectedCurrency: state.currencies.selectedCurrency,
   selectedImage: state.product.selectedImage,
 });

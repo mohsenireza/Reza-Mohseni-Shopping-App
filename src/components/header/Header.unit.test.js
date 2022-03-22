@@ -1,5 +1,4 @@
 import { render, screen } from '../../test/utils/utils';
-import { history } from '../../config';
 import { Header } from './Header';
 
 jest.mock('../currencySwitcher/CurrencySwitcher', () => {
@@ -8,13 +7,13 @@ jest.mock('../currencySwitcher/CurrencySwitcher', () => {
   };
 });
 
-test('should render categories', () => {
+test('should render categories', async () => {
   // Declare component props
   const categories = ['all', 'clothes', 'cars'];
   const dispatchCategorySelected = jest.fn();
 
   // Render the component
-  render(
+  await render(
     <Header
       categories={categories}
       dispatchCategorySelected={dispatchCategorySelected}
@@ -27,14 +26,14 @@ test('should render categories', () => {
   expect(screen.getByText('cars')).toBeInTheDocument();
 });
 
-test('selected category should get -selected class, to have different UI', () => {
+test('selected category should get -selected class, to have different UI', async () => {
   // Declare component props
   const categories = ['all', 'clothes', 'cars'];
   const dispatchCategorySelected = jest.fn();
   const selectedCategory = 'cars';
 
   // Render the component
-  render(
+  await render(
     <Header
       categories={categories}
       dispatchCategorySelected={dispatchCategorySelected}
@@ -52,7 +51,7 @@ test('should change url when a category gets selected', async () => {
   const dispatchCategorySelected = jest.fn();
 
   // Render the component
-  const { user } = render(
+  const { user } = await render(
     <Header
       categories={categories}
       dispatchCategorySelected={dispatchCategorySelected}
@@ -72,7 +71,7 @@ test('should save selected category to the store', async () => {
   const dispatchCategorySelected = jest.fn();
 
   // Render the component
-  const { user } = render(
+  const { user } = await render(
     <Header
       categories={categories}
       dispatchCategorySelected={dispatchCategorySelected}
@@ -87,20 +86,18 @@ test('should save selected category to the store', async () => {
   expect(dispatchCategorySelected).toBeCalledWith('cars');
 });
 
-test('should get selected category from URL', () => {
+test('should get selected category from URL', async () => {
   // Declare component props
   const categories = ['all', 'clothes', 'cars'];
   const dispatchCategorySelected = jest.fn();
 
-  // Put the selected category inside URL as query string
-  history.push('/products?category=cars');
-
   // Render the component
-  render(
+  await render(
     <Header
       categories={categories}
       dispatchCategorySelected={dispatchCategorySelected}
-    />
+    />,
+    { route: '/products?category=cars' }
   );
 
   // The selected category from URL should be saved to the store
@@ -114,7 +111,7 @@ test('should redirect to /products page when the logo gets clicked', async () =>
   const dispatchCategorySelected = jest.fn();
 
   // Render the component
-  const { user } = render(
+  const { user } = await render(
     <Header
       categories={categories}
       dispatchCategorySelected={dispatchCategorySelected}

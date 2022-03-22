@@ -60,6 +60,7 @@
         opacity: 0;
         transition: 0.2s;
         backface-visibility: hidden;
+        white-space: nowrap;
         &::before {
           content: '';
           height: rem(10px);

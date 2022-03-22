@@ -40,13 +40,12 @@ class HeaderComp extends Component {
       queryString
     ).get('category');
     const categories = this.props.categories;
-    if (!categories.length) return;
     // If the category from URL exists in the store, we can use it as the selected category
     if (categories.includes(selectedCategoryFromQueryString)) {
       this.props.dispatchCategorySelected(selectedCategoryFromQueryString);
     }
     // Otherwise we select the first category Item in store as the selected category
-    else {
+    else if (categories.length) {
       const defaultCategory = categories[0];
       this.props.dispatchCategorySelected(defaultCategory);
     }

@@ -1,7 +1,7 @@
 import { render, screen } from '../../test/utils/utils';
 import { CurrencySwitcher } from './CurrencySwitcher';
 
-test('currency list should not be open by default', () => {
+test('currency list should not be open by default', async () => {
   // Declare component props
   const currencies = [
     { label: 'USD', symbol: '$' },
@@ -11,7 +11,7 @@ test('currency list should not be open by default', () => {
   const dispatchCurrencySelected = jest.fn();
 
   // Render component
-  render(
+  await render(
     <CurrencySwitcher
       currencies={currencies}
       dispatchCurrencySelected={dispatchCurrencySelected}
@@ -34,7 +34,7 @@ test('should open currency list by click', async () => {
   const dispatchCurrencySelected = jest.fn();
 
   // Render component
-  const { user } = render(
+  const { user } = await render(
     <CurrencySwitcher
       currencies={currencies}
       dispatchCurrencySelected={dispatchCurrencySelected}
@@ -60,7 +60,7 @@ test('should close currency list after user selected a currency', async () => {
   const dispatchCurrencySelected = jest.fn();
 
   // Render component
-  const { user } = render(
+  const { user } = await render(
     <CurrencySwitcher
       currencies={currencies}
       dispatchCurrencySelected={dispatchCurrencySelected}
@@ -88,7 +88,7 @@ test('should close currency list by clicking outside of the component', async ()
   const dispatchCurrencySelected = jest.fn();
 
   // Render component
-  const { user } = render(
+  const { user } = await render(
     <>
       <span>outside of component</span>
       <CurrencySwitcher
@@ -125,7 +125,7 @@ test('should close the curreny list by clicking on the component header', async 
   const dispatchCurrencySelected = jest.fn();
 
   // Render component
-  const { user } = render(
+  const { user } = await render(
     <>
       <span>outside of component</span>
       <CurrencySwitcher
@@ -162,7 +162,7 @@ test('should save selected currency in store', async () => {
   const dispatchCurrencySelected = jest.fn();
 
   // Render component
-  const { user } = render(
+  const { user } = await render(
     <CurrencySwitcher
       currencies={currencies}
       dispatchCurrencySelected={dispatchCurrencySelected}
@@ -195,7 +195,7 @@ test('should save selected currency in localStorage', async () => {
   const dispatchCurrencySelected = jest.fn();
 
   // Render component
-  const { user } = render(
+  const { user } = await render(
     <CurrencySwitcher
       currencies={currencies}
       dispatchCurrencySelected={dispatchCurrencySelected}
@@ -229,7 +229,7 @@ test('should show symbol of selected currency', async () => {
   const dispatchCurrencySelected = jest.fn();
 
   // Render component
-  render(
+  await render(
     <CurrencySwitcher
       currencies={currencies}
       dispatchCurrencySelected={dispatchCurrencySelected}
@@ -241,7 +241,7 @@ test('should show symbol of selected currency', async () => {
   expect(screen.getByText(selectedCurrency.symbol)).toBeInTheDocument();
 });
 
-test('should load selected currency from localStorage', () => {
+test('should load selected currency from localStorage', async () => {
   // Setup localStorage.getItem spy
   const localStorageGetItemSpy = jest
     .spyOn(localStorage.__proto__, 'getItem')
@@ -256,7 +256,7 @@ test('should load selected currency from localStorage', () => {
   const dispatchCurrencySelected = jest.fn();
 
   // Render component
-  render(
+  await render(
     <CurrencySwitcher
       currencies={currencies}
       dispatchCurrencySelected={dispatchCurrencySelected}

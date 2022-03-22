@@ -5,6 +5,7 @@ import {
   fakeTechProducts,
   fakeCategories,
   fakeCurrencies,
+  fakeIphone12Product,
 } from './fakeData';
 
 export const handlers = [
@@ -40,6 +41,15 @@ export const handlers = [
         category: {
           products,
         },
+      })
+    );
+  }),
+
+  // Handle a 'product' query
+  graphql.query('product', (req, res, ctx) => {
+    return res(
+      ctx.data({
+        product: fakeIphone12Product,
       })
     );
   }),
