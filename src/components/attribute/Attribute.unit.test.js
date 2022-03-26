@@ -18,15 +18,40 @@ test('should render text attribute items', async () => {
 });
 
 test('should be able to select a text attribute item', async () => {
-  const { user } = await render(<Attribute {...textAttribute} />);
+  const onAttributeSelect = jest.fn();
+  const { user, rerender } = await render(
+    <Attribute {...textAttribute} onAttributeSelect={onAttributeSelect} />
+  );
 
-  const attributeItemElement = screen.getAllByRole('button')[1];
+  // Pick an attribute item object to select
+  const attributeItemToSelect = textAttribute.items[1];
+
+  // Pick element corresponding to the attribute item object
+  const attributeItemElement = screen.getByRole('button', {
+    name: attributeItemToSelect.value,
+  });
 
   // The attribute item element shouldn't have '-dark' class, which means it's not selected
   expect(attributeItemElement).not.toHaveClass('-dark');
 
   // Click on the attribute item
   await user.click(attributeItemElement);
+
+  // 'onAttributeSelect' prop should be called
+  expect(onAttributeSelect).toBeCalledTimes(1);
+  expect(onAttributeSelect).toBeCalledWith({
+    attributeId: textAttribute.id,
+    attributeSelectedItemId: attributeItemToSelect.id,
+  });
+
+  // After selecting an attribute item, the component should rerender with a new 'selectedItemId' prop
+  rerender(
+    <Attribute
+      {...textAttribute}
+      onAttributeSelect={onAttributeSelect}
+      selectedItemId={attributeItemToSelect.id}
+    />
+  );
 
   // The attribute item element should have '-dark' class, which means it's selected
   expect(attributeItemElement).toHaveClass('-dark');
@@ -48,8 +73,15 @@ test('should render color attribute items', async () => {
 });
 
 test('should be able to select a color attribute item', async () => {
-  const { user } = await render(<Attribute {...colorAttribute} />);
+  const onAttributeSelect = jest.fn();
+  const { user, rerender } = await render(
+    <Attribute {...colorAttribute} onAttributeSelect={onAttributeSelect} />
+  );
 
+  // Pick an attribute item object to select
+  const attributeItemToSelect = colorAttribute.items[1];
+
+  // Pick element corresponding to the attribute item object
   const attributeItemElement = screen.getAllByRole('button')[1];
 
   // The attribute item element shouldn't have a visible check mark
@@ -59,6 +91,22 @@ test('should be able to select a color attribute item', async () => {
 
   // Click on the attribute item
   await user.click(attributeItemElement);
+
+  // 'onAttributeSelect' prop should be called
+  expect(onAttributeSelect).toBeCalledTimes(1);
+  expect(onAttributeSelect).toBeCalledWith({
+    attributeId: colorAttribute.id,
+    attributeSelectedItemId: attributeItemToSelect.id,
+  });
+
+  // After selecting an attribute item, the component should rerender with a new 'selectedItemId' prop
+  rerender(
+    <Attribute
+      {...colorAttribute}
+      onAttributeSelect={onAttributeSelect}
+      selectedItemId={attributeItemToSelect.id}
+    />
+  );
 
   // The attribute item element should have a visible check mark
   expect(
@@ -76,8 +124,13 @@ test('attribute item should have a tooltip', async () => {
 });
 
 test('user cant select text attribute when "isDisabled" prop is true', async () => {
+  const onAttributeSelect = jest.fn();
   const { user } = await render(
-    <Attribute isDisabled={true} {...textAttribute} />
+    <Attribute
+      isDisabled={true}
+      {...textAttribute}
+      onAttributeSelect={onAttributeSelect}
+    />
   );
 
   const attributeItemElement = screen.getByRole('button', {
@@ -87,8 +140,8 @@ test('user cant select text attribute when "isDisabled" prop is true', async () 
   // Click on the attribute item
   await user.click(attributeItemElement);
 
-  // The attribute item is not selected after getting clicked
-  expect(attributeItemElement).not.toHaveClass('-dark');
+  // 'onAttributeSelect' prop shouldn't be called
+  expect(onAttributeSelect).not.toBeCalled();
 });
 
 test('user cant select color attribute when "isDisabled" prop is true', async () => {

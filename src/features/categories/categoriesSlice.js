@@ -13,7 +13,7 @@ export const fetchCategories = createAsyncThunk(
   'categories/fetchCategories',
   async () => {
     try {
-      const response = await client.query({ query: categoriesQuery });
+      const response = await client.query({ query: categoriesQuery() });
       const categories = response.data.categories.map(
         (category) => category.name
       );

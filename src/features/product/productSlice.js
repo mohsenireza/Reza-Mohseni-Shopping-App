@@ -14,7 +14,7 @@ export const fetchProduct = createAsyncThunk(
   async (id) => {
     try {
       const response = await client.query({
-        query: productQuery,
+        query: productQuery(),
         variables: { id },
       });
       return response.data.product;

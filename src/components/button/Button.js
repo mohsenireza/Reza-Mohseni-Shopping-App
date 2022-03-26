@@ -25,7 +25,7 @@ class Button extends Component {
 Button.propTypes = {
   title: PropTypes.string,
   size: PropTypes.oneOf(['big', 'small']),
-  theme: PropTypes.oneOf(['green', 'dark', 'light']),
+  theme: PropTypes.oneOf(['green', 'red', 'dark', 'light']),
   className: PropTypes.string,
   children: PropTypes.any,
 };

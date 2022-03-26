@@ -23,6 +23,15 @@
       color: $green-color;
     }
   }
+  &.-red {
+    background-color: $red-color;
+    border: rem(1px) solid $red-color;
+    color: $white-color;
+    &:hover {
+      background-color: $white-color;
+      color: $red-color;
+    }
+  }
   &.-light {
     background-color: $white-color;
     border: rem(1px) solid $firstDark-color;

@@ -16,12 +16,17 @@ const initialState = productsAdapter.getInitialState({
 export const fetchProducts = createAsyncThunk(
   'products/fetchProducts',
   async (arg, { getState }) => {
-    const selectedCategory = getState().categories.selectedCategory;
-    const response = await client.query({
-      query: productsQuery,
-      variables: { category: selectedCategory },
-    });
-    return response.data.category.products;
+    try {
+      const selectedCategory = getState().categories.selectedCategory;
+      const response = await client.query({
+        query: productsQuery(),
+        variables: { category: selectedCategory },
+      });
+      return response.data.category.products;
+    } catch (error) {
+      console.log(`Error while fetching products: ${error}`);
+      throw error;
+    }
   }
 );
 
@@ -38,8 +43,9 @@ const productsSlice = createSlice({
         state.status = 'succeeded';
         productsAdapter.setAll(state, action.payload);
       })
-      .addCase(fetchProducts.rejected, (state) => {
+      .addCase(fetchProducts.rejected, (state, action) => {
         state.status = 'failed';
+        state.error = action.error.message;
       });
   },
 });

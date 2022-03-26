@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export const categoriesQuery = gql`
+export const categoriesQuery = () => gql`
   query categories {
     categories {
       name
@@ -8,7 +8,7 @@ export const categoriesQuery = gql`
   }
 `;
 
-export const currenciesQuery = gql`
+export const currenciesQuery = () => gql`
   query currencies {
     currencies {
       label
@@ -17,7 +17,7 @@ export const currenciesQuery = gql`
   }
 `;
 
-export const productsQuery = gql`
+export const productsQuery = () => gql`
   query products($category: String!) {
     category(input: { title: $category }) {
       products {
@@ -37,7 +37,7 @@ export const productsQuery = gql`
   }
 `;
 
-export const productQuery = gql`
+export const productQuery = () => gql`
   query product($id: String!) {
     product(id: $id) {
       id
@@ -67,3 +67,35 @@ export const productQuery = gql`
     }
   }
 `;
+
+export const cartProductsQuery = (productIds) => {
+  const singleProductQueries = productIds.map((productId, index) => {
+    return `product${index}: product(id: "${productId}") {
+        id
+        name
+        gallery
+        attributes {
+          id
+          name
+          type
+          items {
+            id
+            displayValue
+            value
+          }
+        }
+        prices {
+          currency {
+            label
+            symbol
+          }
+          amount
+        }
+        brand
+      }`;
+  });
+
+  return gql`query cart {
+    ${singleProductQueries}
+  }`;
+};

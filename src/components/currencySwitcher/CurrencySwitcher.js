@@ -15,8 +15,8 @@ class CurrencySwitcherComp extends Component {
     this.state = { isOpen: false };
 
     // Bind event handlers
-    this.handleOnToggle = this.handleOnToggle.bind(this);
-    this.handleOnCurrencyClick = this.handleOnCurrencyClick.bind(this);
+    this.handleToggle = this.handleToggle.bind(this);
+    this.handleCurrencyClick = this.handleCurrencyClick.bind(this);
   }
 
   componentDidMount() {
@@ -39,17 +39,17 @@ class CurrencySwitcherComp extends Component {
   }
 
   // Show and hide available currencies
-  handleOnToggle({ shouldOpen, shouldClose, auto }) {
+  handleToggle({ shouldOpen, shouldClose, auto }) {
     shouldOpen && this.setState({ isOpen: true });
     shouldClose && this.setState({ isOpen: false });
     auto && this.setState((state) => ({ isOpen: !state.isOpen }));
   }
 
   // Puts selected currency in store and localstorage
-  handleOnCurrencyClick(currency) {
+  handleCurrencyClick(currency) {
     this.props.dispatchCurrencySelected(currency);
     storage.save('currency', currency);
-    this.handleOnToggle({ shouldClose: true });
+    this.handleToggle({ shouldClose: true });
   }
 
   render() {
@@ -58,7 +58,7 @@ class CurrencySwitcherComp extends Component {
       <li key={currency.label} className="currencySwitcher__currencyItem">
         <button
           className="currencySwitcher__currency"
-          onClick={() => this.handleOnCurrencyClick(currency)}
+          onClick={() => this.handleCurrencyClick(currency)}
         >
           {currency.symbol} {currency.label}
         </button>
@@ -67,12 +67,12 @@ class CurrencySwitcherComp extends Component {
 
     return (
       <DetectClickOutside
-        onClickOutside={() => this.handleOnToggle({ shouldClose: true })}
+        onClickOutside={() => this.handleToggle({ shouldClose: true })}
         className={`currencySwitcher ${this.state.isOpen ? '-open' : ''}`}
       >
         <button
           data-testid="currencySwitcherHeader"
-          onClick={() => this.handleOnToggle({ auto: true })}
+          onClick={() => this.handleToggle({ auto: true })}
           className="currencySwitcher__header"
         >
           <span className="currencySwitcher__symbol">
