@@ -32,6 +32,9 @@ const productSlice = createSlice({
     imageSelected: (state, action) => {
       state.selectedImage = action.payload;
     },
+    productStateCleared: () => {
+      return initialState;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -51,6 +54,6 @@ const productSlice = createSlice({
   },
 });
 
-export const { imageSelected } = productSlice.actions;
+export const { imageSelected, productStateCleared } = productSlice.actions;
 
 export default productSlice.reducer;

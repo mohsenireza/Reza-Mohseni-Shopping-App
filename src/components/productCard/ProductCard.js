@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import './ProductCard.scss';
 import cartWithBackground from '../../assets/images/cartWithBackground.svg';
 import { selectProductById } from '../../features/products/productsSlice';
+import { modalController } from '../../utils';
+import { ProductInfoModal } from '../../modals';
 
 class ProductCardComp extends Component {
   constructor(props) {
@@ -12,6 +14,20 @@ class ProductCardComp extends Component {
 
     // Select the product from store based on its id
     this.product = this.props.selectProductById(this.props.productId);
+
+    // Bind methods
+    this.handleCartProductAdd = this.handleCartProductAdd.bind(this);
+  }
+
+  handleCartProductAdd() {
+    modalController.openModal({
+      modalId: 'productInfoModal',
+      Component: ProductInfoModal,
+      props: {
+        productId: this.product.id,
+      },
+      modalContainerClassName: '-productInfo',
+    });
   }
 
   render() {
@@ -39,7 +55,10 @@ class ProductCardComp extends Component {
             )}
           </Link>
           {inStock && (
-            <button className="productCard__addToCart">
+            <button
+              className="productCard__addToCart"
+              onClick={this.handleCartProductAdd}
+            >
               <img alt="Add Product to Cart" src={cartWithBackground} />
             </button>
           )}

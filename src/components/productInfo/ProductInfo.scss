@@ -1,0 +1,77 @@
+@import '../../styles/config.scss';
+
+.productInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: rem(292px);
+  .productInfo__sectionTitle {
+    font-family: roboto-condensed;
+    font-weight: 700;
+    font-size: rem(18px);
+    margin-bottom: rem(6px);
+  }
+  .productInfo__brand {
+    font-weight: 600;
+    font-size: rem(30px);
+    margin-bottom: rem(10px);
+  }
+  .productInfo__name {
+    font-size: rem(30px);
+    margin-bottom: rem(35px);
+  }
+  .productInfo__attribute {
+    margin-bottom: rem(40px);
+  }
+  .productInfo__priceTitle {
+    margin-bottom: rem(17px);
+  }
+  .productInfo__price {
+    font-weight: 700;
+    font-size: rem(24px);
+    margin-bottom: rem(30px);
+  }
+  .productInfo__count {
+    margin-bottom: rem(30px);
+  }
+  .productInfo__cartButton {
+    width: 100%;
+    margin-bottom: rem(40px);
+  }
+  .productInfo__outOfStock {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: rem(52.5px);
+    width: 100%;
+    margin-bottom: rem(40px);
+    border: rem(1px) solid $firstLight-color;
+    border-radius: rem(10px);
+    color: $firstLight-color;
+    font-weight: 600;
+  }
+  .productInfo__description {
+    font-family: roboto;
+    font-size: rem(16px);
+    ul {
+      list-style: unset;
+      list-style-position: inside;
+      li {
+        margin-bottom: 1rem;
+      }
+    }
+    p {
+      margin-top: 1em;
+      margin-bottom: 1em;
+    }
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      margin-top: 1em;
+      margin-bottom: 1em;
+    }
+  }
+}

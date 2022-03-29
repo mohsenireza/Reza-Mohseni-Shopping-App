@@ -1,0 +1,21 @@
+@import '../../styles/config.scss';
+
+.modalContainer {
+  &.-productInfo {
+    .modalContainer__content {
+      padding: 0;
+      width: auto;
+      height: auto;
+      .modalContainer__contentBody {
+        height: auto;
+        max-height: calc(90vh - rem(50px));
+      }
+    }
+  }
+}
+
+.productInfoModal {
+  padding: 0 rem(16px);
+  box-sizing: content-box;
+  max-width: 80vw;
+}
