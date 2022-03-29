@@ -34,7 +34,7 @@ class ProductsComp extends Component {
     return (
       <div className="products">
         <div className="container">
-          <h2 className="products__categoryName" tabIndex="0">
+          <h2 className="products__categoryName">
             {this.props.selectedCategory}
           </h2>
           <section className="products__productList">

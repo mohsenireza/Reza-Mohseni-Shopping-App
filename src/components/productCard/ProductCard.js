@@ -38,10 +38,7 @@ class ProductCardComp extends Component {
     );
 
     return (
-      <article
-        tabIndex="0"
-        className={`productCard ${inStock ? '' : '-outOfStock'}`}
-      >
+      <article className={`productCard ${inStock ? '' : '-outOfStock'}`}>
         <div className="productCard__imageContainer">
           <Link to={`/product/${id}`} className="productCard__imageWrapper">
             <img
@@ -66,7 +63,7 @@ class ProductCardComp extends Component {
         <Link className="productCard__name" to={`/product/${id}`}>
           {name}
         </Link>
-        <span tabIndex="0" className="productCard__price">
+        <span className="productCard__price">
           {`${price.currency.symbol}${price.amount}`}
         </span>
       </article>
