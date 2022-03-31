@@ -21,25 +21,46 @@ class Attribute extends Component {
   }
 
   render() {
-    const { id, name, type, items, className, selectedItemId, isDisabled } =
-      this.props;
+    const {
+      id,
+      name,
+      type,
+      items,
+      className,
+      selectedItemId,
+      isDisabled,
+      shouldFadeWhenDisabled,
+      hasAttributeName,
+      hasTooltip,
+      size,
+      selectedTextAttributeItemTheme,
+    } = this.props;
 
     return (
-      <div className={`attribute ${className}`}>
-        <h3 className="attribute__name">{name.toUpperCase()}:</h3>
+      <div className={`attribute -${size} ${className}`}>
+        {hasAttributeName && (
+          <h3 className="attribute__name">{name.toUpperCase()}:</h3>
+        )}
         <ul className="attribute__items">
           {items.map((item) => (
             <li
               key={item.id}
-              className={`attribute__itemContainer ${
-                isDisabled ? '-disabled' : ''
-              }`}
+              className={`
+                attribute__itemContainer 
+                ${isDisabled ? '-disabled' : ''}
+                ${isDisabled && shouldFadeWhenDisabled ? '-fade' : ''}
+              `}
             >
               {/* Text attributes like size, etc... */}
               {type === 'text' && (
                 <Button
                   size="small"
-                  theme={item.id === selectedItemId ? 'dark' : 'light'}
+                  theme={
+                    item.id === selectedItemId
+                      ? selectedTextAttributeItemTheme
+                      : 'white'
+                  }
+                  shouldDisableHover={true}
                   title={item.value}
                   className="attribute__item -text"
                   onClick={() => this.handleSelect(item.id)}
@@ -64,9 +85,11 @@ class Attribute extends Component {
                   </span>
                 </Button>
               )}
-              <span className="attribute__itemTooltip">
-                {item.displayValue}
-              </span>
+              {hasTooltip && (
+                <span className="attribute__itemTooltip">
+                  {item.displayValue}
+                </span>
+              )}
             </li>
           ))}
         </ul>
@@ -90,10 +113,20 @@ Attribute.propTypes = {
   onAttributeSelect: PropTypes.func,
   selectedItemId: PropTypes.string,
   isDisabled: PropTypes.bool,
+  shouldFadeWhenDisabled: PropTypes.bool,
+  hasAttributeName: PropTypes.bool,
+  hasTooltip: PropTypes.bool,
+  size: PropTypes.oneOf(['small', 'big']),
+  selectedTextAttributeItemTheme: PropTypes.oneOf(['dark', 'light']),
 };
 
 Attribute.defaultProps = {
   onAttributeSelect: () => {},
+  shouldFadeWhenDisabled: true,
+  hasAttributeName: true,
+  hasTooltip: true,
+  size: 'big',
+  selectedTextAttributeItemTheme: 'dark',
 };
 
 export { Attribute };

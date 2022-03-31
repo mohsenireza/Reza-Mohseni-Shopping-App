@@ -7,3 +7,5 @@ export * from './button/Button';
 export * from './attribute/Attribute';
 export * from './counter/Counter';
 export * from './productInfo/ProductInfo';
+export * from './miniCart/MiniCart';
+export * from './cartItem/CartItem';

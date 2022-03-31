@@ -9,6 +9,7 @@ import {
   productRemovedFromCart,
   selectCartProductById,
 } from '../../features/cart/cartSlice';
+import { selectSelectedCurrency } from '../../features/currencies/currenciesSlice';
 
 class ProductInfoComp extends Component {
   constructor(props) {
@@ -203,7 +204,7 @@ ProductInfoComp.defaultProps = {
 
 const mapStateToProps = (state) => ({
   product: state.product.product,
-  selectedCurrency: state.currencies.selectedCurrency,
+  selectedCurrency: selectSelectedCurrency(state),
   selectCartProductById: selectCartProductById.bind(this, state),
 });
 

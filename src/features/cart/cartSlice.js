@@ -6,6 +6,7 @@ import {
 import { client } from '../../config';
 import { cartProductsQuery } from '../../graphql/queries';
 import { storage } from '../../utils';
+import { selectSelectedCurrency } from '../currencies/currenciesSlice';
 
 const productsApadter = createEntityAdapter();
 
@@ -20,7 +21,7 @@ export const fetchCartProducts = createAsyncThunk(
     try {
       const cartProductList = storage.load('cartProductList');
       // If there isn't any product in cart, don't continue
-      if (!cartProductList) return [];
+      if (!cartProductList || !cartProductList.length) return [];
       const cartProductIds = cartProductList.map(
         (cartProductItem) => cartProductItem.id
       );
@@ -131,7 +132,28 @@ export const {
   productRemovedFromCart,
 } = cartSlice.actions;
 
-export const { selectById: selectCartProductById } =
-  productsApadter.getSelectors((state) => state.cart);
+export const {
+  selectById: selectCartProductById,
+  selectIds: selectCartProductIds,
+  selectTotal: selectTotalCartItemQuantity,
+  selectAll: selectAllCartProducts,
+} = productsApadter.getSelectors((state) => state.cart);
+
+export const selectTotalPrice = (state) => {
+  let totalPrice = 0;
+  const selectedCurrency = selectSelectedCurrency(state);
+  if (!selectedCurrency) return '';
+  const cartProducts = selectAllCartProducts(state);
+  // Loop through all products in cart to calculate the total price
+  cartProducts.forEach((cartProduct) => {
+    // Select price based on the selected currency
+    const price = cartProduct.prices.find(
+      (price) => price.currency.label === selectedCurrency.label
+    );
+    totalPrice += price.amount * cartProduct.count;
+  });
+  totalPrice = Number.parseFloat(totalPrice).toFixed(2);
+  return `${selectedCurrency.symbol}${totalPrice}`;
+};
 
 export default cartSlice.reducer;

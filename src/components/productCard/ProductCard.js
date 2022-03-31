@@ -7,6 +7,7 @@ import cartWithBackground from '../../assets/images/cartWithBackground.svg';
 import { selectProductById } from '../../features/products/productsSlice';
 import { modalController } from '../../utils';
 import { ProductInfoModal } from '../../modals';
+import { selectSelectedCurrency } from '../../features/currencies/currenciesSlice';
 
 class ProductCardComp extends Component {
   constructor(props) {
@@ -79,7 +80,7 @@ ProductCardComp.propTypes = {
 
 const mapStateToProps = (state) => ({
   selectProductById: selectProductById.bind(this, state),
-  selectedCurrency: state.currencies.selectedCurrency,
+  selectedCurrency: selectSelectedCurrency(state),
 });
 
 const ProductCard = connect(mapStateToProps)(ProductCardComp);

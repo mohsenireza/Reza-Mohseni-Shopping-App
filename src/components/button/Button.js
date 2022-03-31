@@ -8,12 +8,21 @@ class Button extends Component {
   }
 
   render() {
-    const { title, size, theme, className, children, ...otherProps } =
-      this.props;
+    const {
+      title,
+      size,
+      theme,
+      className,
+      children,
+      shouldDisableHover,
+      ...otherProps
+    } = this.props;
 
     return (
       <button
-        className={`button -${size} -${theme} ${className}`}
+        className={`button -${size} -${theme} ${
+          shouldDisableHover ? '-hoverDisabled' : ''
+        } ${className}`}
         {...otherProps}
       >
         {children || title}
@@ -25,14 +34,16 @@ class Button extends Component {
 Button.propTypes = {
   title: PropTypes.string,
   size: PropTypes.oneOf(['big', 'small']),
-  theme: PropTypes.oneOf(['green', 'red', 'dark', 'light']),
+  theme: PropTypes.oneOf(['green', 'red', 'dark', 'light', 'white']),
   className: PropTypes.string,
   children: PropTypes.any,
+  shouldDisableHover: PropTypes.bool,
 };
 
 Button.defaultProps = {
   size: 'big',
   theme: 'green',
+  shouldDisableHover: false,
 };
 
 export { Button };

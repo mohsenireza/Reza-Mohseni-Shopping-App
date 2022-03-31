@@ -47,33 +47,6 @@
       }
       &.header__cartAndCurrencyContainer {
         justify-content: flex-end;
-        .header__cart {
-          display: flex;
-          align-items: center;
-          padding-left: rem(11px);
-          cursor: pointer;
-          transition: 0.3s;
-          .header__cartIconContainer {
-            position: relative;
-            top: rem(6px);
-            .header__cartBadge {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              position: absolute;
-              top: rem(-14px);
-              right: rem(-14px);
-              height: rem(25px);
-              width: rem(25px);
-              border-radius: 100%;
-              background-color: $firstDark-color;
-              color: $white-color;
-              font-family: roboto;
-              font-weight: bold;
-              font-size: rem(14px);
-            }
-          }
-        }
       }
     }
   }

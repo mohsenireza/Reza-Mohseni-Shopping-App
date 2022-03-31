@@ -14,12 +14,12 @@ class DetectClickOutside extends Component {
 
   componentDidMount() {
     // Set event listener
-    document.addEventListener('click', this.handleClickOutside);
+    document.addEventListener('mousedown', this.handleClickOutside);
   }
 
   componentWillUnmount() {
     // Remove event listener
-    document.removeEventListener('click', this.handleClickOutside);
+    document.removeEventListener('mousedown', this.handleClickOutside);
   }
 
   handleClickOutside(event) {

@@ -34,16 +34,16 @@ class Counter extends Component {
 
     return (
       <div className={`counter -${alignment} -${size} ${className}`}>
-        <button onClick={this.handleCountDecrease} className="counter__button">
-          <img src={minus} />
-        </button>
-        <span className="counter__count">{count}</span>
         <button
           disabled={!canIncrease}
           onClick={this.handleCountIncrease}
           className={`counter__button ${canIncrease ? '' : '-disabled'}`}
         >
           <img src={plus} />
+        </button>
+        <span className="counter__count">{count}</span>
+        <button onClick={this.handleCountDecrease} className="counter__button">
+          <img src={minus} />
         </button>
       </div>
     );

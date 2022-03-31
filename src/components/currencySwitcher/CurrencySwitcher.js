@@ -4,7 +4,10 @@ import { connect } from 'react-redux';
 import './CurrencySwitcher.scss';
 import arrowDown from '../../assets/images/arrowDown.svg';
 import { DetectClickOutside } from '..';
-import { currencySelected } from '../../features/currencies/currenciesSlice';
+import {
+  currencySelected,
+  selectSelectedCurrency,
+} from '../../features/currencies/currenciesSlice';
 import { storage } from '../../utils';
 
 class CurrencySwitcherComp extends Component {
@@ -104,7 +107,7 @@ CurrencySwitcherComp.propTypes = {
 
 const mapStateToProps = (state) => ({
   currencies: state.currencies.currencies,
-  selectedCurrency: state.currencies.selectedCurrency,
+  selectedCurrency: selectSelectedCurrency(state),
 });
 
 const mapDispatchToProps = {

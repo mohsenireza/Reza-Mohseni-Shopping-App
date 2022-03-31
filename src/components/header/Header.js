@@ -4,8 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import './Header.scss';
 import logo from '../../assets/images/logo.svg';
-import cart from '../../assets/images/cart.svg';
-import { CurrencySwitcher } from '..';
+import { CurrencySwitcher, MiniCart } from '../index';
 import { categorySelected } from '../../features/categories/categoriesSlice';
 import { withRouter } from '../../hoc';
 
@@ -87,12 +86,7 @@ class HeaderComp extends Component {
           </Link>
           <div className="header__column header__cartAndCurrencyContainer">
             <CurrencySwitcher />
-            <button className="header__cart">
-              <div className="header__cartIconContainer">
-                <img loading="lazy" alt="Cart Icon" src={cart} />
-                {/* <span className="header__cartBadge">2</span> */}
-              </div>
-            </button>
+            <MiniCart />
           </div>
         </div>
       </header>

@@ -1,0 +1,91 @@
+@import '../../styles/config.scss';
+
+.cartItem {
+  display: flex;
+  justify-content: space-between;
+  padding: rem(20px) 0;
+  &.-small {
+    .cartItem__infoContainer {
+      margin-right: rem(10px);
+      .cartItem__brand {
+        font-weight: 300;
+        font-size: rem(16px);
+        margin-bottom: rem(10px);
+      }
+      .cartItem__name {
+        font-weight: 300;
+        font-size: rem(16px);
+        margin-bottom: rem(17px);
+      }
+      .cartItem__price {
+        font-weight: 500;
+        font-size: rem(16px);
+        margin-bottom: rem(25px);
+      }
+      .cartItem__attribute {
+        &:not(:last-child) {
+          margin-bottom: rem(16px);
+        }
+      }
+    }
+    .cartItem__imageAndCounterContainer {
+      .cartItem__imageContainer {
+        width: rem(105px);
+        height: rem(137px);
+        margin-left: rem(10px);
+      }
+    }
+  }
+  &.-big {
+    .cartItem__infoContainer {
+      margin-right: rem(12px);
+      .cartItem__brand {
+        font-weight: 600;
+        font-size: rem(30px);
+        margin-bottom: rem(16px);
+      }
+      .cartItem__name {
+        font-weight: 400;
+        font-size: rem(30px);
+        margin-bottom: rem(17px);
+      }
+      .cartItem__price {
+        font-weight: 700;
+        font-size: rem(24px);
+      }
+      .cartItem__attribute {
+        &:not(:last-child) {
+          margin-bottom: rem(20px);
+        }
+      }
+    }
+    .cartItem__imageAndCounterContainer {
+      .cartItem__imageContainer {
+        width: rem(141px);
+        height: rem(185px);
+        margin-left: rem(12px);
+      }
+    }
+  }
+  .cartItem__infoContainer {
+    display: flex;
+    flex-direction: column;
+    .cartItem__brand {
+    }
+    .cartItem__name {
+    }
+    .cartItem__price {
+    }
+  }
+  .cartItem__imageAndCounterContainer {
+    display: flex;
+    align-items: center;
+    .cartItem__imageContainer {
+      .cartItem__image {
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+      }
+    }
+  }
+}
