@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import './Header.scss';
 import logo from '../../assets/images/logo.svg';
+import { ReactComponent as Menu } from '../../assets/images/menu.svg';
 import { CurrencySwitcher, MiniCart, Drawer } from '../index';
 import { categorySelected } from '../../features/categories/categoriesSlice';
 import { withBreakpoint, withRouter } from '../../hoc';
@@ -83,9 +84,20 @@ class HeaderComp extends Component {
           <div className="header__column header__categoriesContainer">
             {shouldRenderDrawer ? (
               <Drawer
-                renderBody={(closeDrawer) => (
+                renderToggler={(toggleDrawer) => (
+                  <button
+                    className="header__drawerToggler"
+                    onClick={toggleDrawer}
+                  >
+                    <Menu
+                      className="header__drawerTogglerImage"
+                      fill="#1d1f22"
+                    />
+                  </button>
+                )}
+                renderDrawerBody={(toggleDrawer) => (
                   <ul className="header__categories">
-                    {renderCategories(closeDrawer)}
+                    {renderCategories(() => toggleDrawer(false))}
                   </ul>
                 )}
               />

@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import './ModalContainer.scss';
+import { ReactComponent as Cross } from '../../assets/images/cross.svg';
 
 class ModalContainer extends Component {
   constructor(props) {
@@ -31,7 +32,10 @@ class ModalContainer extends Component {
               className="modalContainer__contentHeaderCloseButton"
               onClick={this.handleModalClose}
             >
-              Close
+              <Cross
+                fill="#ff0000"
+                className="modalContainer__contentHeaderCloseButtonImage"
+              />
             </button>
             <h1 className="modalContainer__contentHeaderTitle">
               {this.props.title}

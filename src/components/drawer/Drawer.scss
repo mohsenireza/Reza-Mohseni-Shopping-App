@@ -23,16 +23,21 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: rem(50px);
+      height: rem(60px);
       border-bottom: 1px solid $secondLight-color;
       .drawer__headerCloseButton {
         position: absolute;
         top: 0;
         left: 0;
         height: 100%;
-        padding: 0 rem(10px);
+        padding: 0 rem(15px);
         color: $red-color;
         cursor: pointer;
+        .drawer__headerCloseButtonImage {
+          height: rem(24px);
+          width: rem(24px);
+          transform: rotate(-90deg);
+        }
       }
       .drawer__headerLogo {
         display: flex;
@@ -42,7 +47,7 @@
       }
     }
     .drawer__body {
-      height: calc(100% - rem(50px));
+      height: calc(100% - rem(60px));
     }
   }
 }

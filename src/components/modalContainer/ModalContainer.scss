@@ -34,8 +34,12 @@
         top: 50%;
         transform: translateY(-50%);
         height: 100%;
-        padding: 0 10px;
+        padding: 0 rem(15px);
         color: $red-color;
+        .modalContainer__contentHeaderCloseButtonImage {
+          height: rem(16px);
+          width: rem(16px);
+        }
       }
       .modalContainer__contentHeaderTitle {
         font-weight: 600;

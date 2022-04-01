@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import './Counter.scss';
 import plus from '../../assets/images/plusSquare.svg';
 import minus from '../../assets/images/minusSquare.svg';
+import { ReactComponent as Trash } from '../../assets/images/trash.svg';
 
 class Counter extends Component {
   constructor(props) {
@@ -39,11 +40,15 @@ class Counter extends Component {
           onClick={this.handleCountIncrease}
           className={`counter__button ${canIncrease ? '' : '-disabled'}`}
         >
-          <img src={plus} />
+          <img src={plus} className="counter__buttonImage" />
         </button>
         <span className="counter__count">{count}</span>
         <button onClick={this.handleCountDecrease} className="counter__button">
-          <img src={minus} />
+          {count === 1 ? (
+            <Trash fill="#1d1f22" className="counter__buttonImage" />
+          ) : (
+            <img src={minus} className="counter__buttonImage" />
+          )}
         </button>
       </div>
     );

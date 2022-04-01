@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import './Drawer.scss';
 import logo from '../../assets/images/logo.svg';
+import { ReactComponent as Back } from '../../assets/images/back.svg';
 import { DetectClickOutside } from '../index';
 
 class Drawer extends Component {
@@ -29,7 +30,9 @@ class Drawer extends Component {
   render() {
     return (
       <>
-        <button onClick={() => this.handleDrawerToggle()}>Categories</button>
+        {/* Toggler */}
+        {this.props.renderToggler(this.handleDrawerToggle)}
+        {/* Drawer */}
         <section
           className={`drawer ${this.state.isDrawerOpen ? '-open' : '-closed'}`}
         >
@@ -38,12 +41,16 @@ class Drawer extends Component {
               onClickOutside={() => this.handleDrawerToggle(false)}
               className="drawer__content"
             >
+              {/* Drawer header */}
               <div className="drawer__header">
                 <button
                   onClick={() => this.handleDrawerToggle(false)}
                   className="drawer__headerCloseButton"
                 >
-                  Close
+                  <Back
+                    fill="#a6a6a6"
+                    className="drawer__headerCloseButtonImage"
+                  />
                 </button>
                 <Link
                   onClick={() => this.handleDrawerToggle(false)}
@@ -55,8 +62,9 @@ class Drawer extends Component {
                   </figure>
                 </Link>
               </div>
+              {/* Drawer body */}
               <div className="drawer__body">
-                {this.props.renderBody(() => this.handleDrawerToggle(false))}
+                {this.props.renderDrawerBody(this.handleDrawerToggle)}
               </div>
             </DetectClickOutside>
           )}
@@ -67,11 +75,13 @@ class Drawer extends Component {
 }
 
 Drawer.propTypes = {
-  renderBody: PropTypes.func,
+  renderToggler: PropTypes.func,
+  renderDrawerBody: PropTypes.func,
 };
 
 Drawer.defaultProps = {
-  renderBody: () => null,
+  renderToggler: () => null,
+  renderDrawerBody: () => null,
 };
 
 export { Drawer };
