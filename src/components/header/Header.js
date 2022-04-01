@@ -8,6 +8,7 @@ import { ReactComponent as Menu } from '../../assets/images/menu.svg';
 import { CurrencySwitcher, MiniCart, Drawer } from '../index';
 import { categorySelected } from '../../features/categories/categoriesSlice';
 import { withBreakpoint, withRouter } from '../../hoc';
+import { getParameterByName } from '../../utils';
 
 class HeaderComp extends Component {
   constructor(props) {
@@ -32,13 +33,9 @@ class HeaderComp extends Component {
   // Fill store with URL
   // Because we get store data from URL,
   // even after reloading, our app can hold its old state,
-  // like selected category and currency
+  // like selected category
   getDataFromUrl() {
-    const queryString = this.props.router.location.search;
-    // TODO: support URLSearchParams in IE
-    const selectedCategoryFromQueryString = new URLSearchParams(
-      queryString
-    ).get('category');
+    const selectedCategoryFromQueryString = getParameterByName('category');
     const categories = this.props.categories;
     // If the category from URL exists in the store, we can use it as the selected category
     if (categories.includes(selectedCategoryFromQueryString)) {
