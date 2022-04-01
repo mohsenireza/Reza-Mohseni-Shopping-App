@@ -37,12 +37,23 @@
     }
   }
   &.-big {
+    border-top: 1px solid $secondLight-color;
+    @include breakpoint(sm) {
+      flex-direction: column;
+      align-items: center;
+    }
     .cartItem__infoContainer {
       margin-right: rem(12px);
+      @include breakpoint(sm) {
+        align-items: center;
+        text-align: center;
+        margin-bottom: rem(40px);
+        margin-right: 0;
+      }
       .cartItem__brand {
         font-weight: 600;
         font-size: rem(30px);
-        margin-bottom: rem(16px);
+        margin-bottom: rem(10px);
       }
       .cartItem__name {
         font-weight: 400;
@@ -52,6 +63,7 @@
       .cartItem__price {
         font-weight: 700;
         font-size: rem(24px);
+        margin-bottom: rem(17px);
       }
       .cartItem__attribute {
         &:not(:last-child) {
@@ -60,10 +72,53 @@
       }
     }
     .cartItem__imageAndCounterContainer {
+      @include breakpoint(sm) {
+        height: rem(185px);
+      }
       .cartItem__imageContainer {
         width: rem(141px);
         height: rem(185px);
         margin-left: rem(12px);
+        position: relative;
+        &:hover {
+          .cartItem__arrowButton {
+            .cartItem__arrowContainer {
+              background-color: $firstDark-color;
+            }
+          }
+        }
+        .cartItem__arrowButton {
+          position: absolute;
+          top: 0;
+          height: 100%;
+          &.-prev {
+            left: 0;
+            .cartItem__arrowContainer {
+              .cartItem__arrow {
+                position: relative;
+                left: rem(-1px);
+              }
+            }
+          }
+          &.-next {
+            right: 0;
+            .cartItem__arrowContainer {
+              .cartItem__arrow {
+                position: relative;
+                right: rem(-1px);
+              }
+            }
+          }
+          .cartItem__arrowContainer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: rem(23px);
+            height: rem(23px);
+            border-radius: 100%;
+            transition: 0.2s;
+          }
+        }
       }
     }
   }

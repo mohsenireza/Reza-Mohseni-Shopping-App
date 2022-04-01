@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { Routes as AppRoutes, Route } from 'react-router-dom';
-import { Products, Product } from './screens';
+import { Products, Product, Cart } from './screens';
 
 const Routes = () => {
   return (
@@ -10,6 +10,7 @@ const Routes = () => {
         <Route path="/" element={<Products />} />
         <Route path="/products" element={<Products />} />
         <Route path="/product/:id" element={<Product />} />
+        <Route path="/cart" element={<Cart />} />
       </AppRoutes>
     </Suspense>
   );

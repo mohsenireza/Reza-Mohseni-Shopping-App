@@ -10,6 +10,8 @@ import {
   selectCartProductById,
 } from '../../features/cart/cartSlice';
 import { selectSelectedCurrency } from '../../features/currencies/currenciesSlice';
+import arrowLeft from '../../assets/images/arrowLeft.svg';
+import arrowRight from '../../assets/images/arrowRight.svg';
 
 class CartItemComp extends Component {
   constructor(props) {
@@ -23,6 +25,8 @@ class CartItemComp extends Component {
     // Bind methods
     this.handleCartProductRemove = this.handleCartProductRemove.bind(this);
     this.handleCountChange = this.handleCountChange.bind(this);
+    this.handleImageShowNext = this.handleImageShowNext.bind(this);
+    this.handleImageShowPrev = this.handleImageShowPrev.bind(this);
   }
 
   handleCartProductRemove() {
@@ -34,6 +38,42 @@ class CartItemComp extends Component {
       productId: this.props.id,
       count,
     });
+  }
+
+  // Change selected image
+  handleImageShowNext() {
+    const { id, selectCartProductById } = this.props;
+    const { gallery } = selectCartProductById(id);
+    const lastImageIndex = gallery.length - 1;
+    const { selectedImageIndex } = this.state;
+    // Show the first image
+    if (selectedImageIndex + 1 > lastImageIndex) {
+      this.setState({ selectedImageIndex: 0 });
+    }
+    // Show the next image
+    else {
+      this.setState((state) => ({
+        selectedImageIndex: state.selectedImageIndex + 1,
+      }));
+    }
+  }
+
+  // Change selected image
+  handleImageShowPrev() {
+    const { id, selectCartProductById } = this.props;
+    const { gallery } = selectCartProductById(id);
+    const lastImageIndex = gallery.length - 1;
+    const { selectedImageIndex } = this.state;
+    // Show the last image
+    if (selectedImageIndex - 1 < 0) {
+      this.setState({ selectedImageIndex: lastImageIndex });
+    }
+    // Show the prev image
+    else {
+      this.setState((state) => ({
+        selectedImageIndex: state.selectedImageIndex - 1,
+      }));
+    }
   }
 
   render() {
@@ -75,7 +115,7 @@ class CartItemComp extends Component {
               selectedTextAttributeItemTheme={size === 'big' ? 'dark' : 'light'}
               size={size}
               hasAttributeName={false}
-              hasTooltip={false}
+              hasTooltip={size === 'big'}
               {...attribute}
               selectedItemId={selectedAttributes[attribute.id]}
               isDisabled={true}
@@ -92,7 +132,31 @@ class CartItemComp extends Component {
             onRemove={this.handleCartProductRemove}
           />
           <figure className="cartItem__imageContainer">
-            <img className="cartItem__image" src={selectedImage} />
+            <img
+              className="cartItem__image"
+              src={selectedImage}
+              loading="lazy"
+            />
+            {size === 'big' && gallery.length > 1 && (
+              <>
+                <button
+                  onClick={this.handleImageShowPrev}
+                  className="cartItem__arrowButton -prev"
+                >
+                  <div className="cartItem__arrowContainer">
+                    <img src={arrowLeft} className="cartItem__arrow" />
+                  </div>
+                </button>
+                <button
+                  onClick={this.handleImageShowNext}
+                  className="cartItem__arrowButton -next"
+                >
+                  <div className="cartItem__arrowContainer">
+                    <img src={arrowRight} className="cartItem__arrow" />
+                  </div>
+                </button>
+              </>
+            )}
           </figure>
         </div>
       </article>

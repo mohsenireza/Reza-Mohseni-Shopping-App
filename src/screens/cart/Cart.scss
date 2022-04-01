@@ -1,0 +1,36 @@
+@import '../../styles/config.scss';
+
+.cart {
+  .cart__container {
+    .cart__emptyMessage {
+      margin: rem(200px) 0;
+      text-align: center;
+      font-family: roboto;
+      font-weight: 700;
+      font-size: rem(32px);
+    }
+    .cart__title {
+      font-weight: 700;
+      font-size: rem(32px);
+      margin: rem(80px) 0 rem(60px);
+    }
+    .cart__totalPriceContainer {
+      display: flex;
+      justify-content: space-between;
+      margin: rem(60px) 0;
+      .cart__totalPriceTitle {
+        font-family: roboto;
+        font-weight: 500;
+        font-size: rem(32px);
+      }
+      .cart__totalPrice {
+        font-weight: 700;
+        font-size: rem(32px);
+      }
+    }
+    .cart__checkoutButton {
+      display: block;
+      margin: 0 auto rem(50px);
+    }
+  }
+}

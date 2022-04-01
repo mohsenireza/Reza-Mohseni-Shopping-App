@@ -66,7 +66,9 @@ class MiniCartComp extends Component {
         >
           <div className="miniCart__iconContainer">
             <img loading="lazy" alt="Cart Icon" src={cartImage} />
-            {/* <span className="miniCart__badge">2</span> */}
+            {totalCartItemQuantity > 0 && (
+              <span className="miniCart__badge">{totalCartItemQuantity}</span>
+            )}
           </div>
         </button>
         {/* MiniCart content */}
