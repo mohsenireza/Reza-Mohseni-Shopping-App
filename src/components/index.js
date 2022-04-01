@@ -9,3 +9,4 @@ export * from './counter/Counter';
 export * from './productInfo/ProductInfo';
 export * from './miniCart/MiniCart';
 export * from './cartItem/CartItem';
+export * from './drawer/Drawer';

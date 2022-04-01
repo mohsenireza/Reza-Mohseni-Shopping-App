@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import './MiniCart.scss';
 import cartImage from '../../assets/images/cart.svg';
 import { CartItem, DetectClickOutside, Button } from '../index';
@@ -9,7 +10,7 @@ import {
   selectTotalCartItemQuantity,
   selectTotalPrice,
 } from '../../features/cart/cartSlice';
-import { withRouter } from '../../hoc';
+import { withBreakpoint, withRouter } from '../../hoc';
 
 class MiniCartComp extends Component {
   constructor(props) {
@@ -41,38 +42,52 @@ class MiniCartComp extends Component {
   }
 
   render() {
+    // Don't render miniCart overlay in screens smaller than 'sm'
+    const shouldRenderOverlay = !['xxxsm', 'xxsm', 'xsm', 'sm'].includes(
+      this.props.breakpoint
+    );
     const { cartProductIds, totalCartItemQuantity, totalPrice } = this.props;
+
+    const renderedHeaderContent = (
+      <div className="miniCart__iconContainer">
+        <img loading="lazy" alt="Cart Icon" src={cartImage} />
+        {totalCartItemQuantity > 0 && (
+          <span className="miniCart__badge">{totalCartItemQuantity}</span>
+        )}
+      </div>
+    );
 
     return (
       <div className="miniCart">
         {/* MiniCart header */}
-        <button
-          className="miniCart__header"
-          onMouseDown={() => {
-            // DetectClickOutside's onclick and miniCart__header's onClick have interference
-            // I used setTimeout(()=>{...}, 0), to run the operation on the next tick, and prevent the interference
+        {shouldRenderOverlay ? (
+          <button
+            className="miniCart__header"
+            onMouseDown={() => {
+              // DetectClickOutside's onclick and miniCart__header's onClick have interference
+              // I used setTimeout(()=>{...}, 0), to run the operation on the next tick, and prevent the interference
 
-            // When miniCart is open, miniCart__header's onClick should run first,
-            // then DetectClickOutside's onclick should run second to have the final effect
-            if (this.state.isOpen) {
-              this.handleToggle({ isOpen: true });
-            }
-            // When miniCard is closed, DetectClickOutside's onclick should run first,
-            // then miniCart__header's onClick should run second to have the final effect
-            else {
-              setTimeout(() => this.handleToggle({ isOpen: true }), 0);
-            }
-          }}
-        >
-          <div className="miniCart__iconContainer">
-            <img loading="lazy" alt="Cart Icon" src={cartImage} />
-            {totalCartItemQuantity > 0 && (
-              <span className="miniCart__badge">{totalCartItemQuantity}</span>
-            )}
-          </div>
-        </button>
+              // When miniCart is open, miniCart__header's onClick should run first,
+              // then DetectClickOutside's onclick should run second to have the final effect
+              if (this.state.isOpen) {
+                this.handleToggle({ isOpen: true });
+              }
+              // When miniCard is closed, DetectClickOutside's onclick should run first,
+              // then miniCart__header's onClick should run second to have the final effect
+              else {
+                setTimeout(() => this.handleToggle({ isOpen: true }), 0);
+              }
+            }}
+          >
+            {renderedHeaderContent}
+          </button>
+        ) : (
+          <Link to="/cart" className="miniCart__header">
+            {renderedHeaderContent}
+          </Link>
+        )}
         {/* MiniCart content */}
-        {this.state.isOpen && (
+        {shouldRenderOverlay && this.state.isOpen && (
           <section className="miniCart__overlay">
             <div className="miniCart__contentContainer container">
               <DetectClickOutside
@@ -127,6 +142,7 @@ MiniCartComp.propTypes = {
   totalCartItemQuantity: PropTypes.number.isRequired,
   totalPrice: PropTypes.string.isRequired,
   router: PropTypes.object.isRequired,
+  breakpoint: PropTypes.string,
 };
 
 const mapStateToProps = (state) => ({
@@ -135,6 +151,8 @@ const mapStateToProps = (state) => ({
   totalPrice: selectTotalPrice(state),
 });
 
-const MiniCart = withRouter(connect(mapStateToProps)(MiniCartComp));
+const MiniCart = withBreakpoint(
+  withRouter(connect(mapStateToProps)(MiniCartComp))
+);
 
 export { MiniCart };

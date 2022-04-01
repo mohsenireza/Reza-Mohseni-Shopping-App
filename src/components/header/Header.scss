@@ -11,22 +11,38 @@
       flex: 1;
       &.header__categoriesContainer {
         .header__categories {
+          @include breakpoint(sm) {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+          }
           .header__category {
             display: inline-block;
             height: 100%;
             .header__categoryLink {
+              @include breakpoint(sm) {
+                height: auto;
+                line-height: normal;
+                padding: rem(10px) rem(17px);
+              }
               display: flex;
               align-items: flex-end;
               height: 100%;
               padding: 0 rem(17px);
               line-height: rem(81px);
               font-size: rem(16px);
-              transition: 0.3s;
-              &:hover,
-              &:focus {
+              transition: 0.2s;
+              &:hover {
+                @include breakpoint(sm) {
+                  background-color: $secondLight-color;
+                  color: $firstDark-color;
+                }
                 color: $firstLight-color;
               }
               &.-selected {
+                @include breakpoint(sm) {
+                  border-bottom: 0 none;
+                }
                 font-weight: 600;
                 color: $green-color;
                 border-bottom: rem(2px) solid $green-color;

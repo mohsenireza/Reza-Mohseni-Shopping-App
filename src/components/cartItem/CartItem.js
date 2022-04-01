@@ -135,6 +135,7 @@ class CartItemComp extends Component {
             <img
               className="cartItem__image"
               src={selectedImage}
+              alt={`${brand} - ${name}`}
               loading="lazy"
             />
             {size === 'big' && gallery.length > 1 && (
@@ -144,7 +145,11 @@ class CartItemComp extends Component {
                   className="cartItem__arrowButton -prev"
                 >
                   <div className="cartItem__arrowContainer">
-                    <img src={arrowLeft} className="cartItem__arrow" />
+                    <img
+                      src={arrowLeft}
+                      alt="prev image"
+                      className="cartItem__arrow"
+                    />
                   </div>
                 </button>
                 <button
@@ -152,7 +157,11 @@ class CartItemComp extends Component {
                   className="cartItem__arrowButton -next"
                 >
                   <div className="cartItem__arrowContainer">
-                    <img src={arrowRight} className="cartItem__arrow" />
+                    <img
+                      src={arrowRight}
+                      alt="next image"
+                      className="cartItem__arrow"
+                    />
                   </div>
                 </button>
               </>
