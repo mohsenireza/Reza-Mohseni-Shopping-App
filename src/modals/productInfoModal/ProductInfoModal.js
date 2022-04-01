@@ -7,6 +7,7 @@ import {
   fetchProduct,
   productStateCleared,
 } from '../../features/product/productSlice';
+import { PageWrapper } from '../../components';
 
 class ProductInfoModalComp extends Component {
   constructor(props) {
@@ -37,12 +38,16 @@ class ProductInfoModalComp extends Component {
   }
 
   render() {
-    // TODO: handle loading
-    const status = this.props.fetchProductStatus;
-    if (status === 'idle' || status === 'loading')
-      return <h1>Loading product...</h1>;
+    const { fetchProductStatus } = this.props;
 
-    return <ProductInfo className="productInfoModal" isVerbose={false} />;
+    return (
+      <PageWrapper
+        loading={['idle', 'loading'].includes(fetchProductStatus)}
+        error={fetchProductStatus === 'failed'}
+      >
+        <ProductInfo className="productInfoModal" isVerbose={false} />
+      </PageWrapper>
+    );
   }
 }
 

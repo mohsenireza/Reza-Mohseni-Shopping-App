@@ -2,7 +2,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import './Product.scss';
-import { ProductInfo } from '../../components';
+import { PageWrapper, ProductInfo } from '../../components';
 import { withRouter } from '../../hoc';
 import {
   fetchProduct,
@@ -35,57 +35,54 @@ class ProductComp extends Component {
   }
 
   render() {
-    // TODO: handle loading
-    const status = this.props.fetchProductStatus;
-    if (status === 'idle' || status === 'loading')
-      return <h1>Loading product...</h1>;
-
-    const {
-      selectedImage,
-      product: { name, brand, gallery },
-    } = this.props;
+    const { fetchProductStatus, selectedImage, product } = this.props;
 
     return (
-      <div className="product">
-        <div className="container">
-          <main className="product__content">
-            <section className="product__gallery">
-              {gallery.length > 1 && (
-                <aside className="product__galleryImagesContainer">
-                  {gallery.map((src) => (
-                    <button
-                      key={src}
-                      className="product__galleryImageButton"
-                      onClick={() => this.handleImageClick(src)}
-                    >
-                      <figure className="product__galleryImageContainer">
-                        <img
-                          className="product__galleryImage"
-                          src={src}
-                          alt={`${brand} - ${name}`}
-                          loading="lazy"
-                        />
-                      </figure>
-                    </button>
-                  ))}
-                </aside>
-              )}
-              <figure className="product__gallerySelectedImageContainer">
-                <img
-                  data-testid="productGallerySelectedImage"
-                  className="product__gallerySelectedImage"
-                  src={selectedImage}
-                  alt={`${brand} - ${name}`}
-                  loading="lazy"
-                />
-              </figure>
-            </section>
-            <section className="product__infoContainer">
-              <ProductInfo className="product__productInfo" />
-            </section>
-          </main>
+      <PageWrapper
+        loading={['idle', 'loading'].includes(fetchProductStatus)}
+        error={fetchProductStatus === 'failed'}
+      >
+        <div className="product">
+          <div className="container">
+            <main className="product__content">
+              <section className="product__gallery">
+                {product?.gallery.length > 1 && (
+                  <aside className="product__galleryImagesContainer">
+                    {product?.gallery.map((src) => (
+                      <button
+                        key={src}
+                        className="product__galleryImageButton"
+                        onClick={() => this.handleImageClick(src)}
+                      >
+                        <figure className="product__galleryImageContainer">
+                          <img
+                            className="product__galleryImage"
+                            src={src}
+                            alt={`${product?.brand} - ${product?.name}`}
+                            loading="lazy"
+                          />
+                        </figure>
+                      </button>
+                    ))}
+                  </aside>
+                )}
+                <figure className="product__gallerySelectedImageContainer">
+                  <img
+                    data-testid="productGallerySelectedImage"
+                    className="product__gallerySelectedImage"
+                    src={selectedImage}
+                    alt={`${product?.brand} - ${product?.name}`}
+                    loading="lazy"
+                  />
+                </figure>
+              </section>
+              <section className="product__infoContainer">
+                <ProductInfo className="product__productInfo" />
+              </section>
+            </main>
+          </div>
         </div>
-      </div>
+      </PageWrapper>
     );
   }
 }

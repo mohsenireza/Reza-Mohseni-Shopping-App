@@ -83,7 +83,6 @@ class CurrencySwitcherComp extends Component {
               ? this.props.selectedCurrency.symbol
               : ''}
           </span>
-          {/* TODO: Use icomoon instead of img for icons */}
           <img
             loading="lazy"
             alt="Currency Arrow Icon"

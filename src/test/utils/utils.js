@@ -33,7 +33,8 @@ const customRender = async (ui, { route = '/', ...renderOptions } = {}) => {
 const waitForLoadingToFinish = async () => {
   await waitFor(
     () => {
-      expect(screen.queryAllByText(/loading/i)).toHaveLength(0);
+      // Make sure there is not any loading spinner on the screen
+      expect(screen.queryAllByAltText('loading-spinner')).toHaveLength(0);
     },
     { timeout: 4000 }
   );

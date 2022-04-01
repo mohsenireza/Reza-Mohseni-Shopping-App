@@ -10,3 +10,4 @@ export * from './productInfo/ProductInfo';
 export * from './miniCart/MiniCart';
 export * from './cartItem/CartItem';
 export * from './drawer/Drawer';
+export * from './pageWrapper/PageWrapper';
