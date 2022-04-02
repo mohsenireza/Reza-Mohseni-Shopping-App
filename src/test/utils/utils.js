@@ -15,7 +15,10 @@ const AllTheProviders = ({ children }) => {
   );
 };
 
-const customRender = async (ui, { route = '/', ...renderOptions } = {}) => {
+const customRender = async (
+  ui,
+  { route = '/', shouldWaitForLoadingToFinish = true, ...renderOptions } = {}
+) => {
   // Handle default route
   window.history.replaceState({}, '', route);
 
@@ -25,7 +28,7 @@ const customRender = async (ui, { route = '/', ...renderOptions } = {}) => {
   };
 
   // Wait for initial data to be fetched before allowing the test to continue
-  await waitForLoadingToFinish();
+  if (shouldWaitForLoadingToFinish) await waitForLoadingToFinish();
 
   return returnValue;
 };
@@ -34,7 +37,7 @@ const waitForLoadingToFinish = async () => {
   await waitFor(
     () => {
       // Make sure there is not any loading spinner on the screen
-      expect(screen.queryAllByAltText('loading-spinner')).toHaveLength(0);
+      expect(screen.queryAllByAltText(/Loading Spinner/)).toHaveLength(0);
     },
     { timeout: 4000 }
   );

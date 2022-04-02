@@ -177,6 +177,7 @@ class ProductInfoComp extends Component {
         )}
         {isVerbose && (
           <div
+            data-testid="productInfoDescription"
             className="productInfo__description"
             dangerouslySetInnerHTML={{ __html: description }}
           />

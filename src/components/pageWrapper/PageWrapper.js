@@ -15,7 +15,7 @@ class PageWrapper extends Component {
       return (
         <section className="pageWrapper__loadingContainer">
           <img
-            alt="loading-spinner"
+            alt="Loading Spinner"
             src={spinner}
             className="pageWrapper__loadingImage"
           />

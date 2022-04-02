@@ -44,6 +44,7 @@ class Drawer extends Component {
               {/* Drawer header */}
               <div className="drawer__header">
                 <button
+                  data-testid="drawerHeaderCloseButton"
                   onClick={() => this.handleDrawerToggle(false)}
                   className="drawer__headerCloseButton"
                 >

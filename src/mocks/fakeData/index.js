@@ -5,3 +5,4 @@ export * from './fakeCategories';
 export * from './fakeCurrencies';
 export * from './fakeAttributes';
 export * from './fakeProduct';
+export * from './fakeCartProducts';
