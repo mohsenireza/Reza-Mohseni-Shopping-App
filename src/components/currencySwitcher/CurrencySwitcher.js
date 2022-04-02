@@ -56,9 +56,18 @@ class CurrencySwitcherComp extends Component {
   }
 
   render() {
+    const { currencies, selectedCurrency } = this.props;
+
     // Render currencies based on the store
-    const renderedCurrencies = this.props.currencies.map((currency) => (
-      <li key={currency.label} className="currencySwitcher__currencyItem">
+    const renderedCurrencies = currencies.map((currency) => (
+      <li
+        key={currency.label}
+        className={`currencySwitcher__currencyItem ${
+          selectedCurrency && selectedCurrency.label === currency.label
+            ? '-selected'
+            : ''
+        }`}
+      >
         <button
           className="currencySwitcher__currency"
           onClick={() => this.handleCurrencyClick(currency)}
@@ -79,9 +88,7 @@ class CurrencySwitcherComp extends Component {
           className="currencySwitcher__header"
         >
           <span className="currencySwitcher__symbol">
-            {this.props.selectedCurrency
-              ? this.props.selectedCurrency.symbol
-              : ''}
+            {selectedCurrency ? selectedCurrency.symbol : ''}
           </span>
           <img
             loading="lazy"

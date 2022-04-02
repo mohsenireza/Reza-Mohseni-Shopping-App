@@ -47,11 +47,14 @@
           padding-bottom: rem(21px);
         }
       }
+      &:hover,
+      &:focus {
+        background-color: rgba(0, 0, 0, 0.03);
+      }
+      &.-selected {
+        background-color: rgba(0, 0, 0, 0.07);
+      }
       .currencySwitcher__currency {
-        &:hover,
-        &:focus {
-          background-color: rgba(0, 0, 0, 0.03);
-        }
         width: 100%;
         text-align: start;
         padding: rem(13px) 0 rem(13px) rem(20px);
