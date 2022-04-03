@@ -81,10 +81,10 @@ class HeaderComp extends Component {
           <div className="header__column header__categoriesContainer">
             {shouldRenderDrawer ? (
               <Drawer
-                renderToggler={(toggleDrawer) => (
+                renderToggler={(onDrawerOpen) => (
                   <button
                     className="header__drawerToggler"
-                    onClick={toggleDrawer}
+                    onClick={onDrawerOpen}
                   >
                     <Menu
                       className="header__drawerTogglerImage"
@@ -92,9 +92,9 @@ class HeaderComp extends Component {
                     />
                   </button>
                 )}
-                renderDrawerBody={(toggleDrawer) => (
+                renderDrawerBody={(onDrawerClose) => (
                   <ul className="header__categories">
-                    {renderCategories(() => toggleDrawer(false))}
+                    {renderCategories(onDrawerClose)}
                   </ul>
                 )}
               />

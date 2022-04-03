@@ -147,7 +147,7 @@ class CartItemComp extends Component {
                   <div className="cartItem__arrowContainer">
                     <img
                       src={arrowLeft}
-                      alt="prev image"
+                      alt="Prev Image"
                       className="cartItem__arrow"
                     />
                   </div>
@@ -159,7 +159,7 @@ class CartItemComp extends Component {
                   <div className="cartItem__arrowContainer">
                     <img
                       src={arrowRight}
-                      alt="next image"
+                      alt="Next Image"
                       className="cartItem__arrow"
                     />
                   </div>

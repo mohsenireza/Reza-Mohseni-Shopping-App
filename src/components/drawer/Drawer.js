@@ -13,39 +13,39 @@ class Drawer extends Component {
     this.state = { isDrawerOpen: false };
 
     // Bind methods
-    this.handleDrawerToggle = this.handleDrawerToggle.bind(this);
+    this.handleDrawerOpen = this.handleDrawerOpen.bind(this);
+    this.handleDrawerClose = this.handleDrawerClose.bind(this);
   }
 
-  handleDrawerToggle(isDrawerOpen = null) {
-    // Toggle automatically
-    if (isDrawerOpen === null) {
-      this.setState((state) => ({ isDrawerOpen: !state.isDrawerOpen }));
-    }
-    // Toggle based on the parameter
-    else {
-      this.setState({ isDrawerOpen });
-    }
+  handleDrawerOpen() {
+    this.setState({ isDrawerOpen: true });
+  }
+
+  handleDrawerClose() {
+    this.setState({ isDrawerOpen: false });
   }
 
   render() {
+    const { renderToggler, renderDrawerBody } = this.props;
+
     return (
       <>
         {/* Toggler */}
-        {this.props.renderToggler(this.handleDrawerToggle)}
+        {renderToggler && renderToggler(this.handleDrawerOpen)}
         {/* Drawer */}
         <section
           className={`drawer ${this.state.isDrawerOpen ? '-open' : '-closed'}`}
         >
           {this.state.isDrawerOpen && (
             <DetectClickOutside
-              onClickOutside={() => this.handleDrawerToggle(false)}
+              onClickOutside={this.handleDrawerClose}
               className="drawer__content"
             >
               {/* Drawer header */}
               <div className="drawer__header">
                 <button
                   data-testid="drawerHeaderCloseButton"
-                  onClick={() => this.handleDrawerToggle(false)}
+                  onClick={this.handleDrawerClose}
                   className="drawer__headerCloseButton"
                 >
                   <Back
@@ -54,18 +54,18 @@ class Drawer extends Component {
                   />
                 </button>
                 <Link
-                  onClick={() => this.handleDrawerToggle(false)}
+                  onClick={this.handleDrawerClose}
                   className="drawer__headerLogo"
                   to="/products"
                 >
                   <figure>
-                    <img src={logo} />
+                    <img src={logo} alt="Logo" loading="lazy" />
                   </figure>
                 </Link>
               </div>
               {/* Drawer body */}
               <div className="drawer__body">
-                {this.props.renderDrawerBody(this.handleDrawerToggle)}
+                {renderDrawerBody && renderDrawerBody(this.handleDrawerClose)}
               </div>
             </DetectClickOutside>
           )}
@@ -78,11 +78,6 @@ class Drawer extends Component {
 Drawer.propTypes = {
   renderToggler: PropTypes.func,
   renderDrawerBody: PropTypes.func,
-};
-
-Drawer.defaultProps = {
-  renderToggler: () => null,
-  renderDrawerBody: () => null,
 };
 
 export { Drawer };
