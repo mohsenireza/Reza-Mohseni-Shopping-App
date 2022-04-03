@@ -32,8 +32,11 @@ class ModalController {
   }
 
   deleteModalRoot() {
+    if (!this.modalRoot) return;
     this.modalRoot.remove();
     this.modalRoot = null;
+    // Enable scrolling of body
+    document.querySelector('body').style.overflow = 'auto';
   }
 
   isModalOpen(modalId) {

@@ -1,8 +1,15 @@
 import { render, screen, within, waitForLoadingToFinish } from '../utils';
+import { graphql } from 'msw';
 import { setupServer } from 'msw/node';
-import { handlers, fakeCurrencies, fakeTechProducts } from '../../mocks';
+import {
+  handlers,
+  fakeCurrencies,
+  fakeTechProducts,
+  fakeShoesProduct,
+} from '../../mocks';
 import { client } from '../../config';
 import App from '../../App';
+import { modalController, storage } from '../../utils';
 
 // Unmock 'react-redux' to ignore the manual mock
 jest.unmock('react-redux');
@@ -16,6 +23,10 @@ afterEach(async () => {
   server.resetHandlers();
   // Clear ApolloClient cache
   await client.clearStore();
+  // Clear localStorage
+  localStorage.clear();
+  // Clear modalRoot
+  modalController.deleteModalRoot();
 });
 
 afterAll(() => server.close());
@@ -45,6 +56,26 @@ test('should fetch currencies and show them in the UI', async () => {
   expect(firstCurrency).toBeInTheDocument();
   expect(secondCurrency).toBeInTheDocument();
   expect(thirdCurrency).toBeInTheDocument();
+});
+
+test('show error when products dont get loaded', async () => {
+  // Handle 'products' query to response with an error
+  server.use(
+    graphql.query('products', (req, res, ctx) => {
+      return res(ctx.errors);
+    })
+  );
+  await render(<App />);
+
+  // An error message should be in the UI
+  const errorElement = screen.getByRole('heading', {
+    name: /please try again later/i,
+  });
+  expect(errorElement).toBeInTheDocument();
+
+  // Product cards should not be in the UI
+  const productCards = screen.queryAllByRole('article');
+  expect(productCards).toHaveLength(0);
 });
 
 test('some products should be fetched and rendered when app loads', async () => {
@@ -91,4 +122,279 @@ test('should show price of product cards based on the selected currency', async 
     const pattern = new RegExp(currencyToSelect.symbol);
     within(productCard).getByText(pattern);
   });
+});
+
+test('open cart management modal', async () => {
+  // Prepare initial data and render the component
+  const { user } = await render(<App />);
+
+  // Click on cart management button of a <ProductCard /> to open the cart modal
+  const cartManagementButtonElement = screen.getAllByRole('button', {
+    name: /add product to cart/i,
+  })[0];
+  await user.click(cartManagementButtonElement);
+
+  // Now the modal should be opened
+  const modalContainerElement = screen.getByTestId('modalContainer');
+  expect(modalContainerElement).toBeInTheDocument();
+});
+
+test('close cart management modal by clicking on close button', async () => {
+  // Prepare initial data and render the component
+  const { user } = await render(<App />);
+
+  // Click on cart management button of a <ProductCard /> to open the cart modal
+  const cartManagementButtonElement = screen.getAllByRole('button', {
+    name: /add product to cart/i,
+  })[0];
+  await user.click(cartManagementButtonElement);
+
+  // Click on the close button to close the modal
+  const closeButtonElement = screen.getByTestId(
+    'modalContainerContentHeaderCloseButton'
+  );
+  await user.click(closeButtonElement);
+
+  // Now the modal should be closed
+  const modalContainerElement = screen.queryByTestId('modalContainer');
+  expect(modalContainerElement).not.toBeInTheDocument();
+});
+
+test('add product to cart', async () => {
+  // Prepare initial data and render the component
+  const { user } = await render(<App />);
+
+  // Click on cart management button of a <ProductCard /> to open the cart modal
+  const cartManagementButtonElement = screen.getAllByRole('button', {
+    name: /add product to cart/i,
+  })[0];
+  await user.click(cartManagementButtonElement);
+
+  // Wait until product data to be loaded
+  await waitForLoadingToFinish();
+
+  // Click on the ADD TO CART button
+  let addToCartButtonElement = screen.getByRole('button', {
+    name: /add to cart/i,
+  });
+  await user.click(addToCartButtonElement);
+
+  // ADD TO CART button should be removed
+  addToCartButtonElement = screen.queryByRole('button', {
+    name: /add to cart/i,
+  });
+  expect(addToCartButtonElement).not.toBeInTheDocument();
+
+  // REMOVE FROM CART button should be in the UI
+  const removeFromCartButtonElement = screen.queryByRole('button', {
+    name: /remove from cart/i,
+  });
+  expect(removeFromCartButtonElement).toBeInTheDocument();
+
+  // The product should be added to localStorage
+  const cartProductList = storage.load('cartProductList');
+  expect(cartProductList).toBeTruthy();
+  expect(cartProductList).toHaveLength(1);
+  expect(cartProductList[0].id).toBe(fakeShoesProduct.id);
+});
+
+test('remove product from cart by remove button', async () => {
+  // Prepare initial data and render the component
+  // Add a product to cart by adding it to localStorage
+  const initialCartProductList = [
+    {
+      id: fakeShoesProduct.id,
+      selectedAttributes: { Size: '40' },
+      count: 1,
+    },
+  ];
+  storage.save('cartProductList', initialCartProductList);
+  const { user } = await render(<App />);
+
+  // Click on cart management button of a <ProductCard /> to open the cart modal
+  const cartManagementButtonElement = screen.getAllByRole('button', {
+    name: /add product to cart/i,
+  })[0];
+  await user.click(cartManagementButtonElement);
+
+  // Wait until product data to be loaded
+  await waitForLoadingToFinish();
+
+  // Click on the REMOVE FROM CART button
+  let removeFromCartButtonElement = screen.getByRole('button', {
+    name: /remove from cart/i,
+  });
+  await user.click(removeFromCartButtonElement);
+
+  // REMOVE FROM CART button should be removed
+  removeFromCartButtonElement = screen.queryByRole('button', {
+    name: /remove from cart/i,
+  });
+  expect(removeFromCartButtonElement).not.toBeInTheDocument();
+
+  // ADD TO CART button should be in the UI
+  const addToCartButtonElement = screen.queryByRole('button', {
+    name: /add to cart/i,
+  });
+  expect(addToCartButtonElement).toBeInTheDocument();
+
+  // The product should be removed from localStorage
+  const cartProductList = storage.load('cartProductList');
+  expect(cartProductList).toEqual([]);
+});
+
+test('remove product from cart by <Counter />', async () => {
+  // Prepare initial data and render the component
+  // Add a product to cart by adding it to localStorage
+  const initialCartProductList = [
+    {
+      id: fakeShoesProduct.id,
+      selectedAttributes: { Size: '40' },
+      count: 1,
+    },
+  ];
+  storage.save('cartProductList', initialCartProductList);
+  const { user } = await render(<App />);
+
+  // Click on cart management button of a <ProductCard /> to open the cart modal
+  const cartManagementButtonElement = screen.getAllByRole('button', {
+    name: /add product to cart/i,
+  })[0];
+  await user.click(cartManagementButtonElement);
+
+  // Wait until product data to be loaded
+  await waitForLoadingToFinish();
+
+  // Click on the decrease count button
+  const decreaseButtonElement = screen.getByTestId('counterDecreaseButton');
+  await user.click(decreaseButtonElement);
+
+  // REMOVE FROM CART button should be removed
+  const removeFromCartButtonElement = screen.queryByRole('button', {
+    name: /remove from cart/i,
+  });
+  expect(removeFromCartButtonElement).not.toBeInTheDocument();
+
+  // ADD TO CART button should be in the UI
+  const addToCartButtonElement = screen.queryByRole('button', {
+    name: /add to cart/i,
+  });
+  expect(addToCartButtonElement).toBeInTheDocument();
+
+  // The product should be removed from localStorage
+  const cartProductList = storage.load('cartProductList');
+  expect(cartProductList).toEqual([]);
+});
+
+test('increase product count', async () => {
+  // Prepare initial data and render the component
+  // Add a product to cart by adding it to localStorage
+  const initialCartProductList = [
+    {
+      id: fakeShoesProduct.id,
+      selectedAttributes: { Size: '40' },
+      count: 1,
+    },
+  ];
+  storage.save('cartProductList', initialCartProductList);
+  const { user } = await render(<App />);
+
+  // Click on cart management button of a <ProductCard /> to open the cart modal
+  const cartManagementButtonElement = screen.getAllByRole('button', {
+    name: /add product to cart/i,
+  })[0];
+  await user.click(cartManagementButtonElement);
+
+  // Wait until product data to be loaded
+  await waitForLoadingToFinish();
+
+  // Click on the increase count button
+  const increaseButtonElement = screen.getByRole('button', {
+    name: 'Increase Count',
+  });
+  await user.click(increaseButtonElement);
+
+  // count number in <Counter /> should change
+  const countElement = screen.getByTestId('counterCount');
+  expect(countElement).toHaveTextContent(2);
+
+  // The product should be updated in localStorage
+  const cartProductList = storage.load('cartProductList');
+  expect(cartProductList[0].count).toBe(2);
+});
+
+test('decrease product count', async () => {
+  // Prepare initial data and render the component
+  // Add a product to cart by adding it to localStorage
+  const initialCartProductList = [
+    {
+      id: fakeShoesProduct.id,
+      selectedAttributes: { Size: '40' },
+      count: 2,
+    },
+  ];
+  storage.save('cartProductList', initialCartProductList);
+  const { user } = await render(<App />);
+
+  // Click on cart management button of a <ProductCard /> to open the cart modal
+  const cartManagementButtonElement = screen.getAllByRole('button', {
+    name: /add product to cart/i,
+  })[0];
+  await user.click(cartManagementButtonElement);
+
+  // Wait until product data to be loaded
+  await waitForLoadingToFinish();
+
+  // Click on the decrease count button
+  const decreaseButtonElement = screen.getByRole('button', {
+    name: 'Decrease Count',
+  });
+  await user.click(decreaseButtonElement);
+
+  // count number in <Counter /> should change
+  const countElement = screen.getByTestId('counterCount');
+  expect(countElement).toHaveTextContent(1);
+
+  // The product should be updated in localStorage
+  const cartProductList = storage.load('cartProductList');
+  expect(cartProductList[0].count).toBe(1);
+});
+
+test('edit attribute of a cartProduct', async () => {
+  // Prepare initial data and render the component
+  // Add a product to cart by adding it to localStorage
+  const initialCartProductList = [
+    {
+      id: fakeShoesProduct.id,
+      selectedAttributes: { Size: '40' },
+      count: 1,
+    },
+  ];
+  storage.save('cartProductList', initialCartProductList);
+  const { user } = await render(<App />);
+
+  // Click on cart management button of a <ProductCard /> to open the cart modal
+  const cartManagementButtonElement = screen.getAllByRole('button', {
+    name: /add product to cart/i,
+  })[0];
+  await user.click(cartManagementButtonElement);
+
+  // Wait until product data to be loaded
+  await waitForLoadingToFinish();
+
+  // Click on another attribute item to select
+  const attributeItemToSelect = fakeShoesProduct.attributes[0].items[1];
+  const attributeItemElement = screen.getByRole('button', {
+    name: attributeItemToSelect.value,
+  });
+  await user.click(attributeItemElement);
+
+  // UI of selected attribute should change
+  expect(attributeItemElement).toHaveClass('-dark');
+
+  // The product should be updated in localStorage
+  const cartProductList = storage.load('cartProductList');
+  expect(cartProductList[0].selectedAttributes.Size).toBe(
+    attributeItemToSelect.id
+  );
 });

@@ -341,4 +341,6 @@ const fakePs5Product = {
   __typename: 'Product',
 };
 
-export { fakeShoesProduct, fakeIphone12Product, fakePs5Product };
+const fakeProducts = [fakeShoesProduct, fakeIphone12Product, fakePs5Product];
+
+export { fakeShoesProduct, fakeIphone12Product, fakePs5Product, fakeProducts };

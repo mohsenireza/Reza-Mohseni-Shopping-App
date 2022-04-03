@@ -1,16 +1,13 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { configureStore } from '@reduxjs/toolkit';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { configureStoreOptions } from '../../config/store';
+import { store } from '../../config/store';
 
 const AllTheProviders = ({ children }) => {
   return (
     <BrowserRouter>
-      <Provider store={configureStore(configureStoreOptions)}>
-        {children}
-      </Provider>
+      <Provider store={store}>{children}</Provider>
     </BrowserRouter>
   );
 };

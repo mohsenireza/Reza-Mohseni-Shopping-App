@@ -5,7 +5,7 @@ import {
 } from '@reduxjs/toolkit';
 import { client } from '../../config';
 import { cartProductsQuery } from '../../graphql/queries';
-import { storage } from '../../utils';
+import { storage } from '../../utils/storage';
 import { selectSelectedCurrency } from '../currencies/currenciesSlice';
 
 const productsApadter = createEntityAdapter();

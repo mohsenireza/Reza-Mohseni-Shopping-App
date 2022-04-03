@@ -18,7 +18,10 @@ class ModalContainer extends Component {
 
   render() {
     return (
-      <section className={`modalContainer ${this.props.className}`}>
+      <section
+        data-testid="modalContainer"
+        className={`modalContainer ${this.props.className}`}
+      >
         {/* Overlay */}
         <div
           className="modalContainer__overlay"
@@ -29,6 +32,7 @@ class ModalContainer extends Component {
           {/* Modal Content Header */}
           <header className="modalContainer__contentHeader">
             <button
+              data-testid="modalContainerContentHeaderCloseButton"
               className="modalContainer__contentHeaderCloseButton"
               onClick={this.handleModalClose}
             >

@@ -1,11 +1,12 @@
 import { graphql } from 'msw';
+import { storage } from '../utils';
 import {
   fakeAllProducts,
   fakeClothesProducts,
   fakeTechProducts,
   fakeCategories,
   fakeCurrencies,
-  fakeIphone12Product,
+  fakeProducts,
 } from './fakeData';
 
 export const handlers = [
@@ -47,10 +48,27 @@ export const handlers = [
 
   // Handle a 'product' query
   graphql.query('product', (req, res, ctx) => {
+    const requestedProduct = fakeProducts.find(
+      (fakeProduct) => fakeProduct.id === req.variables.id
+    );
     return res(
       ctx.data({
-        product: fakeIphone12Product,
+        product: requestedProduct,
       })
     );
+  }),
+
+  // Handle a 'cart' query
+  graphql.query('cart', (req, res, ctx) => {
+    // Send products which their ids are inside localStorage
+    const data = {};
+    const cartProductList = storage.load('cartProductList');
+    cartProductList.forEach((cartProductItem, index) => {
+      const product = fakeProducts.find(
+        (fakeProduct) => fakeProduct.id === cartProductItem.id
+      );
+      data[`product${index}`] = product;
+    });
+    return res(ctx.data(data));
   }),
 ];

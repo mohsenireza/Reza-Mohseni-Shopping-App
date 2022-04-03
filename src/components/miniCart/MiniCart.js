@@ -58,10 +58,11 @@ class MiniCartComp extends Component {
     );
 
     return (
-      <div className="miniCart">
+      <div data-testid="miniCart" className="miniCart">
         {/* MiniCart header */}
         {shouldRenderOverlay ? (
           <button
+            data-testid="miniCartHeader"
             className="miniCart__header"
             onMouseDown={() => {
               // DetectClickOutside's onclick and miniCart__header's onClick have interference
