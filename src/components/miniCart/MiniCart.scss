@@ -7,10 +7,14 @@
     display: flex;
     align-items: center;
     height: 100%;
-    padding-left: rem(11px);
+    padding-left: rem(21px);
     .miniCart__iconContainer {
       position: relative;
       top: rem(6px);
+      .miniCart__icon {
+        width: rem(20px);
+        height: rem(19px);
+      }
       .miniCart__badge {
         display: flex;
         justify-content: center;

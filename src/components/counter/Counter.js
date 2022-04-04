@@ -44,6 +44,7 @@ class Counter extends Component {
             src={plus}
             className="counter__buttonImage"
             alt="Increase Count"
+            loading="lazy"
           />
         </button>
         <span data-testid="counterCount" className="counter__count">
@@ -61,6 +62,7 @@ class Counter extends Component {
               src={minus}
               className="counter__buttonImage"
               alt="Decrease Count"
+              loading="lazy"
             />
           )}
         </button>

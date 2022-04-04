@@ -64,7 +64,12 @@ class MiniCartComp extends Component {
 
     const renderedHeaderContent = (
       <div className="miniCart__iconContainer">
-        <img loading="lazy" alt="Cart Icon" src={cartImage} />
+        <img
+          loading="lazy"
+          alt="Cart Icon"
+          src={cartImage}
+          className="miniCart__icon"
+        />
         {totalCartItemQuantity > 0 && (
           <span className="miniCart__badge">{totalCartItemQuantity}</span>
         )}

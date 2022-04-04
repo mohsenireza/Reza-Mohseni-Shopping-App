@@ -44,7 +44,6 @@ class ProductCardComp extends Component {
           <Link to={`/product/${id}`} className="productCard__imageWrapper">
             <img
               className="productCard__image"
-              loading="lazy"
               alt={`${brand} - ${name}`}
               src={gallery.length && gallery[0]}
             />
@@ -57,7 +56,12 @@ class ProductCardComp extends Component {
               className="productCard__addToCart"
               onClick={this.handleCartProductAdd}
             >
-              <img alt="Add Product to Cart" src={cartWithBackground} />
+              <img
+                alt="Add Product to Cart"
+                src={cartWithBackground}
+                className="productCard__addToCartImage"
+                loading="lazy"
+              />
             </button>
           )}
         </div>

@@ -72,7 +72,6 @@ class ProductComp extends Component {
                     className="product__gallerySelectedImage"
                     src={selectedImage}
                     alt={`${product?.brand} - ${product?.name}`}
-                    loading="lazy"
                   />
                 </figure>
               </section>

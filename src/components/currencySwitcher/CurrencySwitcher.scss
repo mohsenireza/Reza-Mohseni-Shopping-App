@@ -13,7 +13,7 @@
     display: flex;
     align-items: center;
     height: 100%;
-    padding: 0 rem(10px);
+    padding: 0 0 0 rem(20px);
     cursor: pointer;
     .currencySwitcher__symbol {
       position: relative;
@@ -26,6 +26,8 @@
       position: relative;
       top: rem(6px);
       transition: 0.3s;
+      width: rem(8px);
+      height: rem(4px);
     }
   }
   .currencySwitcher__content {
