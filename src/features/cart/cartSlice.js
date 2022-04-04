@@ -135,9 +135,17 @@ export const {
 export const {
   selectById: selectCartProductById,
   selectIds: selectCartProductIds,
-  selectTotal: selectTotalCartItemQuantity,
   selectAll: selectAllCartProducts,
 } = productsApadter.getSelectors((state) => state.cart);
+
+export const selectTotalCartItemQuantity = (state) => {
+  let totalCartItemQuantity = 0;
+  const cartProducts = selectAllCartProducts(state);
+  cartProducts.forEach(
+    (cartProduct) => (totalCartItemQuantity += cartProduct.count)
+  );
+  return totalCartItemQuantity;
+};
 
 export const selectTotalPrice = (state) => {
   let totalPrice = 0;

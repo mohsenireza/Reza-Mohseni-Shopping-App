@@ -50,7 +50,7 @@ test('miniCart badge should show total cart item quantity', async () => {
   const withinMiniCart = within(screen.getByTestId('miniCart'));
 
   // Badge with a correct number should be in the UI
-  const badge = withinMiniCart.getByText('2');
+  const badge = withinMiniCart.getByText('3');
   expect(badge).toBeInTheDocument();
 });
 
