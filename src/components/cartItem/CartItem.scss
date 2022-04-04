@@ -74,13 +74,6 @@
           @include breakpoint(sm) {
             justify-content: center;
           }
-          .attribute__itemContainer {
-            &:last-child {
-              @include breakpoint(sm) {
-                margin-right: rem(12px);
-              }
-            }
-          }
         }
         &:not(:last-child) {
           margin-bottom: rem(20px);

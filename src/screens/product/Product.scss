@@ -7,6 +7,7 @@
       margin: rem(82px) 0 rem(72px);
       @include breakpoint(sm) {
         flex-direction: column;
+        margin: rem(45px) 0 rem(45px);
       }
       .product__gallery {
         width: 58.5%;
@@ -65,7 +66,7 @@
         }
         @include breakpoint(sm) {
           width: 100%;
-          margin-top: rem(100px);
+          margin-top: rem(70px);
         }
         .product__productInfo {
           @include breakpoint(sm) {
