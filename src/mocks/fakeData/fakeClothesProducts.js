@@ -10,6 +10,40 @@ export const fakeClothesProducts = [
       'https://cdn.shopify.com/s/files/1/0087/6193/3920/products/DD1381200_DEOA_5_720x.jpg?v=1612816087',
       'https://cdn.shopify.com/s/files/1/0087/6193/3920/products/DD1381200_DEOA_4_720x.jpg?v=1612816087',
     ],
+    attributes: [
+      {
+        id: 'Size',
+        name: 'Size',
+        type: 'text',
+        items: [
+          {
+            id: '40',
+            displayValue: '40',
+            value: '40',
+            __typename: 'Attribute',
+          },
+          {
+            id: '41',
+            displayValue: '41',
+            value: '41',
+            __typename: 'Attribute',
+          },
+          {
+            id: '42',
+            displayValue: '42',
+            value: '42',
+            __typename: 'Attribute',
+          },
+          {
+            id: '43',
+            displayValue: '43',
+            value: '43',
+            __typename: 'Attribute',
+          },
+        ],
+        __typename: 'AttributeSet',
+      },
+    ],
     prices: [
       {
         currency: {
@@ -57,6 +91,7 @@ export const fakeClothesProducts = [
         __typename: 'Price',
       },
     ],
+    brand: 'Nike x Stussy',
     __typename: 'Product',
   },
   {
@@ -71,6 +106,40 @@ export const fakeClothesProducts = [
       'https://images.canadagoose.com/image/upload/w_480,c_scale,f_auto,q_auto:best/v1576016110/product-image/2409L_61_d.jpg',
       'https://images.canadagoose.com/image/upload/w_1333,c_scale,f_auto,q_auto:best/v1634058169/product-image/2409L_61_o.png',
       'https://images.canadagoose.com/image/upload/w_1333,c_scale,f_auto,q_auto:best/v1634058159/product-image/2409L_61_p.png',
+    ],
+    attributes: [
+      {
+        id: 'Size',
+        name: 'Size',
+        type: 'text',
+        items: [
+          {
+            id: 'Small',
+            displayValue: 'Small',
+            value: 'S',
+            __typename: 'Attribute',
+          },
+          {
+            id: 'Medium',
+            displayValue: 'Medium',
+            value: 'M',
+            __typename: 'Attribute',
+          },
+          {
+            id: 'Large',
+            displayValue: 'Large',
+            value: 'L',
+            __typename: 'Attribute',
+          },
+          {
+            id: 'Extra Large',
+            displayValue: 'Extra Large',
+            value: 'XL',
+            __typename: 'Attribute',
+          },
+        ],
+        __typename: 'AttributeSet',
+      },
     ],
     prices: [
       {
@@ -119,6 +188,7 @@ export const fakeClothesProducts = [
         __typename: 'Price',
       },
     ],
+    brand: 'Canada Goose',
     __typename: 'Product',
   },
 ];

@@ -22,7 +22,14 @@ export const fetchProducts = createAsyncThunk(
         query: productsQuery(),
         variables: { category: selectedCategory },
       });
-      return response.data.category.products;
+      // Keep just one image of product to improve the performance
+      const products = response.data.category.products.map((product) => {
+        return {
+          ...product,
+          gallery: product.gallery.length ? [product.gallery[0]] : [],
+        };
+      });
+      return products;
     } catch (error) {
       console.log(`Error while fetching products: ${error}`);
       throw error;

@@ -100,8 +100,8 @@ test('should fetch products when category changes', async () => {
   await waitForLoadingToFinish();
 
   // New products based on the selected category should be rendered
-  screen.getByText(fakeTechProducts[0].name);
-  screen.getByText(fakeTechProducts[1].name);
+  screen.getByText(new RegExp(fakeTechProducts[0].name));
+  screen.getByText(new RegExp(fakeTechProducts[1].name));
 });
 
 test('should show price of product cards based on the selected currency', async () => {
@@ -170,9 +170,6 @@ test('add product to cart', async () => {
   })[0];
   await user.click(cartManagementButtonElement);
 
-  // Wait until product data to be loaded
-  await waitForLoadingToFinish();
-
   // Click on the ADD TO CART button
   let addToCartButtonElement = screen.getByRole('button', {
     name: /add to cart/i,
@@ -217,9 +214,6 @@ test('remove product from cart by remove button', async () => {
   })[0];
   await user.click(cartManagementButtonElement);
 
-  // Wait until product data to be loaded
-  await waitForLoadingToFinish();
-
   // Click on the REMOVE FROM CART button
   let removeFromCartButtonElement = screen.getByRole('button', {
     name: /remove from cart/i,
@@ -262,9 +256,6 @@ test('remove product from cart by <Counter />', async () => {
   })[0];
   await user.click(cartManagementButtonElement);
 
-  // Wait until product data to be loaded
-  await waitForLoadingToFinish();
-
   // Click on the decrease count button
   const decreaseButtonElement = screen.getByTestId('counterDecreaseButton');
   await user.click(decreaseButtonElement);
@@ -305,9 +296,6 @@ test('increase product count', async () => {
   })[0];
   await user.click(cartManagementButtonElement);
 
-  // Wait until product data to be loaded
-  await waitForLoadingToFinish();
-
   // Click on the increase count button
   const increaseButtonElement = screen.getByRole('button', {
     name: 'Increase Count',
@@ -342,9 +330,6 @@ test('decrease product count', async () => {
   })[0];
   await user.click(cartManagementButtonElement);
 
-  // Wait until product data to be loaded
-  await waitForLoadingToFinish();
-
   // Click on the decrease count button
   const decreaseButtonElement = screen.getByRole('button', {
     name: 'Decrease Count',
@@ -378,9 +363,6 @@ test('edit attribute of a cartProduct', async () => {
     name: /add product to cart/i,
   })[0];
   await user.click(cartManagementButtonElement);
-
-  // Wait until product data to be loaded
-  await waitForLoadingToFinish();
 
   // Click on another attribute item to select
   const attributeItemToSelect = fakeShoesProduct.attributes[0].items[1];

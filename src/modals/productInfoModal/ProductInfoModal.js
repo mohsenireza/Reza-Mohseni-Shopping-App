@@ -1,77 +1,42 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import './ProductInfoModal.scss';
 import { ProductInfo } from '../../components';
-import {
-  fetchProduct,
-  productStateCleared,
-} from '../../features/product/productSlice';
-import { PageWrapper } from '../../components';
 
-class ProductInfoModalComp extends Component {
+class ProductInfoModal extends Component {
   constructor(props) {
     super(props);
   }
 
-  // Fetch product data
+  // Add focus trapper
   componentDidMount() {
-    this.props.dispatchFetchProduct(this.props.productId);
+    const { modalId, trapFocus } = this.props;
+    const modalParent = document.getElementById(modalId);
+    this.removeFocusTrapper = trapFocus(modalParent);
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.fetchProductStatus !== this.props.fetchProductStatus) {
-      const { fetchProductStatus, modalId, trapFocus } = this.props;
-      if (fetchProductStatus === 'succeeded') {
-        // Add focus trapper
-        const modalParent = document.getElementById(modalId);
-        this.removeFocusTrapper = trapFocus(modalParent);
-      }
-    }
-  }
-
+  // Remove focus trapper
   componentWillUnmount() {
-    // Remove focus trapper if exists
-    if (this.removeFocusTrapper) this.removeFocusTrapper();
-    // Clear the product state
-    this.props.dispatchProductStateCleared();
+    this.removeFocusTrapper();
   }
 
   render() {
-    const { fetchProductStatus } = this.props;
+    const { product } = this.props;
 
     return (
-      <PageWrapper
-        loading={['idle', 'loading'].includes(fetchProductStatus)}
-        error={fetchProductStatus === 'failed'}
-      >
-        <ProductInfo className="productInfoModal" isVerbose={false} />
-      </PageWrapper>
+      <ProductInfo
+        product={product}
+        className="productInfoModal"
+        isVerbose={false}
+      />
     );
   }
 }
 
-ProductInfoModalComp.propTypes = {
-  productId: PropTypes.string,
-  fetchProductStatus: PropTypes.string.isRequired,
-  dispatchFetchProduct: PropTypes.func.isRequired,
-  dispatchProductStateCleared: PropTypes.func.isRequired,
+ProductInfoModal.propTypes = {
+  product: PropTypes.object.isRequired,
   trapFocus: PropTypes.func.isRequired,
   modalId: PropTypes.string.isRequired,
 };
-
-const mapStateToProps = (state) => ({
-  fetchProductStatus: state.product.status,
-});
-
-const mapDispatchToProps = {
-  dispatchFetchProduct: fetchProduct,
-  dispatchProductStateCleared: productStateCleared,
-};
-
-const ProductInfoModal = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ProductInfoModalComp);
 
 export { ProductInfoModal };

@@ -77,7 +77,10 @@ class ProductComp extends Component {
                 </figure>
               </section>
               <section className="product__infoContainer">
-                <ProductInfo className="product__productInfo" />
+                <ProductInfo
+                  product={product}
+                  className="product__productInfo"
+                />
               </section>
             </main>
           </div>

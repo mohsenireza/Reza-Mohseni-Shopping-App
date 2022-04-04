@@ -25,6 +25,16 @@ export const productsQuery = () => gql`
         name
         inStock
         gallery
+        attributes {
+          id
+          name
+          type
+          items {
+            id
+            displayValue
+            value
+          }
+        }
         prices {
           currency {
             label
@@ -32,6 +42,7 @@ export const productsQuery = () => gql`
           }
           amount
         }
+        brand
       }
     }
   }

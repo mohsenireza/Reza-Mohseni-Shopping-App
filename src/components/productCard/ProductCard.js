@@ -25,14 +25,14 @@ class ProductCardComp extends Component {
       modalId: 'productInfoModal',
       Component: ProductInfoModal,
       props: {
-        productId: this.product.id,
+        product: this.product,
       },
       modalContainerClassName: '-productInfo',
     });
   }
 
   render() {
-    const { id, name, gallery, inStock, prices } = this.product;
+    const { id, name, brand, gallery, inStock, prices } = this.product;
     // Get price based on the selected currency
     const price = prices.find(
       (price) => price.currency.label === this.props.selectedCurrency.label
@@ -45,7 +45,7 @@ class ProductCardComp extends Component {
             <img
               className="productCard__image"
               loading="lazy"
-              alt={name}
+              alt={`${brand} - ${name}`}
               src={gallery.length && gallery[0]}
             />
             {!inStock && (
@@ -62,7 +62,7 @@ class ProductCardComp extends Component {
           )}
         </div>
         <Link className="productCard__name" to={`/product/${id}`}>
-          {name}
+          {`${brand} ${name}`}
         </Link>
         <span className="productCard__price">
           {`${price.currency.symbol}${price.amount}`}

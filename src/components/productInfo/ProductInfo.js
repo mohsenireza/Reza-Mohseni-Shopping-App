@@ -189,7 +189,7 @@ class ProductInfoComp extends Component {
 
 ProductInfoComp.propTypes = {
   className: PropTypes.string,
-  product: PropTypes.object,
+  product: PropTypes.object.isRequired,
   isVerbose: PropTypes.bool,
   selectedCurrency: PropTypes.object,
   selectCartProductById: PropTypes.func.isRequired,
@@ -204,7 +204,6 @@ ProductInfoComp.defaultProps = {
 };
 
 const mapStateToProps = (state) => ({
-  product: state.product.product,
   selectedCurrency: selectSelectedCurrency(state),
   selectCartProductById: selectCartProductById.bind(this, state),
 });

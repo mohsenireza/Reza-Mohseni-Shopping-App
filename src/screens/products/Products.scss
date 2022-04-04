@@ -33,6 +33,7 @@
         }
         @include breakpoint(xxsm) {
           width: 100%;
+          margin-bottom: rem(60px);
         }
       }
     }
