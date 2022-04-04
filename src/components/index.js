@@ -11,3 +11,5 @@ export * from './miniCart/MiniCart';
 export * from './cartItem/CartItem';
 export * from './drawer/Drawer';
 export * from './pageWrapper/PageWrapper';
+export * from './errorBoundary/ErrorBoundary';
+export * from './statusView/StatusView';

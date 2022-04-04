@@ -1,22 +1,14 @@
 @import '../../styles/config.scss';
 
-.pageWrapper__loadingContainer {
+.statusView {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: rem(500px);
-  min-width: rem(320px);
-  .pageWrapper__loadingImage {
+  height: 70vh;
+  .statusView__loadingImage {
     animation: rotating 0.5s linear infinite;
   }
-}
-
-.pageWrapper__errorContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: rem(500px);
-  .pageWrapper__error {
+  .statusView__error {
     font-family: roboto;
     font-weight: 700;
     font-size: rem(32px);

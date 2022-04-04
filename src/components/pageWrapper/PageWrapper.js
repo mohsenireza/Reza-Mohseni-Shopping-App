@@ -1,7 +1,6 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import './PageWrapper.scss';
-import spinner from '../../assets/images/spinner.svg';
+import { StatusView } from '../index';
 
 class PageWrapper extends Component {
   constructor(props) {
@@ -12,23 +11,11 @@ class PageWrapper extends Component {
     const { loading, error, children } = this.props;
 
     if (loading) {
-      return (
-        <section className="pageWrapper__loadingContainer">
-          <img
-            alt="Loading Spinner"
-            src={spinner}
-            className="pageWrapper__loadingImage"
-          />
-        </section>
-      );
+      return <StatusView type="loading" />;
     }
 
     if (error) {
-      return (
-        <section className="pageWrapper__errorContainer">
-          <h1 className="pageWrapper__error">Please Try Again Later</h1>
-        </section>
-      );
+      return <StatusView type="error" />;
     }
 
     return children;
