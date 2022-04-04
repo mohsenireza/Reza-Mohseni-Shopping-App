@@ -76,7 +76,7 @@ class HeaderComp extends Component {
       });
 
     return (
-      <header className="header">
+      <header id="header" className="header">
         <div className="header__container container">
           <div className="header__column header__categoriesContainer">
             {shouldRenderDrawer ? (

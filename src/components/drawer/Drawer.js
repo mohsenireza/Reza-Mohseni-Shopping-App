@@ -31,7 +31,8 @@ class Drawer extends Component {
     return (
       <>
         {/* Toggler */}
-        {renderToggler && renderToggler(this.handleDrawerOpen)}
+        {renderToggler &&
+          renderToggler(() => setTimeout(this.handleDrawerOpen, 0))}
         {/* Drawer */}
         <section
           className={`drawer ${this.state.isDrawerOpen ? '-open' : '-closed'}`}
@@ -42,7 +43,7 @@ class Drawer extends Component {
               className="drawer__content"
             >
               {/* Drawer header */}
-              <div className="drawer__header">
+              <div data-testid="drawerHeader" className="drawer__header">
                 <button
                   data-testid="drawerHeaderCloseButton"
                   onClick={this.handleDrawerClose}

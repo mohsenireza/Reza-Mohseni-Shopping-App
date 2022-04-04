@@ -4,6 +4,9 @@
   display: flex;
   align-items: center;
   .miniCart__header {
+    display: flex;
+    align-items: center;
+    height: 100%;
     padding-left: rem(11px);
     .miniCart__iconContainer {
       position: relative;
@@ -29,7 +32,7 @@
   .miniCart__overlay {
     position: fixed;
     left: 0;
-    top: rem(78px);
+    top: 0;
     right: 0;
     bottom: 0;
     background-color: rgba(57, 55, 72, 0.22);

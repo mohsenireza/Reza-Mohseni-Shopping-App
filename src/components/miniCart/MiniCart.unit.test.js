@@ -1,4 +1,4 @@
-import { render, screen } from '../../test/utils';
+import { render, screen, waitFor } from '../../test/utils';
 import { fakeCartProducts } from '../../mocks';
 import { MiniCart } from './MiniCart';
 
@@ -57,8 +57,13 @@ test('open miniCart and show the data', async () => {
   );
 
   // Click on the cart icon to open the miniCart
-  const cartIconButton = screen.getByRole('button');
-  await user.pointer({ target: cartIconButton, keys: '[MouseLeft]' });
+  const cartIconButton = screen.getByTestId('miniCartHeader');
+  await user.click(cartIconButton);
+
+  // Wait for miniCart's overlay to open
+  await waitFor(() =>
+    expect(screen.getByTestId('miniCartOverlay')).toBeInTheDocument()
+  );
 
   // totalCartItemQuantity should be in the UI
   const totalCountElement = screen.getByRole('heading', {
@@ -98,8 +103,13 @@ test('Clicking on "VIEW BAG" button navigates to /cart page', async () => {
   );
 
   // Click on the cart icon to open the miniCart
-  const cartIconButton = screen.getByRole('button');
-  await user.pointer({ target: cartIconButton, keys: '[MouseLeft]' });
+  const cartIconButton = screen.getByTestId('miniCartHeader');
+  await user.click(cartIconButton);
+
+  // Wait for miniCart's overlay to open
+  await waitFor(() =>
+    expect(screen.getByTestId('miniCartOverlay')).toBeInTheDocument()
+  );
 
   // Click on the 'VIEW BAG' button
   const viewBagButtonElement = screen.getByRole('button', {
@@ -129,8 +139,13 @@ test('should close miniCart', async () => {
   );
 
   // Click on the cart icon to open the miniCart
-  const cartIconButton = screen.getByRole('button');
-  await user.pointer({ target: cartIconButton, keys: '[MouseLeft]' });
+  const cartIconButton = screen.getByTestId('miniCartHeader');
+  await user.click(cartIconButton);
+
+  // Wait for miniCart's overlay to open
+  await waitFor(() =>
+    expect(screen.getByTestId('miniCartOverlay')).toBeInTheDocument()
+  );
 
   // totalCartItemQuantity should be in the UI
   let totalCountElement = screen.getByRole('heading', {
@@ -139,7 +154,7 @@ test('should close miniCart', async () => {
   expect(totalCountElement).toBeInTheDocument();
 
   // Click on the cart icon again to close the miniCart
-  await user.pointer({ target: cartIconButton, keys: '[MouseLeft]' });
+  await user.click(cartIconButton);
 
   // totalCartItemQuantity should not be in the UI
   totalCountElement = screen.queryByRole('heading', {
