@@ -71,11 +71,6 @@ test('load cartProducts', async () => {
   const cartIconButton = screen.getByTestId('miniCartHeader');
   await user.click(cartIconButton);
 
-  // Wait for miniCart's overlay to open
-  await waitFor(() =>
-    expect(screen.getByTestId('miniCartOverlay')).toBeInTheDocument()
-  );
-
   // Get miniCart to query elements inside it
   const withinMiniCart = within(screen.getByTestId('miniCart'));
 
@@ -152,11 +147,6 @@ test('remove product from cart by <Counter />', async () => {
   const cartIconButton = screen.getByTestId('miniCartHeader');
   await user.click(cartIconButton);
 
-  // Wait for miniCart's overlay to open
-  await waitFor(() =>
-    expect(screen.getByTestId('miniCartOverlay')).toBeInTheDocument()
-  );
-
   // Get miniCart to query elements inside it
   const withinMiniCart = within(screen.getByTestId('miniCart'));
 
@@ -192,11 +182,6 @@ test('increase product count', async () => {
   const cartIconButton = screen.getByTestId('miniCartHeader');
   await user.click(cartIconButton);
 
-  // Wait for miniCart's overlay to open
-  await waitFor(() =>
-    expect(screen.getByTestId('miniCartOverlay')).toBeInTheDocument()
-  );
-
   // Get miniCart to query elements inside it
   const withinMiniCart = within(screen.getByTestId('miniCart'));
 
@@ -231,11 +216,6 @@ test('decrease product count', async () => {
   // Click on the cart icon to open the miniCart
   const cartIconButton = screen.getByTestId('miniCartHeader');
   await user.click(cartIconButton);
-
-  // Wait for miniCart's overlay to open
-  await waitFor(() =>
-    expect(screen.getByTestId('miniCartOverlay')).toBeInTheDocument()
-  );
 
   // Get miniCart to query elements inside it
   const withinMiniCart = within(screen.getByTestId('miniCart'));
@@ -277,11 +257,6 @@ test('show total price', async () => {
   const cartIconButton = screen.getByTestId('miniCartHeader');
   await user.click(cartIconButton);
 
-  // Wait for miniCart's overlay to open
-  await waitFor(() =>
-    expect(screen.getByTestId('miniCartOverlay')).toBeInTheDocument()
-  );
-
   // Get miniCart to query elements inside it
   const withinMiniCart = within(screen.getByTestId('miniCart'));
 
@@ -317,11 +292,6 @@ test('VIEW BAG button navigates to /cart page', async () => {
   // Click on the cart icon to open the miniCart
   const cartIconButton = screen.getByTestId('miniCartHeader');
   await user.click(cartIconButton);
-
-  // Wait for miniCart's overlay to open
-  await waitFor(() =>
-    expect(screen.getByTestId('miniCartOverlay')).toBeInTheDocument()
-  );
 
   // Get miniCart to query elements inside it
   const withinMiniCart = within(screen.getByTestId('miniCart'));

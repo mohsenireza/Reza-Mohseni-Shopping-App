@@ -31,8 +31,7 @@ class Drawer extends Component {
     return (
       <>
         {/* Toggler */}
-        {renderToggler &&
-          renderToggler(() => setTimeout(this.handleDrawerOpen, 0))}
+        {renderToggler && renderToggler(this.handleDrawerOpen)}
         {/* Drawer */}
         <section
           className={`drawer ${this.state.isDrawerOpen ? '-open' : '-closed'}`}

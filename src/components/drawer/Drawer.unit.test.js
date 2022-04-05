@@ -15,11 +15,6 @@ test('toggler will open the drawer', async () => {
   const togglerElement = screen.getByRole('button', { name: 'open' });
   await user.click(togglerElement);
 
-  // Wait for drawer to open
-  await waitFor(() =>
-    expect(screen.getByTestId('drawerHeader')).toBeInTheDocument()
-  );
-
   // Drawer should be open and its body should be shown
   const drawerBody = screen.getByRole('heading', {
     name: 'drawer body',
@@ -40,11 +35,6 @@ test('clicking on the close button will close the drawer', async () => {
   // Click on the toggler to open the drawer
   const togglerElement = screen.getByRole('button', { name: 'open' });
   await user.click(togglerElement);
-
-  // Wait for drawer to open
-  await waitFor(() =>
-    expect(screen.getByTestId('drawerHeader')).toBeInTheDocument()
-  );
 
   // Drawer should be open and its body should be shown
   let drawerBody = screen.getByRole('heading', { name: 'drawer body' });
@@ -72,11 +62,6 @@ test('clicking on the logo will close the drawer', async () => {
   // Click on the toggler to open the drawer
   const togglerElement = screen.getByRole('button', { name: 'open' });
   await user.click(togglerElement);
-
-  // Wait for drawer to open
-  await waitFor(() =>
-    expect(screen.getByTestId('drawerHeader')).toBeInTheDocument()
-  );
 
   // Drawer should be open and its body should be shown
   let drawerBody = screen.getByRole('heading', { name: 'drawer body' });
@@ -113,11 +98,6 @@ test('clicking outside of the drawer will close it', async () => {
   // Click on the toggler to open the drawer
   const togglerElement = screen.getByRole('button', { name: 'open' });
   await user.click(togglerElement);
-
-  // Wait for drawer to open
-  await waitFor(() =>
-    expect(screen.getByTestId('drawerHeader')).toBeInTheDocument()
-  );
 
   // Drawer should be open and its body should be shown
   let drawerBody = screen.getByRole('heading', { name: 'drawer body' });

@@ -21,7 +21,9 @@ class Counter extends Component {
   }
 
   // Decrease count or remove product if count already meets the min value
-  handleCountDecrease() {
+  handleCountDecrease(e) {
+    // Prevent event bubbling
+    e.stopPropagation();
     const { count, min, onCountChange, onRemove } = this.props;
     if (count > min) onCountChange(count - 1);
     else if (count === min) onRemove();

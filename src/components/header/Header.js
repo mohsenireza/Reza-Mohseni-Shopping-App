@@ -84,7 +84,11 @@ class HeaderComp extends Component {
                 renderToggler={(onDrawerOpen) => (
                   <button
                     className="header__drawerToggler"
-                    onClick={onDrawerOpen}
+                    onClick={(e) => {
+                      // Prevent <DetectClickOutside /> to get the click event and close the drawer after opening it
+                      e.stopPropagation();
+                      onDrawerOpen();
+                    }}
                   >
                     <Menu
                       className="header__drawerTogglerImage"

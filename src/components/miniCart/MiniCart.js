@@ -1,4 +1,4 @@
-import { Component, createRef } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -17,10 +17,8 @@ class MiniCartComp extends Component {
     super(props);
 
     // isOpen state defines whether the miniCart is open or closed
-    this.state = { isOpen: false };
-
-    // Refs
-    this.overlayRef = createRef();
+    // overlayTop defines the minicard's overlay top
+    this.state = { isOpen: false, overlayTop: 0 };
 
     // Bind methods
     this.handleToggle = this.handleToggle.bind(this);
@@ -29,22 +27,22 @@ class MiniCartComp extends Component {
 
   // Show and hide miniCart overlay
   handleToggle(shouldOpen) {
-    // Update state
-    this.setState({ isOpen: shouldOpen });
     if (shouldOpen) {
       // Disable body's scroll when the overlay is open
       document.body.style.overflow = 'hidden';
       // Calculate the overlay's top
       const headerElement = document.getElementById('header');
-      if (!headerElement) return;
       const { bottom: headerBottomToViewportDistance } =
         headerElement.getBoundingClientRect();
       const overlayTop =
         headerBottomToViewportDistance < 0 ? 0 : headerBottomToViewportDistance;
-      this.overlayRef.current.style.top = `${overlayTop}px`;
+      // Update state
+      this.setState({ isOpen: true, overlayTop });
     } else {
       // Enable body's scroll when the overlay is closed
       document.body.style.overflow = 'auto';
+      // Update state
+      this.setState({ isOpen: false, overlayTop: 0 });
     }
   }
 
@@ -83,20 +81,10 @@ class MiniCartComp extends Component {
           <button
             data-testid="miniCartHeader"
             className="miniCart__header"
-            onClick={() => {
-              // DetectClickOutside's onclick and miniCart__header's onClick have interference
-              // I used setTimeout(()=>{...}, 0), to run the operation on the next tick, and prevent the interference
-
-              // When miniCart is open, miniCart__header's onClick should run first,
-              // then DetectClickOutside's onclick should run second to have the final effect
-              if (this.state.isOpen) {
-                this.handleToggle(true);
-              }
-              // When miniCard is closed, DetectClickOutside's onclick should run first,
-              // then miniCart__header's onClick should run second to have the final effect
-              else {
-                setTimeout(() => this.handleToggle(true), 0);
-              }
+            onClick={(e) => {
+              // Prevent <DetectClickOutside /> to get the click event and close the overlay after opening it
+              e.stopPropagation();
+              this.handleToggle(!this.state.isOpen);
             }}
           >
             {renderedHeaderContent}
@@ -110,8 +98,8 @@ class MiniCartComp extends Component {
         {shouldRenderOverlay && this.state.isOpen && (
           <section
             data-testid="miniCartOverlay"
-            ref={this.overlayRef}
             className="miniCart__overlay"
+            style={{ top: this.state.overlayTop }}
           >
             <div className="miniCart__contentContainer container">
               <DetectClickOutside

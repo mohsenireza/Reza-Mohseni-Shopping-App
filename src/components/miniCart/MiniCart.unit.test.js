@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '../../test/utils';
+import { render, screen, waitFor, prettyDOM } from '../../test/utils';
 import { fakeCartProducts } from '../../mocks';
 import { MiniCart } from './MiniCart';
 
@@ -44,6 +44,13 @@ test('a badge should show the total cart item quantity', async () => {
 });
 
 test('open miniCart and show the data', async () => {
+  // Mock document.getElementById
+  const documentGetElementById = jest
+    .spyOn(document, 'getElementById')
+    .mockImplementation(() => {
+      return document.createElement('div');
+    });
+
   // Prepare initial data and render the component
   const cartProductIds = [fakeCartProducts[0].id, fakeCartProducts[1].id];
   const totalCartItemQuantity = 3;
@@ -59,11 +66,6 @@ test('open miniCart and show the data', async () => {
   // Click on the cart icon to open the miniCart
   const cartIconButton = screen.getByTestId('miniCartHeader');
   await user.click(cartIconButton);
-
-  // Wait for miniCart's overlay to open
-  await waitFor(() =>
-    expect(screen.getByTestId('miniCartOverlay')).toBeInTheDocument()
-  );
 
   // totalCartItemQuantity should be in the UI
   const totalCountElement = screen.getByRole('heading', {
@@ -83,9 +85,19 @@ test('open miniCart and show the data', async () => {
   // totalPrice should be in the UI
   const totalPriceElement = screen.getByText(totalPrice);
   expect(totalPriceElement).toBeInTheDocument();
+
+  // Restore document.getElementById mock
+  document.getElementById.mockRestore();
 });
 
 test('Clicking on "VIEW BAG" button navigates to /cart page', async () => {
+  // Mock document.getElementById
+  const documentGetElementById = jest
+    .spyOn(document, 'getElementById')
+    .mockImplementation(() => {
+      return document.createElement('div');
+    });
+
   // Prepare initial data and render the component
   const cartProductIds = [fakeCartProducts[0].id, fakeCartProducts[1].id];
   const totalCartItemQuantity = 3;
@@ -105,11 +117,6 @@ test('Clicking on "VIEW BAG" button navigates to /cart page', async () => {
   // Click on the cart icon to open the miniCart
   const cartIconButton = screen.getByTestId('miniCartHeader');
   await user.click(cartIconButton);
-
-  // Wait for miniCart's overlay to open
-  await waitFor(() =>
-    expect(screen.getByTestId('miniCartOverlay')).toBeInTheDocument()
-  );
 
   // Click on the 'VIEW BAG' button
   const viewBagButtonElement = screen.getByRole('button', {
@@ -119,9 +126,19 @@ test('Clicking on "VIEW BAG" button navigates to /cart page', async () => {
 
   // Now we should be in /cart page
   expect(mockNavigate).toBeCalledWith('/cart');
+
+  // Restore document.getElementById mock
+  document.getElementById.mockRestore();
 });
 
 test('should close miniCart', async () => {
+  // Mock document.getElementById
+  const documentGetElementById = jest
+    .spyOn(document, 'getElementById')
+    .mockImplementation(() => {
+      return document.createElement('div');
+    });
+
   // Prepare initial data and render the component
   const cartProductIds = [fakeCartProducts[0].id, fakeCartProducts[1].id];
   const totalCartItemQuantity = 3;
@@ -141,11 +158,6 @@ test('should close miniCart', async () => {
   // Click on the cart icon to open the miniCart
   const cartIconButton = screen.getByTestId('miniCartHeader');
   await user.click(cartIconButton);
-
-  // Wait for miniCart's overlay to open
-  await waitFor(() =>
-    expect(screen.getByTestId('miniCartOverlay')).toBeInTheDocument()
-  );
 
   // totalCartItemQuantity should be in the UI
   let totalCountElement = screen.getByRole('heading', {
@@ -161,4 +173,7 @@ test('should close miniCart', async () => {
     name: /3 items/,
   });
   expect(totalCountElement).not.toBeInTheDocument();
+
+  // Restore document.getElementById mock
+  document.getElementById.mockRestore();
 });
