@@ -37,6 +37,10 @@ class ProductInfoComp extends Component {
     this.initializeAttributes();
   }
 
+  componentDidUpdate() {
+    this.props.onComponentDidUpdate();
+  }
+
   // Initialize state.selectedAttributes
   initializeAttributes() {
     // If a product is out of stock, then attributes should not be selected
@@ -191,6 +195,7 @@ ProductInfoComp.propTypes = {
   className: PropTypes.string,
   product: PropTypes.object.isRequired,
   isVerbose: PropTypes.bool,
+  onComponentDidUpdate: PropTypes.func,
   selectedCurrency: PropTypes.object,
   selectCartProductById: PropTypes.func.isRequired,
   dispatchProductAddedToCart: PropTypes.func.isRequired,
@@ -201,6 +206,7 @@ ProductInfoComp.propTypes = {
 ProductInfoComp.defaultProps = {
   className: '',
   isVerbose: true,
+  onComponentDidUpdate: () => {},
 };
 
 const mapStateToProps = (state) => ({

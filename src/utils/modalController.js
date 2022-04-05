@@ -15,7 +15,6 @@ class ModalController {
     this.isModalOpen = this.isModalOpen.bind(this);
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
-    this.trapFocus = this.trapFocus.bind(this);
   }
 
   doesModalRootExist() {
@@ -72,7 +71,7 @@ class ModalController {
           onModalClose={() => this.closeModal(modalId)}
           title={title}
         >
-          <Component {...props} trapFocus={this.trapFocus} modalId={modalId} />
+          <Component {...props} modalId={modalId} />
         </this.ModalContainerComponent>
       </Provider>,
       modalParent
@@ -96,50 +95,6 @@ class ModalController {
 
     // Enable scrolling of body
     document.querySelector('body').style.overflow = 'auto';
-  }
-
-  // Trap focus inside the modal and also take back focus to the last focused element in page after closing the modal
-  trapFocus(element, prevFocusableElement = document.activeElement) {
-    const focusableElements = Array.from(
-      element.querySelectorAll(
-        'a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input[type="text"]:not([disabled]), input[type="radio"]:not([disabled]), input[type="checkbox"]:not([disabled]), select:not([disabled])'
-      )
-    );
-    const firstFocusableEl = focusableElements[0];
-    const lastFocusableEl = focusableElements[focusableElements.length - 1];
-    let currentFocus = null;
-
-    firstFocusableEl.focus();
-    currentFocus = firstFocusableEl;
-
-    const handleFocus = (e) => {
-      e.preventDefault();
-      // If the focused element "lives" in your modal container then just focus it
-      if (focusableElements.includes(e.target)) {
-        currentFocus = e.target;
-      } else {
-        // You're out of the container
-        // If the previously focused element was the first element then focus the last
-        // element - means you were using the shift key
-        if (currentFocus === firstFocusableEl) {
-          lastFocusableEl.focus();
-        } else {
-          // You previously focused on the last element so just focus the first one
-          firstFocusableEl.focus();
-        }
-        // update the current focus var
-        currentFocus = document.activeElement;
-      }
-    };
-
-    document.addEventListener('focus', handleFocus, true);
-
-    const removeTrapFocus = () => {
-      document.removeEventListener('focus', handleFocus, true);
-      prevFocusableElement.focus();
-    };
-
-    return removeTrapFocus;
   }
 }
 

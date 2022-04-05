@@ -56,8 +56,8 @@ class HeaderComp extends Component {
 
     const renderCategories = (onLinkClick = () => {}) =>
       this.props.categories.map((category) => {
-        // If the selected category from store is equal to thi category Item
-        // the it means this category is the selected one
+        // If the selected category from store is equal to this category Item
+        // then it means this category is the selected one
         // so we add '-selected' className to make it highlighted
         const isCategorySelected = this.props.selectedCategory === category;
         return (
