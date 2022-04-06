@@ -7,41 +7,63 @@ class Attribute extends Component {
   constructor(props) {
     super(props);
 
-    // Initialize state
-    this.state = { selectedItemId: null };
-
     // Bind methods
-    this.handleOnSelect = this.handleOnSelect.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
   }
 
-  handleOnSelect(id) {
-    !this.props.isDisabled && this.setState({ selectedItemId: id });
+  handleSelect(itemId) {
+    if (this.props.isDisabled) return;
+    // Save selected attribute item id in <Product />'s state
+    this.props.onAttributeSelect({
+      attributeId: this.props.id,
+      attributeSelectedItemId: itemId,
+    });
   }
 
   render() {
-    const { id, name, type, items, className, isDisabled } = this.props;
+    const {
+      id,
+      name,
+      type,
+      items,
+      className,
+      selectedItemId,
+      isDisabled,
+      shouldFadeWhenDisabled,
+      hasAttributeName,
+      hasTooltip,
+      size,
+      selectedTextAttributeItemTheme,
+    } = this.props;
 
     return (
-      <div className={`attribute ${className}`}>
-        <h3 className="attribute__name">{name}:</h3>
+      <div className={`attribute -${size} ${className}`}>
+        {hasAttributeName && (
+          <h3 className="attribute__name">{name.toUpperCase()}:</h3>
+        )}
         <ul className="attribute__items">
           {items.map((item) => (
             <li
               key={item.id}
-              className={`attribute__itemContainer ${
-                isDisabled ? '-disabled' : ''
-              }`}
+              className={`
+                attribute__itemContainer 
+                ${isDisabled ? '-disabled' : ''}
+                ${isDisabled && shouldFadeWhenDisabled ? '-fade' : ''}
+              `}
             >
               {/* Text attributes like size, etc... */}
               {type === 'text' && (
                 <Button
                   size="small"
                   theme={
-                    item.id === this.state.selectedItemId ? 'dark' : 'light'
+                    item.id === selectedItemId
+                      ? selectedTextAttributeItemTheme
+                      : 'white'
                   }
+                  shouldDisableHover={true}
                   title={item.value}
                   className="attribute__item -text"
-                  onClick={() => this.handleOnSelect(item.id)}
+                  onClick={() => this.handleSelect(item.id)}
                   tabIndex={isDisabled ? '-1' : '0'}
                 />
               )}
@@ -50,22 +72,24 @@ class Attribute extends Component {
                 <Button
                   size="small"
                   className="attribute__item -color"
-                  onClick={() => this.handleOnSelect(item.id)}
+                  onClick={() => this.handleSelect(item.id)}
                   style={{ background: item.value }}
                   tabIndex={isDisabled ? '-1' : '0'}
                 >
                   <span
                     className={`attribute__itemCheckMark ${
-                      item.id === this.state.selectedItemId ? '-show' : ''
+                      item.id === selectedItemId ? '-show' : ''
                     }`}
                   >
                     👍
                   </span>
                 </Button>
               )}
-              <span className="attribute__itemTooltip">
-                {item.displayValue}
-              </span>
+              {hasTooltip && (
+                <span className="attribute__itemTooltip">
+                  {item.displayValue}
+                </span>
+              )}
             </li>
           ))}
         </ul>
@@ -86,7 +110,23 @@ Attribute.propTypes = {
     })
   ),
   className: PropTypes.string,
+  onAttributeSelect: PropTypes.func,
+  selectedItemId: PropTypes.string,
   isDisabled: PropTypes.bool,
+  shouldFadeWhenDisabled: PropTypes.bool,
+  hasAttributeName: PropTypes.bool,
+  hasTooltip: PropTypes.bool,
+  size: PropTypes.oneOf(['small', 'big']),
+  selectedTextAttributeItemTheme: PropTypes.oneOf(['dark', 'light']),
+};
+
+Attribute.defaultProps = {
+  onAttributeSelect: () => {},
+  shouldFadeWhenDisabled: true,
+  hasAttributeName: true,
+  hasTooltip: true,
+  size: 'big',
+  selectedTextAttributeItemTheme: 'dark',
 };
 
 export { Attribute };

@@ -3,12 +3,14 @@ import { graphql } from 'msw';
 import { setupServer } from 'msw/node';
 import {
   handlers,
+  fakeShoesProduct,
   fakeIphone12Product,
   fakeCurrencies,
   fakePs5Product,
 } from '../../mocks';
 import App from '../../App';
 import { client } from '../../config';
+import { storage } from '../../utils';
 
 // Unmock 'react-redux' to ignore the manual mock
 jest.unmock('react-redux');
@@ -22,12 +24,14 @@ afterEach(async () => {
   server.resetHandlers();
   // Clear ApolloClient cache
   await client.clearStore();
+  // Clear localStorage
+  localStorage.clear();
 });
 
 afterAll(() => server.close());
 
 test('should load product data', async () => {
-  await render(<App />, { route: '/product/id' });
+  await render(<App />, { route: `/product/${fakeIphone12Product.id}` });
 
   // The product's data should be in the UI
   expect(screen.getByText(fakeIphone12Product.name)).toBeInTheDocument();
@@ -35,8 +39,33 @@ test('should load product data', async () => {
   expect(screen.getByText(fakeIphone12Product.description)).toBeInTheDocument();
 });
 
+test('show error when product doesnt get loaded', async () => {
+  // Handle 'product' query to response with an error
+  server.use(
+    graphql.query('product', (req, res, ctx) => {
+      return res(ctx.errors);
+    })
+  );
+  await render(<App />, { route: `/product/${fakeIphone12Product.id}` });
+
+  // An error message should be in the UI
+  const errorElement = screen.getByRole('heading', {
+    name: /please try again later/i,
+  });
+  expect(errorElement).toBeInTheDocument();
+
+  // The product's data should not be in the UI
+  expect(screen.queryByText(fakeIphone12Product.name)).not.toBeInTheDocument();
+  expect(screen.queryByText(fakeIphone12Product.brand)).not.toBeInTheDocument();
+  expect(
+    screen.queryByText(fakeIphone12Product.description)
+  ).not.toBeInTheDocument();
+});
+
 test('should show the price based on the selected currency', async () => {
-  const { user } = await render(<App />, { route: '/product/id' });
+  const { user } = await render(<App />, {
+    route: `/product/${fakeIphone12Product.id}`,
+  });
 
   const currencyToSelect = fakeCurrencies[1];
   // Click on the currency switcher to open the menu
@@ -58,18 +87,7 @@ test('should show the price based on the selected currency', async () => {
 });
 
 test('The first image of product should be shown in the bigger img element by default', async () => {
-  // Handle 'product' query to response with 'fakePs5Product' data
-  server.use(
-    graphql.query('product', (req, res, ctx) => {
-      return res(
-        ctx.data({
-          product: fakePs5Product,
-        })
-      );
-    })
-  );
-
-  await render(<App />, { route: '/product/id' });
+  await render(<App />, { route: `/product/${fakePs5Product.id}` });
 
   // The bigger img element should show the first image
   expect(screen.getByTestId('productGallerySelectedImage')).toHaveAttribute(
@@ -79,18 +97,9 @@ test('The first image of product should be shown in the bigger img element by de
 });
 
 test('should select an image to see it in the bigger img element', async () => {
-  // Handle 'product' query to response with 'fakePs5Product' data
-  server.use(
-    graphql.query('product', (req, res, ctx) => {
-      return res(
-        ctx.data({
-          product: fakePs5Product,
-        })
-      );
-    })
-  );
-
-  const { user } = await render(<App />, { route: '/product/id' });
+  const { user } = await render(<App />, {
+    route: `/product/${fakePs5Product.id}`,
+  });
 
   // Get all image elements
   const imageElements = await within(
@@ -111,18 +120,9 @@ test('should select an image to see it in the bigger img element', async () => {
 });
 
 test('an out of stock product should have disabled attributes', async () => {
-  // Handle 'product' query to response with 'fakePs5Product' data
-  server.use(
-    graphql.query('product', (req, res, ctx) => {
-      return res(
-        ctx.data({
-          product: fakePs5Product,
-        })
-      );
-    })
-  );
-
-  const { user } = await render(<App />, { route: '/product/id' });
+  const { user } = await render(<App />, {
+    route: `/product/${fakePs5Product.id}`,
+  });
 
   // Get an attribute item element from UI
   const attributeItemElement = screen.getByRole('button', {
@@ -137,22 +137,208 @@ test('an out of stock product should have disabled attributes', async () => {
 });
 
 test('an out of stock product should have "OUT OF STOCK" message instead of "Add TO CART" button', async () => {
-  // Handle 'product' query to response with 'fakePs5Product' data
-  server.use(
-    graphql.query('product', (req, res, ctx) => {
-      return res(
-        ctx.data({
-          product: fakePs5Product,
-        })
-      );
-    })
-  );
-
-  await render(<App />, { route: '/product/id' });
+  await render(<App />, { route: `/product/${fakePs5Product.id}` });
 
   // Should have 'OUT OF STOCK' message instead of 'ADD TO CART' button
   const addToCartButton = screen.queryByRole('button', { name: 'ADD TO CART' });
   const outOfStockMessage = screen.getByText('OUT OF STOCK');
   expect(addToCartButton).not.toBeInTheDocument();
   expect(outOfStockMessage).toBeInTheDocument();
+});
+
+test('add product to cart', async () => {
+  // Prepare initial data and render the component
+  const { user } = await render(<App />, {
+    route: `/product/${fakeShoesProduct.id}`,
+  });
+
+  // Click on the ADD TO CART button
+  let addToCartButtonElement = screen.getByRole('button', {
+    name: /add to cart/i,
+  });
+  await user.click(addToCartButtonElement);
+
+  // ADD TO CART button should be removed
+  addToCartButtonElement = screen.queryByRole('button', {
+    name: /add to cart/i,
+  });
+  expect(addToCartButtonElement).not.toBeInTheDocument();
+
+  // REMOVE FROM CART button should be in the UI
+  const removeFromCartButtonElement = screen.queryByRole('button', {
+    name: /remove from cart/i,
+  });
+  expect(removeFromCartButtonElement).toBeInTheDocument();
+
+  // The product should be added to localStorage
+  const cartProductList = storage.load('cartProductList');
+  expect(cartProductList).toBeTruthy();
+  expect(cartProductList).toHaveLength(1);
+  expect(cartProductList[0].id).toBe(fakeShoesProduct.id);
+});
+
+test('remove product from cart by remove button', async () => {
+  // Prepare initial data and render the component
+  // Add a product to cart by adding it to localStorage
+  const initialCartProductList = [
+    {
+      id: fakeShoesProduct.id,
+      selectedAttributes: { Size: '40' },
+      count: 1,
+    },
+  ];
+  storage.save('cartProductList', initialCartProductList);
+  const { user } = await render(<App />, {
+    route: `/product/${fakeShoesProduct.id}`,
+  });
+
+  // Click on the REMOVE FROM CART button
+  let removeFromCartButtonElement = screen.getByRole('button', {
+    name: /remove from cart/i,
+  });
+  await user.click(removeFromCartButtonElement);
+
+  // REMOVE FROM CART button should be removed
+  removeFromCartButtonElement = screen.queryByRole('button', {
+    name: /remove from cart/i,
+  });
+  expect(removeFromCartButtonElement).not.toBeInTheDocument();
+
+  // ADD TO CART button should be in the UI
+  const addToCartButtonElement = screen.queryByRole('button', {
+    name: /add to cart/i,
+  });
+  expect(addToCartButtonElement).toBeInTheDocument();
+
+  // The product should be removed from localStorage
+  const cartProductList = storage.load('cartProductList');
+  expect(cartProductList).toEqual([]);
+});
+
+test('remove product from cart by <Counter />', async () => {
+  // Prepare initial data and render the component
+  // Add a product to cart by adding it to localStorage
+  const initialCartProductList = [
+    {
+      id: fakeShoesProduct.id,
+      selectedAttributes: { Size: '40' },
+      count: 1,
+    },
+  ];
+  storage.save('cartProductList', initialCartProductList);
+  const { user } = await render(<App />, {
+    route: `/product/${fakeShoesProduct.id}`,
+  });
+
+  // Click on the decrease count button
+  const decreaseButtonElement = screen.getByTestId('counterDecreaseButton');
+  await user.click(decreaseButtonElement);
+
+  // REMOVE FROM CART button should be removed
+  const removeFromCartButtonElement = screen.queryByRole('button', {
+    name: /remove from cart/i,
+  });
+  expect(removeFromCartButtonElement).not.toBeInTheDocument();
+
+  // ADD TO CART button should be in the UI
+  const addToCartButtonElement = screen.queryByRole('button', {
+    name: /add to cart/i,
+  });
+  expect(addToCartButtonElement).toBeInTheDocument();
+
+  // The product should be removed from localStorage
+  const cartProductList = storage.load('cartProductList');
+  expect(cartProductList).toEqual([]);
+});
+
+test('increase product count', async () => {
+  // Prepare initial data and render the component
+  // Add a product to cart by adding it to localStorage
+  const initialCartProductList = [
+    {
+      id: fakeShoesProduct.id,
+      selectedAttributes: { Size: '40' },
+      count: 1,
+    },
+  ];
+  storage.save('cartProductList', initialCartProductList);
+  const { user } = await render(<App />, {
+    route: `/product/${fakeShoesProduct.id}`,
+  });
+
+  // Click on the increase count button
+  const increaseButtonElement = screen.getByRole('button', {
+    name: 'Increase Count',
+  });
+  await user.click(increaseButtonElement);
+
+  // count number in <Counter /> should change
+  const countElement = screen.getByTestId('counterCount');
+  expect(countElement).toHaveTextContent(2);
+
+  // The product should be updated in localStorage
+  const cartProductList = storage.load('cartProductList');
+  expect(cartProductList[0].count).toBe(2);
+});
+
+test('decrease product count', async () => {
+  // Prepare initial data and render the component
+  // Add a product to cart by adding it to localStorage
+  const initialCartProductList = [
+    {
+      id: fakeShoesProduct.id,
+      selectedAttributes: { Size: '40' },
+      count: 2,
+    },
+  ];
+  storage.save('cartProductList', initialCartProductList);
+  const { user } = await render(<App />, {
+    route: `/product/${fakeShoesProduct.id}`,
+  });
+
+  // Click on the decrease count button
+  const decreaseButtonElement = screen.getByRole('button', {
+    name: 'Decrease Count',
+  });
+  await user.click(decreaseButtonElement);
+
+  // count number in <Counter /> should change
+  const countElement = screen.getByTestId('counterCount');
+  expect(countElement).toHaveTextContent(1);
+
+  // The product should be updated in localStorage
+  const cartProductList = storage.load('cartProductList');
+  expect(cartProductList[0].count).toBe(1);
+});
+
+test('edit attribute of a cartProduct', async () => {
+  // Prepare initial data and render the component
+  // Add a product to cart by adding it to localStorage
+  const initialCartProductList = [
+    {
+      id: fakeShoesProduct.id,
+      selectedAttributes: { Size: '40' },
+      count: 1,
+    },
+  ];
+  storage.save('cartProductList', initialCartProductList);
+  const { user } = await render(<App />, {
+    route: `/product/${fakeShoesProduct.id}`,
+  });
+
+  // Click on another attribute item to select
+  const attributeItemToSelect = fakeShoesProduct.attributes[0].items[1];
+  const attributeItemElement = screen.getByRole('button', {
+    name: attributeItemToSelect.value,
+  });
+  await user.click(attributeItemElement);
+
+  // UI of selected attribute should change
+  expect(attributeItemElement).toHaveClass('-dark');
+
+  // The product should be updated in localStorage
+  const cartProductList = storage.load('cartProductList');
+  expect(cartProductList[0].selectedAttributes.Size).toBe(
+    attributeItemToSelect.id
+  );
 });

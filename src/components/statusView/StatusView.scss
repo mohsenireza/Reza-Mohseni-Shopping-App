@@ -1,0 +1,26 @@
+@import '../../styles/config.scss';
+
+.statusView {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+  .statusView__loadingImage {
+    animation: rotating 0.5s linear infinite;
+  }
+  .statusView__error {
+    font-family: roboto;
+    font-weight: 700;
+    font-size: rem(32px);
+    padding: 0 rem(16px);
+  }
+}
+
+@keyframes rotating {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

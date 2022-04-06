@@ -1,5 +1,12 @@
 {
   "name": "shopping-app",
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}",
+      "!src/reportWebVitals.js",
+      "!src/index.js"
+    ]
+  },
   "version": "0.1.0",
   "private": true,
   "dependencies": {

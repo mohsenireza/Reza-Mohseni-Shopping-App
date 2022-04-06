@@ -14,7 +14,7 @@ export const fetchProduct = createAsyncThunk(
   async (id) => {
     try {
       const response = await client.query({
-        query: productQuery,
+        query: productQuery(),
         variables: { id },
       });
       return response.data.product;
@@ -31,6 +31,9 @@ const productSlice = createSlice({
   reducers: {
     imageSelected: (state, action) => {
       state.selectedImage = action.payload;
+    },
+    productStateCleared: () => {
+      return initialState;
     },
   },
   extraReducers: (builder) => {
@@ -51,6 +54,6 @@ const productSlice = createSlice({
   },
 });
 
-export const { imageSelected } = productSlice.actions;
+export const { imageSelected, productStateCleared } = productSlice.actions;
 
 export default productSlice.reducer;

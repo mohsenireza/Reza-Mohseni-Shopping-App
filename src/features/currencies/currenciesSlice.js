@@ -13,7 +13,7 @@ export const fetchCurrencies = createAsyncThunk(
   'currencies/fetchCurrencies',
   async () => {
     try {
-      const response = await client.query({ query: currenciesQuery });
+      const response = await client.query({ query: currenciesQuery() });
       const currencies = response.data.currencies.map((currency) => ({
         label: currency.label,
         symbol: currency.symbol,
@@ -50,5 +50,8 @@ const currenciesSlice = createSlice({
 });
 
 export const { currencySelected } = currenciesSlice.actions;
+
+export const selectSelectedCurrency = (state) =>
+  state.currencies.selectedCurrency;
 
 export default currenciesSlice.reducer;

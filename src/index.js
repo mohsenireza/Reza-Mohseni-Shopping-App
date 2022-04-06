@@ -6,14 +6,17 @@ import './styles/app.scss';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { store } from './config/store';
+import { ErrorBoundary } from './components';
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Provider store={store}>
-        <App />
-      </Provider>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <Provider store={store}>
+          <App />
+        </Provider>
+      </BrowserRouter>
+    </ErrorBoundary>
   </React.StrictMode>,
   document.getElementById('root')
 );

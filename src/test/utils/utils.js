@@ -1,21 +1,21 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { configureStore } from '@reduxjs/toolkit';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { configureStoreOptions } from '../../config/store';
+import { store } from '../../config/store';
 
 const AllTheProviders = ({ children }) => {
   return (
     <BrowserRouter>
-      <Provider store={configureStore(configureStoreOptions)}>
-        {children}
-      </Provider>
+      <Provider store={store}>{children}</Provider>
     </BrowserRouter>
   );
 };
 
-const customRender = async (ui, { route = '/', ...renderOptions } = {}) => {
+const customRender = async (
+  ui,
+  { route = '/', shouldWaitForLoadingToFinish = true, ...renderOptions } = {}
+) => {
   // Handle default route
   window.history.replaceState({}, '', route);
 
@@ -25,7 +25,7 @@ const customRender = async (ui, { route = '/', ...renderOptions } = {}) => {
   };
 
   // Wait for initial data to be fetched before allowing the test to continue
-  await waitForLoadingToFinish();
+  if (shouldWaitForLoadingToFinish) await waitForLoadingToFinish();
 
   return returnValue;
 };
@@ -33,7 +33,8 @@ const customRender = async (ui, { route = '/', ...renderOptions } = {}) => {
 const waitForLoadingToFinish = async () => {
   await waitFor(
     () => {
-      expect(screen.queryAllByText(/loading/i)).toHaveLength(0);
+      // Make sure there is not any loading spinner on the screen
+      expect(screen.queryAllByAltText(/Loading Spinner/)).toHaveLength(0);
     },
     { timeout: 4000 }
   );

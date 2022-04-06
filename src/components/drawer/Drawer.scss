@@ -1,0 +1,53 @@
+@import '../../styles/config.scss';
+
+.drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: $white-color;
+  z-index: 1000;
+  transition: 0.3s;
+  &.-closed {
+    width: 0;
+  }
+  &.-open {
+    width: 80%;
+    border-top: 1px solid $secondLight-color;
+    border-right: 1px solid $secondLight-color;
+  }
+  .drawer__content {
+    height: 100%;
+    .drawer__header {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: rem(60px);
+      border-bottom: 1px solid $secondLight-color;
+      .drawer__headerCloseButton {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        padding: 0 rem(15px);
+        color: $red-color;
+        cursor: pointer;
+        .drawer__headerCloseButtonImage {
+          height: rem(24px);
+          width: rem(24px);
+          transform: rotate(-90deg);
+        }
+      }
+      .drawer__headerLogo {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        padding: 0 10px;
+      }
+    }
+    .drawer__body {
+      height: calc(100% - rem(60px));
+    }
+  }
+}

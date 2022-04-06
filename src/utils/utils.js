@@ -16,3 +16,8 @@ export const rgbaTohex = (rgba) =>
         .replace('NaN', '')
     )
     .join('')}`;
+
+export const getParameterByName = (name) => {
+  var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+  return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+};

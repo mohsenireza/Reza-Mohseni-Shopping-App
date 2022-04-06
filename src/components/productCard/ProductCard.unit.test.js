@@ -9,6 +9,40 @@ const fakeProduct = {
   gallery: [
     'https://cdn.shopify.com/s/files/1/0087/6193/3920/products/DD1381200_DEOA_2_720x.jpg?v=1612816087',
   ],
+  attributes: [
+    {
+      id: 'Size',
+      name: 'Size',
+      type: 'text',
+      items: [
+        {
+          id: '40',
+          displayValue: '40',
+          value: '40',
+          __typename: 'Attribute',
+        },
+        {
+          id: '41',
+          displayValue: '41',
+          value: '41',
+          __typename: 'Attribute',
+        },
+        {
+          id: '42',
+          displayValue: '42',
+          value: '42',
+          __typename: 'Attribute',
+        },
+        {
+          id: '43',
+          displayValue: '43',
+          value: '43',
+          __typename: 'Attribute',
+        },
+      ],
+      __typename: 'AttributeSet',
+    },
+  ],
   prices: [
     {
       currency: {
@@ -25,6 +59,7 @@ const fakeProduct = {
       amount: 104,
     },
   ],
+  brand: 'Nike x Stussy',
 };
 const selectedCurrency = {
   label: 'USD',
@@ -43,12 +78,19 @@ test('should render product data', async () => {
   );
 
   // UI should render based on the product data
-  expect(screen.getByAltText(fakeProduct.name)).toBeInTheDocument();
-  expect(screen.getByAltText(fakeProduct.name).src).toBe(
-    fakeProduct.gallery[0]
+  const imageElement = screen.getByAltText(
+    `${fakeProduct.brand} - ${fakeProduct.name}`
   );
-  expect(screen.getByText(fakeProduct.name)).toBeInTheDocument();
-  expect(screen.getByText('$144')).toBeInTheDocument();
+  expect(imageElement).toBeInTheDocument();
+  expect(imageElement).toHaveAttribute('src', fakeProduct.gallery[0]);
+
+  const nameElement = screen.getByText(
+    `${fakeProduct.brand} ${fakeProduct.name}`
+  );
+  expect(nameElement).toBeInTheDocument();
+
+  const priceElement = screen.getByText('$144');
+  expect(priceElement).toBeInTheDocument();
 });
 
 test('should redirect to product page by clicking on the product image', async () => {
@@ -62,7 +104,9 @@ test('should redirect to product page by clicking on the product image', async (
   );
 
   // Click on product image
-  await user.click(screen.getByAltText(fakeProduct.name));
+  await user.click(
+    screen.getByAltText(`${fakeProduct.brand} - ${fakeProduct.name}`)
+  );
 
   // Check the URL
   expect(window.location.pathname).toBe(`/product/${fakeProduct.id}`);
@@ -79,7 +123,9 @@ test('should redirect to product page by clicking on the product name', async ()
   );
 
   // Click on product name
-  await user.click(screen.getByText(fakeProduct.name));
+  await user.click(
+    screen.getByText(`${fakeProduct.brand} ${fakeProduct.name}`)
+  );
 
   // Check the URL
   expect(window.location.pathname).toBe(`/product/${fakeProduct.id}`);

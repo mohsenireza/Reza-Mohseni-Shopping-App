@@ -1,6 +1,40 @@
 @import '../../styles/config.scss';
 
 .attribute {
+  &.-small {
+    .attribute__items {
+      .attribute__itemContainer {
+        margin-right: rem(8px);
+        .attribute__item {
+          &.-text {
+            height: rem(24px);
+            min-width: rem(24px);
+          }
+          &.-color {
+            height: rem(24px);
+            width: rem(24px);
+          }
+        }
+      }
+    }
+  }
+  &.-big {
+    .attribute__items {
+      .attribute__itemContainer {
+        margin-right: rem(12px);
+        .attribute__item {
+          &.-text {
+            height: rem(45px);
+            min-width: rem(63px);
+          }
+          &.-color {
+            height: rem(45px);
+            width: rem(45px);
+          }
+        }
+      }
+    }
+  }
   .attribute__name {
     font-family: roboto-condensed;
     font-weight: 700;
@@ -11,25 +45,25 @@
     flex-wrap: wrap;
     .attribute__itemContainer {
       position: relative;
-      margin-right: rem(12px);
       margin-top: rem(6px);
       &:last-child {
         margin-right: 0;
       }
       &.-disabled {
+        .attribute__item {
+          cursor: default;
+        }
+      }
+      &.-fade {
         opacity: 40%;
       }
       .attribute__item {
         &.-text {
           padding: 0 rem(3px);
-          height: rem(45px);
-          min-width: rem(63px);
         }
         &.-color {
           padding: 0;
-          height: rem(45px);
-          width: rem(45px);
-          border-radius: 100%;
+          border-radius: rem(3px);
           border: 0 none;
           box-shadow: 0 rem(5px) rem(10px) 0 rgba(0, 0, 0, 0.3);
           .attribute__itemCheckMark {
@@ -40,7 +74,8 @@
             }
           }
         }
-        &:hover {
+        &:hover,
+        &:focus {
           + .attribute__itemTooltip {
             opacity: 100%;
           }

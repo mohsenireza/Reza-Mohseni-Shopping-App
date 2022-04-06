@@ -4,10 +4,11 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import './Header.scss';
 import logo from '../../assets/images/logo.svg';
-import cart from '../../assets/images/cart.svg';
-import { CurrencySwitcher } from '..';
+import { ReactComponent as Menu } from '../../assets/images/menu.svg';
+import { CurrencySwitcher, MiniCart, Drawer } from '../index';
 import { categorySelected } from '../../features/categories/categoriesSlice';
-import { withRouter } from '../../hoc';
+import { withBreakpoint, withRouter } from '../../hoc';
+import { getParameterByName } from '../../utils';
 
 class HeaderComp extends Component {
   constructor(props) {
@@ -32,13 +33,9 @@ class HeaderComp extends Component {
   // Fill store with URL
   // Because we get store data from URL,
   // even after reloading, our app can hold its old state,
-  // like selected category and currency
+  // like selected category
   getDataFromUrl() {
-    const queryString = this.props.router.location.search;
-    // TODO: support URLSearchParams in IE
-    const selectedCategoryFromQueryString = new URLSearchParams(
-      queryString
-    ).get('category');
+    const selectedCategoryFromQueryString = getParameterByName('category');
     const categories = this.props.categories;
     // If the category from URL exists in the store, we can use it as the selected category
     if (categories.includes(selectedCategoryFromQueryString)) {
@@ -52,30 +49,62 @@ class HeaderComp extends Component {
   }
 
   render() {
-    const renderedCategories = this.props.categories.map((category) => {
-      // If the selected category from store is equal to thi category Item
-      // the it means this category is the selected one
-      // so we add '-selected' className to make it highlighted
-      const isCategorySelected = this.props.selectedCategory === category;
-      return (
-        <li key={category} className="header__category">
-          <Link
-            to={`/products?category=${category}`}
-            className={`header__categoryLink ${
-              isCategorySelected ? '-selected' : ''
-            }`}
-          >
-            {category}
-          </Link>
-        </li>
-      );
-    });
+    // Render drawer in screens smaller than 'sm'
+    const shouldRenderDrawer = ['xxxsm', 'xxsm', 'xsm', 'sm'].includes(
+      this.props.breakpoint
+    );
+
+    const renderCategories = (onLinkClick = () => {}) =>
+      this.props.categories.map((category) => {
+        // If the selected category from store is equal to this category Item
+        // then it means this category is the selected one
+        // so we add '-selected' className to make it highlighted
+        const isCategorySelected = this.props.selectedCategory === category;
+        return (
+          <li key={category} className="header__category">
+            <Link
+              to={`/products?category=${category}`}
+              onClick={onLinkClick}
+              className={`header__categoryLink ${
+                isCategorySelected ? '-selected' : ''
+              }`}
+            >
+              {category}
+            </Link>
+          </li>
+        );
+      });
 
     return (
-      <header className="header">
+      <header id="header" className="header">
         <div className="header__container container">
           <div className="header__column header__categoriesContainer">
-            <ul className="header__categories">{renderedCategories}</ul>
+            {shouldRenderDrawer ? (
+              <Drawer
+                renderToggler={(onDrawerOpen) => (
+                  <button
+                    className="header__drawerToggler"
+                    onClick={(e) => {
+                      // Prevent <DetectClickOutside /> to get the click event and close the drawer after opening it
+                      e.stopPropagation();
+                      onDrawerOpen();
+                    }}
+                  >
+                    <Menu
+                      className="header__drawerTogglerImage"
+                      fill="#1d1f22"
+                    />
+                  </button>
+                )}
+                renderDrawerBody={(onDrawerClose) => (
+                  <ul className="header__categories">
+                    {renderCategories(onDrawerClose)}
+                  </ul>
+                )}
+              />
+            ) : (
+              <ul className="header__categories">{renderCategories()}</ul>
+            )}
           </div>
           <Link to="/products" className="header__column header__logoContainer">
             <img
@@ -87,12 +116,7 @@ class HeaderComp extends Component {
           </Link>
           <div className="header__column header__cartAndCurrencyContainer">
             <CurrencySwitcher />
-            <button className="header__cart">
-              <div className="header__cartIconContainer">
-                <img loading="lazy" alt="Cart Icon" src={cart} />
-                {/* <span className="header__cartBadge">2</span> */}
-              </div>
-            </button>
+            <MiniCart />
           </div>
         </div>
       </header>
@@ -105,6 +129,7 @@ HeaderComp.propTypes = {
   selectedCategory: PropTypes.string,
   dispatchCategorySelected: PropTypes.func.isRequired,
   router: PropTypes.object,
+  breakpoint: PropTypes.string,
 };
 
 const mapStateToProps = (state) => ({
@@ -116,8 +141,8 @@ const mapDispatchToProps = {
   dispatchCategorySelected: categorySelected,
 };
 
-const Header = withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(HeaderComp)
+const Header = withBreakpoint(
+  withRouter(connect(mapStateToProps, mapDispatchToProps)(HeaderComp))
 );
 
 export { Header };

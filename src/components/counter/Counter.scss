@@ -1,0 +1,45 @@
+@import '../../styles/config.scss';
+
+.counter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  &.-horizontal {
+    width: 100%;
+  }
+  &.-vertical {
+    height: 100%;
+    flex-direction: column;
+  }
+  &.-big {
+    .counter__button {
+      height: rem(45px);
+      width: rem(45px);
+    }
+    .counter__count {
+      font-size: rem(24px);
+    }
+  }
+  &.-small {
+    .counter__button {
+      height: rem(24px);
+      width: rem(24px);
+    }
+    .counter__count {
+      font-size: rem(16px);
+    }
+  }
+  .counter__button {
+    transition: 0.3s;
+    &.-disabled {
+      opacity: 30%;
+    }
+    .counter__buttonImage {
+      height: 100%;
+      width: 100%;
+    }
+  }
+  .counter__count {
+    font-weight: 500;
+  }
+}

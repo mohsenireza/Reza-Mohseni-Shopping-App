@@ -18,18 +18,60 @@
     background-color: $green-color;
     border: rem(1px) solid $green-color;
     color: $white-color;
-    &:hover {
-      background-color: $white-color;
-      color: $green-color;
+    &:not(.-hoverDisabled) {
+      &:hover,
+      &:focus {
+        background-color: $white-color;
+        color: $green-color;
+      }
     }
   }
-  &.-light {
-    background-color: $white-color;
-    border: rem(1px) solid $firstDark-color;
-    color: $firstDark-color;
+  &.-red {
+    background-color: $red-color;
+    border: rem(1px) solid $red-color;
+    color: $white-color;
+    &:not(.-hoverDisabled) {
+      &:hover,
+      &:focus {
+        background-color: $white-color;
+        color: $red-color;
+      }
+    }
   }
   &.-dark {
     background-color: $firstDark-color;
+    border: rem(1px) solid $firstDark-color;
     color: $white-color;
+    &:not(.-hoverDisabled) {
+      &:hover,
+      &:focus {
+        background-color: $white-color;
+        color: $firstDark-color;
+      }
+    }
+  }
+  &.-light {
+    background-color: rgba(166, 166, 166, 0.2);
+    border: rem(1px) solid $firstLight-color;
+    color: $firstLight-color;
+    &:not(.-hoverDisabled) {
+      &:hover,
+      &:focus {
+        background-color: $firstLight-color;
+        color: $white-color;
+      }
+    }
+  }
+  &.-white {
+    background-color: $white-color;
+    border: rem(1px) solid $firstDark-color;
+    color: $firstDark-color;
+    &:not(.-hoverDisabled) {
+      &:hover,
+      &:focus {
+        background-color: $firstDark-color;
+        color: $white-color;
+      }
+    }
   }
 }

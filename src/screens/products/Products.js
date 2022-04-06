@@ -2,7 +2,7 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import './Products.scss';
-import { ProductCard } from '../../components';
+import { PageWrapper, ProductCard } from '../../components';
 import {
   fetchProducts,
   selectProductIds,
@@ -26,26 +26,28 @@ class ProductsComp extends Component {
   }
 
   render() {
-    // TODO: handle loading
-    const status = this.props.fetchProductsStatus;
-    if (status === 'loading' || status === 'idle')
-      return <span>Loading...</span>;
+    const { fetchProductsStatus } = this.props;
 
     return (
-      <div className="products">
-        <div className="container">
-          <h2 className="products__categoryName" tabIndex="0">
-            {this.props.selectedCategory}
-          </h2>
-          <section className="products__productList">
-            {this.props.productIds.map((productId) => (
-              <div key={productId} className="products__productWrapper">
-                <ProductCard productId={productId} />
-              </div>
-            ))}
-          </section>
+      <PageWrapper
+        loading={['idle', 'loading'].includes(fetchProductsStatus)}
+        error={fetchProductsStatus === 'failed'}
+      >
+        <div className="products">
+          <div className="container">
+            <h2 className="products__categoryName">
+              {this.props.selectedCategory}
+            </h2>
+            <section className="products__productList">
+              {this.props.productIds.map((productId) => (
+                <div key={productId} className="products__productWrapper">
+                  <ProductCard productId={productId} />
+                </div>
+              ))}
+            </section>
+          </div>
         </div>
-      </div>
+      </PageWrapper>
     );
   }
 }
