@@ -9,11 +9,27 @@ class ModalContainer extends Component {
 
     // Bind methods
     this.handleModalClose = this.handleModalClose.bind(this);
+    this.handleEscapeKeyDown = this.handleEscapeKeyDown.bind(this);
+  }
+
+  componentDidMount() {
+    document.addEventListener('keydown', this.handleEscapeKeyDown);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleEscapeKeyDown);
   }
 
   // Close the modal
   handleModalClose() {
     this.props.onModalClose();
+  }
+
+  // Close modal when escape key is pressed
+  handleEscapeKeyDown(e) {
+    if (e.keyCode === 27) {
+      this.handleModalClose();
+    }
   }
 
   render() {

@@ -49,7 +49,8 @@
           padding-bottom: rem(21px);
         }
       }
-      &:hover {
+      &:hover,
+      &:focus-within {
         background-color: rgba(0, 0, 0, 0.03);
       }
       &.-selected {

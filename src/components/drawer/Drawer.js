@@ -1,10 +1,11 @@
-import { Component } from 'react';
+import { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import './Drawer.scss';
 import logo from '../../assets/images/logo.svg';
 import { ReactComponent as Back } from '../../assets/images/back.svg';
 import { DetectClickOutside } from '../index';
+import { FocusTrapper } from '../../utils';
 
 class Drawer extends Component {
   constructor(props) {
@@ -12,9 +13,41 @@ class Drawer extends Component {
 
     this.state = { isDrawerOpen: false };
 
+    // Refs
+    this.drawerRef = createRef();
+
     // Bind methods
     this.handleDrawerOpen = this.handleDrawerOpen.bind(this);
     this.handleDrawerClose = this.handleDrawerClose.bind(this);
+    this.handleEscapeKeyDown = this.handleEscapeKeyDown.bind(this);
+  }
+
+  componentDidMount() {
+    // Initialize focusTrapper
+    this.focusTrapper = new FocusTrapper(this.drawerRef.current);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.isDrawerOpen !== this.state.isDrawerOpen) {
+      if (this.state.isDrawerOpen) {
+        // Add focus trapper when the drawer gets opened
+        this.focusTrapper.add();
+        // Add event listener for handleEscapeKeyDown
+        document.addEventListener('keydown', this.handleEscapeKeyDown);
+      } else {
+        // Delete focus trapper when the drawer gets closed
+        this.focusTrapper.delete();
+        // Remove event listener for handleEscapeKeyDown
+        document.removeEventListener('keydown', this.handleEscapeKeyDown);
+      }
+    }
+  }
+
+  componentWillUnmount() {
+    // Delete focus trapper when viewport's width becomes bigger and <Drawer /> gets unmounted
+    this.focusTrapper.delete();
+    // Remove event listener for handleEscapeKeyDown when viewport's width becomes bigger and <Drawer /> gets unmounted
+    document.removeEventListener('keydown', this.handleEscapeKeyDown);
   }
 
   handleDrawerOpen() {
@@ -23,6 +56,13 @@ class Drawer extends Component {
 
   handleDrawerClose() {
     this.setState({ isDrawerOpen: false });
+  }
+
+  // Close drawer when escape key is pressed
+  handleEscapeKeyDown(e) {
+    if (e.keyCode === 27) {
+      this.handleDrawerClose();
+    }
   }
 
   render() {
@@ -34,6 +74,7 @@ class Drawer extends Component {
         {renderToggler && renderToggler(this.handleDrawerOpen)}
         {/* Drawer */}
         <section
+          ref={this.drawerRef}
           className={`drawer ${this.state.isDrawerOpen ? '-open' : '-closed'}`}
         >
           {this.state.isDrawerOpen && (

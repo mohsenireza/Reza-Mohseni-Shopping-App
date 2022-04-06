@@ -74,7 +74,8 @@
             }
           }
         }
-        &:hover {
+        &:hover,
+        &:focus {
           + .attribute__itemTooltip {
             opacity: 100%;
           }

@@ -10,7 +10,7 @@ import {
   selectTotalPrice,
 } from '../../features/cart/cartSlice';
 import { withBreakpoint, withRouter } from '../../hoc';
-import { domHelper } from '../../utils';
+import { FocusTrapper } from '../../utils';
 
 class MiniCartComp extends Component {
   constructor(props) {
@@ -27,21 +27,32 @@ class MiniCartComp extends Component {
     this.handleToggle = this.handleToggle.bind(this);
     this.handleCartPageNavigate = this.handleCartPageNavigate.bind(this);
     this.handleMiniCartHeaderClick = this.handleMiniCartHeaderClick.bind(this);
-    this.addFocusTrapper = this.addFocusTrapper.bind(this);
-    this.deleteFocusTrapper = this.deleteFocusTrapper.bind(this);
-    this.resetFocusTrapper = this.resetFocusTrapper.bind(this);
+    this.handleEscapeKeyDown = this.handleEscapeKeyDown.bind(this);
+  }
+
+  componentDidMount() {
+    // Initialize focusTrapper
+    this.focusTrapper = new FocusTrapper(this.miniCartRef.current);
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // Add or delete focus trapper when the miniCart gets closed or opened
     if (prevState.isOpen !== this.state.isOpen) {
-      if (this.state.isOpen) this.addFocusTrapper();
-      else this.deleteFocusTrapper();
+      if (this.state.isOpen) {
+        // Add focus trapper when the overlay gets opened
+        this.focusTrapper.add();
+        // Add event listener for handleEscapeKeyDown
+        document.addEventListener('keydown', this.handleEscapeKeyDown);
+      } else {
+        // Delete focus trapper when the overlay gets closed
+        this.focusTrapper.delete();
+        // Remove event listener for handleEscapeKeyDown
+        document.removeEventListener('keydown', this.handleEscapeKeyDown);
+      }
     }
 
     // Reset the focus trapper if a cartProduct gets removed and focusable elements inside <MiniCart />'s overlay change
     if (prevProps.cartProductIds.length != this.props.cartProductIds.length) {
-      if (this.state.isOpen) this.resetFocusTrapper();
+      if (this.state.isOpen) this.focusTrapper.reset();
     }
 
     // If <MiniCart />'s overlay is open, and viewport's width gets smaller up to a certain point
@@ -103,32 +114,11 @@ class MiniCartComp extends Component {
     }
   }
 
-  // Add focus trapper
-  addFocusTrapper({ isResetting = false } = {}) {
-    const miniCartElement = this.miniCartRef.current;
-    // Calculate elementToRevertFocusTo just once
-    if (!isResetting) {
-      this.elementToRevertFocusTo = document.activeElement;
+  // Close <MiniCart />'s overlay when escape key is pressed
+  handleEscapeKeyDown(e) {
+    if (e.keyCode === 27) {
+      this.handleToggle(false);
     }
-    this.untrapFocus = domHelper.trapFocus({
-      elementToTrapFocusIn: miniCartElement,
-      elementToRevertFocusTo: this.elementToRevertFocusTo,
-      startFocusingFrom: isResetting ? document.activeElement : null,
-    });
-  }
-
-  // Delete focus trapper
-  deleteFocusTrapper({ isResetting = false } = {}) {
-    if (!this.untrapFocus) return;
-    this.untrapFocus({ shouldRevertFocusedElement: !isResetting });
-    this.untrapFocus = null;
-    if (!isResetting) this.elementToRevertFocusTo = null;
-  }
-
-  // Reset focus trapper when <MiniCart />'s overlay rerenders and focusable elements change
-  resetFocusTrapper() {
-    this.deleteFocusTrapper({ isResetting: true });
-    this.addFocusTrapper({ isResetting: true });
   }
 
   render() {

@@ -2,54 +2,25 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import './ProductInfoModal.scss';
 import { ProductInfo } from '../../components';
-import { domHelper } from '../../utils';
+import { FocusTrapper } from '../../utils';
 
 class ProductInfoModal extends Component {
   constructor(props) {
     super(props);
 
-    // Bind methods
-    this.addFocusTrapper = this.addFocusTrapper.bind(this);
-    this.deleteFocusTrapper = this.deleteFocusTrapper.bind(this);
-    this.resetFocusTrapper = this.resetFocusTrapper.bind(this);
-  }
-
-  // Add focus trapper when component mounts
-  componentDidMount() {
-    this.addFocusTrapper();
-  }
-
-  // Delete the focus trapper when component unmounts
-  componentWillUnmount() {
-    this.deleteFocusTrapper();
-  }
-
-  // Add focus trapper
-  addFocusTrapper({ isResetting = false } = {}) {
+    // Initialize focusTrapper
     const modalParent = document.getElementById(this.props.modalId);
-    // Calculate elementToRevertFocusTo just once
-    if (!isResetting) {
-      this.elementToRevertFocusTo = document.activeElement;
-    }
-    this.untrapFocus = domHelper.trapFocus({
-      elementToTrapFocusIn: modalParent,
-      elementToRevertFocusTo: this.elementToRevertFocusTo,
-      startFocusingFrom: isResetting ? document.activeElement : null,
-    });
+    this.focusTrapper = new FocusTrapper(modalParent);
   }
 
-  // Delete focus trapper
-  deleteFocusTrapper({ isResetting = false } = {}) {
-    if (!this.untrapFocus) return;
-    this.untrapFocus({ shouldRevertFocusedElement: !isResetting });
-    this.untrapFocus = null;
-    if (!isResetting) this.elementToRevertFocusTo = null;
+  componentDidMount() {
+    // Add focus trapper when component mounts
+    this.focusTrapper.add();
   }
 
-  // Reset focus trapper when <ProductInfo /> rerenders and focusable elements change
-  resetFocusTrapper() {
-    this.deleteFocusTrapper({ isResetting: true });
-    this.addFocusTrapper({ isResetting: true });
+  componentWillUnmount() {
+    // Delete the focus trapper when component unmounts
+    this.focusTrapper.delete();
   }
 
   render() {
@@ -60,7 +31,8 @@ class ProductInfoModal extends Component {
         product={product}
         className="productInfoModal"
         isVerbose={false}
-        onComponentDidUpdate={this.resetFocusTrapper}
+        // Reset focus trapper when <ProductInfo /> rerenders and focusable elements change
+        onComponentDidUpdate={this.focusTrapper.reset}
       />
     );
   }
