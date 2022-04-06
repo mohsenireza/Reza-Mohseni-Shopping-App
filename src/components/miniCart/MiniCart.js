@@ -1,7 +1,6 @@
-import { Component } from 'react';
+import { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import './MiniCart.scss';
 import cartImage from '../../assets/images/cart.svg';
 import { CartItem, DetectClickOutside, Button } from '../index';
@@ -11,6 +10,7 @@ import {
   selectTotalPrice,
 } from '../../features/cart/cartSlice';
 import { withBreakpoint, withRouter } from '../../hoc';
+import { domHelper } from '../../utils';
 
 class MiniCartComp extends Component {
   constructor(props) {
@@ -20,9 +20,44 @@ class MiniCartComp extends Component {
     // overlayTop defines the minicard's overlay top
     this.state = { isOpen: false, overlayTop: 0 };
 
+    // Refs
+    this.miniCartRef = createRef();
+
     // Bind methods
     this.handleToggle = this.handleToggle.bind(this);
     this.handleCartPageNavigate = this.handleCartPageNavigate.bind(this);
+    this.handleMiniCartHeaderClick = this.handleMiniCartHeaderClick.bind(this);
+    this.addFocusTrapper = this.addFocusTrapper.bind(this);
+    this.deleteFocusTrapper = this.deleteFocusTrapper.bind(this);
+    this.resetFocusTrapper = this.resetFocusTrapper.bind(this);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    // Add or delete focus trapper when the miniCart gets closed or opened
+    if (prevState.isOpen !== this.state.isOpen) {
+      if (this.state.isOpen) this.addFocusTrapper();
+      else this.deleteFocusTrapper();
+    }
+
+    // Reset the focus trapper if a cartProduct gets removed and focusable elements inside <MiniCart />'s overlay change
+    if (prevProps.cartProductIds.length != this.props.cartProductIds.length) {
+      if (this.state.isOpen) this.resetFocusTrapper();
+    }
+
+    // If <MiniCart />'s overlay is open, and viewport's width gets smaller up to a certain point
+    // then call this.handleToggle(false). it will set this.state.isOpen to false and closes the overlay
+    // in this case componentDidUpdate will run again, and focus trapper will be deleted
+    if (prevProps.breakpoint !== this.props.breakpoint) {
+      const prevShouldRenderOverlay = !['xxxsm', 'xxsm', 'xsm', 'sm'].includes(
+        prevProps.breakpoint
+      );
+      const shouldRenderOverlay = !['xxxsm', 'xxsm', 'xsm', 'sm'].includes(
+        this.props.breakpoint
+      );
+      if (prevShouldRenderOverlay === true && shouldRenderOverlay === false) {
+        if (this.state.isOpen) this.handleToggle(false);
+      }
+    }
   }
 
   // Show and hide miniCart overlay
@@ -53,11 +88,50 @@ class MiniCartComp extends Component {
     this.handleToggle(false);
   }
 
-  render() {
+  handleMiniCartHeaderClick(e) {
     // Don't render miniCart overlay in screens smaller than 'sm'
     const shouldRenderOverlay = !['xxxsm', 'xxsm', 'xsm', 'sm'].includes(
       this.props.breakpoint
     );
+    if (shouldRenderOverlay) {
+      // Prevent <DetectClickOutside /> to get the click event and close the overlay after opening it
+      e.stopPropagation();
+      this.handleToggle(!this.state.isOpen);
+    } else {
+      // Navigate to /cart
+      this.props.router.navigate('/cart');
+    }
+  }
+
+  // Add focus trapper
+  addFocusTrapper({ isResetting = false } = {}) {
+    const miniCartElement = this.miniCartRef.current;
+    // Calculate elementToRevertFocusTo just once
+    if (!isResetting) {
+      this.elementToRevertFocusTo = document.activeElement;
+    }
+    this.untrapFocus = domHelper.trapFocus({
+      elementToTrapFocusIn: miniCartElement,
+      elementToRevertFocusTo: this.elementToRevertFocusTo,
+      startFocusingFrom: isResetting ? document.activeElement : null,
+    });
+  }
+
+  // Delete focus trapper
+  deleteFocusTrapper({ isResetting = false } = {}) {
+    if (!this.untrapFocus) return;
+    this.untrapFocus({ shouldRevertFocusedElement: !isResetting });
+    this.untrapFocus = null;
+    if (!isResetting) this.elementToRevertFocusTo = null;
+  }
+
+  // Reset focus trapper when <MiniCart />'s overlay rerenders and focusable elements change
+  resetFocusTrapper() {
+    this.deleteFocusTrapper({ isResetting: true });
+    this.addFocusTrapper({ isResetting: true });
+  }
+
+  render() {
     const { cartProductIds, totalCartItemQuantity, totalPrice } = this.props;
 
     const renderedHeaderContent = (
@@ -75,27 +149,17 @@ class MiniCartComp extends Component {
     );
 
     return (
-      <div data-testid="miniCart" className="miniCart">
+      <div data-testid="miniCart" ref={this.miniCartRef} className="miniCart">
         {/* MiniCart header */}
-        {shouldRenderOverlay ? (
-          <button
-            data-testid="miniCartHeader"
-            className="miniCart__header"
-            onClick={(e) => {
-              // Prevent <DetectClickOutside /> to get the click event and close the overlay after opening it
-              e.stopPropagation();
-              this.handleToggle(!this.state.isOpen);
-            }}
-          >
-            {renderedHeaderContent}
-          </button>
-        ) : (
-          <Link to="/cart" className="miniCart__header">
-            {renderedHeaderContent}
-          </Link>
-        )}
+        <button
+          data-testid="miniCartHeader"
+          className="miniCart__header"
+          onClick={this.handleMiniCartHeaderClick}
+        >
+          {renderedHeaderContent}
+        </button>
         {/* MiniCart content */}
-        {shouldRenderOverlay && this.state.isOpen && (
+        {this.state.isOpen && (
           <section
             data-testid="miniCartOverlay"
             className="miniCart__overlay"
@@ -155,6 +219,10 @@ MiniCartComp.propTypes = {
   totalPrice: PropTypes.string.isRequired,
   router: PropTypes.object.isRequired,
   breakpoint: PropTypes.string,
+};
+
+MiniCartComp.defaultProps = {
+  cartProductIds: [],
 };
 
 const mapStateToProps = (state) => ({

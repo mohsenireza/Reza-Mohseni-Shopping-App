@@ -16,16 +16,16 @@ class ProductInfoModal extends Component {
 
   // Add focus trapper when component mounts
   componentDidMount() {
-    this.addFocusTrapper({ isResetting: false });
+    this.addFocusTrapper();
   }
 
   // Delete the focus trapper when component unmounts
   componentWillUnmount() {
-    this.deleteFocusTrapper({ isResetting: false });
+    this.deleteFocusTrapper();
   }
 
   // Add focus trapper
-  addFocusTrapper({ isResetting }) {
+  addFocusTrapper({ isResetting = false } = {}) {
     const modalParent = document.getElementById(this.props.modalId);
     // Calculate elementToRevertFocusTo just once
     if (!isResetting) {
@@ -39,10 +39,11 @@ class ProductInfoModal extends Component {
   }
 
   // Delete focus trapper
-  deleteFocusTrapper({ isResetting }) {
+  deleteFocusTrapper({ isResetting = false } = {}) {
     if (!this.untrapFocus) return;
     this.untrapFocus({ shouldRevertFocusedElement: !isResetting });
     this.untrapFocus = null;
+    if (!isResetting) this.elementToRevertFocusTo = null;
   }
 
   // Reset focus trapper when <ProductInfo /> rerenders and focusable elements change
