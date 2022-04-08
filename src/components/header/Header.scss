@@ -14,7 +14,7 @@
           padding-right: rem(11px);
           .header__drawerTogglerImage {
             position: relative;
-            top: rem(5px);
+            top: rem(4px);
           }
         }
         .header__categories {
@@ -27,6 +27,7 @@
             display: inline-block;
             height: 100%;
             .header__categoryLink {
+              text-transform: uppercase;
               @include breakpoint(sm) {
                 height: auto;
                 line-height: normal;
@@ -68,6 +69,9 @@
           top: rem(5px);
           width: rem(33px);
           height: rem(31px);
+          @include breakpoint(sm) {
+            top: rem(3.5px);
+          }
         }
       }
       &.header__cartAndCurrencyContainer {

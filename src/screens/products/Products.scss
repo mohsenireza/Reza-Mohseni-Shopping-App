@@ -6,6 +6,7 @@
       display: inline-block;
       font-weight: 400;
       font-size: rem(42px);
+      text-transform: capitalize;
       margin: rem(90px) 0 rem(115px);
       @include breakpoint(sm) {
         margin: rem(45px) 0 rem(50px);

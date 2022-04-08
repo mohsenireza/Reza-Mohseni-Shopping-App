@@ -169,7 +169,7 @@ class ProductInfoComp extends Component {
           <Button
             theme="red"
             className="productInfo__cartButton"
-            title="Remove From Cart"
+            title="REMOVE FROM CART"
             onClick={this.handleOrderItemRemove}
           />
         ) : (
