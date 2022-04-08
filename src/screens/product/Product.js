@@ -16,17 +16,30 @@ class ProductComp extends Component {
 
     // Bind methods
     this.handleImageClick = this.handleImageClick.bind(this);
+    this.fetchProduct = this.fetchProduct.bind(this);
   }
 
-  // Fetch product data
+  // Fetch product data when component mounts
   componentDidMount() {
-    const productId = this.props.router.params.id;
-    this.props.dispatchFetchProduct(productId);
+    this.fetchProduct();
+  }
+
+  // Fetch product data when URL changes
+  componentDidUpdate(prevProps) {
+    if (prevProps.router.params.id !== this.props.router.params.id) {
+      this.fetchProduct();
+    }
   }
 
   // Clear the product state
   componentWillUnmount() {
     this.props.dispatchProductStateCleared();
+  }
+
+  // Fetch product's data based on the URL
+  fetchProduct() {
+    const productId = this.props.router.params.id;
+    this.props.dispatchFetchProduct(productId);
   }
 
   // Show the clicked image in the bigger image box

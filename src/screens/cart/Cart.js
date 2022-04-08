@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import './Cart.scss';
 import {
-  selectCartProductIds,
+  selectOrderItemIds,
   selectTotalPrice,
 } from '../../features/cart/cartSlice';
 import { Button, CartItem } from '../../components';
@@ -14,17 +14,17 @@ class CartComp extends Component {
   }
 
   render() {
-    const { cartProductIds, totalPrice } = this.props;
+    const { orderItemIds, totalPrice } = this.props;
 
     return (
       <div className="cart">
         <div className="cart__container container">
-          {cartProductIds.length ? (
+          {orderItemIds.length ? (
             // If cart is not empty
             <>
               <h1 className="cart__title">CART</h1>
-              {cartProductIds.map((cartProductId) => (
-                <CartItem key={cartProductId} id={cartProductId} size="big" />
+              {orderItemIds.map((orderItemId) => (
+                <CartItem key={orderItemId} id={orderItemId} size="big" />
               ))}
               <div className="cart__totalPriceContainer">
                 <span className="cart__totalPriceTitle">Total</span>
@@ -47,12 +47,12 @@ class CartComp extends Component {
 }
 
 CartComp.propTypes = {
-  cartProductIds: PropTypes.array.isRequired,
+  orderItemIds: PropTypes.array.isRequired,
   totalPrice: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  cartProductIds: selectCartProductIds(state),
+  orderItemIds: selectOrderItemIds(state),
   totalPrice: selectTotalPrice(state),
 });
 

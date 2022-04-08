@@ -1,5 +1,5 @@
-import { render, screen, waitFor, prettyDOM } from '../../test/utils';
-import { fakeCartProducts } from '../../mocks';
+import { render, screen } from '../../test/utils';
+import { fakeOrderList } from '../../mocks';
 import { MiniCart } from './MiniCart';
 
 // Mock 'react-router-dom'
@@ -27,12 +27,12 @@ beforeEach(() => {
 
 test('a badge should show the total cart item quantity', async () => {
   // Prepare initial data and render the component
-  const cartProductIds = [fakeCartProducts[0].id, fakeCartProducts[1].id];
+  const orderItemIds = [fakeOrderList[0].id, fakeOrderList[1].id];
   const totalCartItemQuantity = 3;
   const totalPrice = '$100';
   const { user } = await render(
     <MiniCart
-      cartProductIds={cartProductIds}
+      orderItemIds={orderItemIds}
       totalCartItemQuantity={totalCartItemQuantity}
       totalPrice={totalPrice}
     />
@@ -52,12 +52,12 @@ test('open miniCart and show the data', async () => {
     });
 
   // Prepare initial data and render the component
-  const cartProductIds = [fakeCartProducts[0].id, fakeCartProducts[1].id];
+  const orderItemIds = [fakeOrderList[0].id, fakeOrderList[1].id];
   const totalCartItemQuantity = 3;
   const totalPrice = '$100';
   const { user } = await render(
     <MiniCart
-      cartProductIds={cartProductIds}
+      orderItemIds={orderItemIds}
       totalCartItemQuantity={totalCartItemQuantity}
       totalPrice={totalPrice}
     />
@@ -73,13 +73,13 @@ test('open miniCart and show the data', async () => {
   });
   expect(totalCountElement).toBeInTheDocument();
 
-  // Should render a <CartItem /> for each cartProduct
+  // Should render a <CartItem /> for each orderItem
   // Mocked version of <CartItem /> just renders the id
-  cartProductIds.forEach((cartProductId) => {
-    const cartProductIdElement = screen.getByRole('heading', {
-      name: cartProductId,
+  orderItemIds.forEach((orderItemId) => {
+    const orderItemElement = screen.getByRole('heading', {
+      name: orderItemId,
     });
-    expect(cartProductIdElement).toBeInTheDocument();
+    expect(orderItemElement).toBeInTheDocument();
   });
 
   // totalPrice should be in the UI
@@ -87,7 +87,7 @@ test('open miniCart and show the data', async () => {
   expect(totalPriceElement).toBeInTheDocument();
 
   // Restore document.getElementById mock
-  document.getElementById.mockRestore();
+  documentGetElementById.mockRestore();
 });
 
 test('Clicking on "VIEW BAG" button navigates to /cart page', async () => {
@@ -99,7 +99,7 @@ test('Clicking on "VIEW BAG" button navigates to /cart page', async () => {
     });
 
   // Prepare initial data and render the component
-  const cartProductIds = [fakeCartProducts[0].id, fakeCartProducts[1].id];
+  const orderItemIds = [fakeOrderList[0].id, fakeOrderList[1].id];
   const totalCartItemQuantity = 3;
   const totalPrice = '$100';
   const router = {
@@ -107,7 +107,7 @@ test('Clicking on "VIEW BAG" button navigates to /cart page', async () => {
   };
   const { user } = await render(
     <MiniCart
-      cartProductIds={cartProductIds}
+      orderItemIds={orderItemIds}
       totalCartItemQuantity={totalCartItemQuantity}
       totalPrice={totalPrice}
       router={router}
@@ -128,7 +128,7 @@ test('Clicking on "VIEW BAG" button navigates to /cart page', async () => {
   expect(mockNavigate).toBeCalledWith('/cart');
 
   // Restore document.getElementById mock
-  document.getElementById.mockRestore();
+  documentGetElementById.mockRestore();
 });
 
 test('should close miniCart', async () => {
@@ -140,7 +140,7 @@ test('should close miniCart', async () => {
     });
 
   // Prepare initial data and render the component
-  const cartProductIds = [fakeCartProducts[0].id, fakeCartProducts[1].id];
+  const orderItemIds = [fakeOrderList[0].id, fakeOrderList[1].id];
   const totalCartItemQuantity = 3;
   const totalPrice = '$100';
   const router = {
@@ -148,7 +148,7 @@ test('should close miniCart', async () => {
   };
   const { user } = await render(
     <MiniCart
-      cartProductIds={cartProductIds}
+      orderItemIds={orderItemIds}
       totalCartItemQuantity={totalCartItemQuantity}
       totalPrice={totalPrice}
       router={router}
@@ -175,5 +175,5 @@ test('should close miniCart', async () => {
   expect(totalCountElement).not.toBeInTheDocument();
 
   // Restore document.getElementById mock
-  document.getElementById.mockRestore();
+  documentGetElementById.mockRestore();
 });

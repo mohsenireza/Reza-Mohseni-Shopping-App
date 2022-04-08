@@ -6,6 +6,7 @@ import {
   fakeCurrencies,
   fakeTechProducts,
   fakeShoesProduct,
+  fakeStorageOrderList,
 } from '../../mocks';
 import { client } from '../../config';
 import App from '../../App';
@@ -189,23 +190,17 @@ test('add product to cart', async () => {
   expect(removeFromCartButtonElement).toBeInTheDocument();
 
   // The product should be added to localStorage
-  const cartProductList = storage.load('cartProductList');
-  expect(cartProductList).toBeTruthy();
-  expect(cartProductList).toHaveLength(1);
-  expect(cartProductList[0].id).toBe(fakeShoesProduct.id);
+  const orderList = storage.load('orderList');
+  expect(orderList).toBeTruthy();
+  expect(orderList).toHaveLength(1);
+  expect(orderList[0].productId).toBe(fakeShoesProduct.id);
 });
 
 test('remove product from cart by remove button', async () => {
   // Prepare initial data and render the component
   // Add a product to cart by adding it to localStorage
-  const initialCartProductList = [
-    {
-      id: fakeShoesProduct.id,
-      selectedAttributes: { Size: '40' },
-      count: 1,
-    },
-  ];
-  storage.save('cartProductList', initialCartProductList);
+  const initialOrderList = [fakeStorageOrderList[0]];
+  storage.save('orderList', initialOrderList);
   const { user } = await render(<App />);
 
   // Click on cart management button of a <ProductCard /> to open the cart modal
@@ -233,21 +228,15 @@ test('remove product from cart by remove button', async () => {
   expect(addToCartButtonElement).toBeInTheDocument();
 
   // The product should be removed from localStorage
-  const cartProductList = storage.load('cartProductList');
-  expect(cartProductList).toEqual([]);
+  const orderList = storage.load('orderList');
+  expect(orderList).toEqual([]);
 });
 
 test('remove product from cart by <Counter />', async () => {
   // Prepare initial data and render the component
   // Add a product to cart by adding it to localStorage
-  const initialCartProductList = [
-    {
-      id: fakeShoesProduct.id,
-      selectedAttributes: { Size: '40' },
-      count: 1,
-    },
-  ];
-  storage.save('cartProductList', initialCartProductList);
+  const initialOrderList = [fakeStorageOrderList[0]];
+  storage.save('orderList', initialOrderList);
   const { user } = await render(<App />);
 
   // Click on cart management button of a <ProductCard /> to open the cart modal
@@ -273,21 +262,15 @@ test('remove product from cart by <Counter />', async () => {
   expect(addToCartButtonElement).toBeInTheDocument();
 
   // The product should be removed from localStorage
-  const cartProductList = storage.load('cartProductList');
-  expect(cartProductList).toEqual([]);
+  const orderList = storage.load('orderList');
+  expect(orderList).toEqual([]);
 });
 
 test('increase product count', async () => {
   // Prepare initial data and render the component
   // Add a product to cart by adding it to localStorage
-  const initialCartProductList = [
-    {
-      id: fakeShoesProduct.id,
-      selectedAttributes: { Size: '40' },
-      count: 1,
-    },
-  ];
-  storage.save('cartProductList', initialCartProductList);
+  const initialOrderList = [fakeStorageOrderList[0]];
+  storage.save('orderList', initialOrderList);
   const { user } = await render(<App />);
 
   // Click on cart management button of a <ProductCard /> to open the cart modal
@@ -307,21 +290,15 @@ test('increase product count', async () => {
   expect(countElement).toHaveTextContent(2);
 
   // The product should be updated in localStorage
-  const cartProductList = storage.load('cartProductList');
-  expect(cartProductList[0].count).toBe(2);
+  const orderList = storage.load('orderList');
+  expect(orderList[0].quantity).toBe(2);
 });
 
 test('decrease product count', async () => {
   // Prepare initial data and render the component
   // Add a product to cart by adding it to localStorage
-  const initialCartProductList = [
-    {
-      id: fakeShoesProduct.id,
-      selectedAttributes: { Size: '40' },
-      count: 2,
-    },
-  ];
-  storage.save('cartProductList', initialCartProductList);
+  const initialOrderList = [{ ...fakeStorageOrderList[0], quantity: 2 }];
+  storage.save('orderList', initialOrderList);
   const { user } = await render(<App />);
 
   // Click on cart management button of a <ProductCard /> to open the cart modal
@@ -341,42 +318,6 @@ test('decrease product count', async () => {
   expect(countElement).toHaveTextContent(1);
 
   // The product should be updated in localStorage
-  const cartProductList = storage.load('cartProductList');
-  expect(cartProductList[0].count).toBe(1);
-});
-
-test('edit attribute of a cartProduct', async () => {
-  // Prepare initial data and render the component
-  // Add a product to cart by adding it to localStorage
-  const initialCartProductList = [
-    {
-      id: fakeShoesProduct.id,
-      selectedAttributes: { Size: '40' },
-      count: 1,
-    },
-  ];
-  storage.save('cartProductList', initialCartProductList);
-  const { user } = await render(<App />);
-
-  // Click on cart management button of a <ProductCard /> to open the cart modal
-  const cartManagementButtonElement = screen.getAllByRole('button', {
-    name: /add product to cart/i,
-  })[0];
-  await user.click(cartManagementButtonElement);
-
-  // Click on another attribute item to select
-  const attributeItemToSelect = fakeShoesProduct.attributes[0].items[1];
-  const attributeItemElement = screen.getByRole('button', {
-    name: attributeItemToSelect.value,
-  });
-  await user.click(attributeItemElement);
-
-  // UI of selected attribute should change
-  expect(attributeItemElement).toHaveClass('-dark');
-
-  // The product should be updated in localStorage
-  const cartProductList = storage.load('cartProductList');
-  expect(cartProductList[0].selectedAttributes.Size).toBe(
-    attributeItemToSelect.id
-  );
+  const orderList = storage.load('orderList');
+  expect(orderList[0].quantity).toBe(1);
 });

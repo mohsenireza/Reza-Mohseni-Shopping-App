@@ -2,147 +2,170 @@ import {
   createSlice,
   createAsyncThunk,
   createEntityAdapter,
+  nanoid,
 } from '@reduxjs/toolkit';
 import { client } from '../../config';
-import { cartProductsQuery } from '../../graphql/queries';
+import { cartQuery } from '../../graphql/queries';
 import { storage } from '../../utils/storage';
 import { selectSelectedCurrency } from '../currencies/currenciesSlice';
 
-const productsApadter = createEntityAdapter();
+const orderListApadter = createEntityAdapter({
+  sortComparer: (a, b) =>
+    String(b.addedTimestamp).localeCompare(String(a.addedTimestamp)),
+});
 
-const initialState = productsApadter.getInitialState({
+const initialState = orderListApadter.getInitialState({
   status: 'idle',
   error: null,
 });
 
-export const fetchCartProducts = createAsyncThunk(
-  'fetchCartProducts',
-  async () => {
-    try {
-      const cartProductList = storage.load('cartProductList');
-      // If there isn't any product in cart, don't continue
-      if (!cartProductList || !cartProductList.length) return [];
-      const cartProductIds = cartProductList.map(
-        (cartProductItem) => cartProductItem.id
-      );
-      const { data } = await client.query({
-        query: cartProductsQuery(cartProductIds),
-      });
-      // Create 'products' array with a suitable shape
-      const products = [];
-      for (const key of Object.keys(data)) {
-        const product = { ...data[key] };
-        const productInCart = cartProductList.find(
-          (cartProductItem) => cartProductItem.id === product.id
-        );
-        // Add 'selectedAttributes' and 'count' from localStorage to product objects in store
-        product.selectedAttributes = productInCart.selectedAttributes;
-        product.count = productInCart.count;
-        products.push(product);
+export const fetchOrderList = createAsyncThunk('fetchOrderList', async () => {
+  try {
+    const storageOrderList = storage.load('orderList');
+    // If there isn't any product in cart, don't continue
+    if (!storageOrderList || !storageOrderList.length) return [];
+    let orderItemProductIds = storageOrderList.map(
+      (orderItem) => orderItem.productId
+    );
+    // Remove duplicate product ids
+    orderItemProductIds = [...new Set(orderItemProductIds)];
+    // Fetch data of products
+    const { data } = await client.query({
+      query: cartQuery(orderItemProductIds),
+    });
+    // Create 'orderList' array with a suitable shape
+    const orderList = storageOrderList.map((storageOrderItem) => {
+      let product;
+      for (const key in data) {
+        if (data[key].id === storageOrderItem.productId) {
+          product = data[key];
+          break;
+        }
       }
-      return products;
-    } catch (error) {
-      console.log(`Error while fetching cart data: ${error}`);
-      throw error;
-    }
+      // Create 'orderItem' based on product and localStorage data
+      const { id, ...otherProps } = product;
+      const orderItem = {
+        productId: id,
+        ...otherProps,
+        ...storageOrderItem,
+      };
+      return orderItem;
+    });
+    return orderList;
+  } catch (error) {
+    console.log(`Error while fetching cart data: ${error}`);
+    throw error;
   }
-);
+});
 
 const cartSlice = createSlice({
   name: 'cart',
   initialState: initialState,
   reducers: {
-    productAddedToCart: (state, action) => {
-      const product = action.payload;
-      const productForLocalStorage = {
-        id: product.id,
-        selectedAttributes: product.selectedAttributes,
-        count: product.count,
-      };
-      const cartProductList = storage.load('cartProductList');
-      // If the 'cartProductList' array exists in the localStorage, then add the new product to it
-      // But if 'cartProductList' is null, then create an array with the new product data
-      const modifiedCartProductList = cartProductList
-        ? [productForLocalStorage, ...cartProductList]
-        : [productForLocalStorage];
-      // Save 'modifiedCartProductList' to the localStorage
-      storage.save('cartProductList', modifiedCartProductList);
-      // Add 'product' to the store
-      productsApadter.addOne(state, product);
+    orderItemAdded: {
+      reducer: (state, action) => {
+        const orderItem = action.payload;
+        const storageOrderItem = {
+          id: orderItem.id,
+          productId: orderItem.productId,
+          selectedAttributes: orderItem.selectedAttributes,
+          quantity: orderItem.quantity,
+          addedTimestamp: orderItem.addedTimestamp,
+        };
+        const storageOrderList = storage.load('orderList');
+        // If the 'storageOrderList' array exists in the localStorage, then add the new product to it
+        // But if 'storageOrderList' is null, then create an array with the new product data
+        const modifiedStorageOrderList = storageOrderList
+          ? [storageOrderItem, ...storageOrderList]
+          : [storageOrderItem];
+        // Save 'modifiedStorageOrderList' to the localStorage
+        storage.save('orderList', modifiedStorageOrderList);
+        // Add 'orderItem' to the store
+        orderListApadter.addOne(state, orderItem);
+      },
+      prepare: (orderItem) => {
+        return {
+          payload: {
+            id: nanoid(),
+            ...orderItem,
+            quantity: 1,
+            addedTimestamp: new Date().getTime(),
+          },
+        };
+      },
     },
-    productEditedInCart: (state, action) => {
-      const { productId, attributeId, attributeSelectedItemId, count } =
-        action.payload;
-      const cartProductList = storage.load('cartProductList');
-      const productIndexInCart = cartProductList.findIndex(
-        (cartProductItem) => cartProductItem.id === productId
+    orderItemQuantityEdited: (state, action) => {
+      const { orderItemId, quantity } = action.payload;
+      // Update the localStorage
+      const storageOrderList = storage.load('orderList');
+      const storageOrderItem = storageOrderList.find(
+        (orderItem) => orderItem.id === orderItemId
       );
-      // If attributes changed
-      if (attributeId && attributeSelectedItemId) {
-        // Edit the product's selectedAttributes in the 'cartProductList' array
-        cartProductList[productIndexInCart].selectedAttributes[attributeId] =
-          attributeSelectedItemId;
-        // Update the localStorage
-        storage.save('cartProductList', cartProductList);
-        // Update the store
-        state.entities[productId].selectedAttributes[attributeId] =
-          attributeSelectedItemId;
-      }
-      // If count changed
-      if (count) {
-        // Edit the product's count in the 'cartProductList' array
-        cartProductList[productIndexInCart].count = count;
-        // Update the localStorage
-        storage.save('cartProductList', cartProductList);
-        // Update the store
-        state.entities[productId].count = count;
-      }
+      storageOrderItem.quantity = quantity;
+      storage.save('orderList', storageOrderList);
+      // Update the store
+      orderListApadter.updateOne(state, {
+        id: orderItemId,
+        changes: { quantity },
+      });
     },
-    productRemovedFromCart: (state, action) => {
-      const productId = action.payload;
+    orderItemRemoved: (state, action) => {
+      const orderItemId = action.payload;
       // Remove product from localStorage
-      const cartProductList = storage.load('cartProductList');
-      const updatedCartProductList = cartProductList.filter(
-        (product) => product.id !== productId
+      const storageOrderList = storage.load('orderList');
+      const modifiedStorageOrderList = storageOrderList.filter(
+        (orderItem) => orderItem.id !== orderItemId
       );
-      storage.save('cartProductList', updatedCartProductList);
+      storage.save('orderList', modifiedStorageOrderList);
       // Remove product from store
-      productsApadter.removeOne(state, productId);
+      orderListApadter.removeOne(state, orderItemId);
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchCartProducts.pending, (state) => {
+      .addCase(fetchOrderList.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(fetchCartProducts.fulfilled, (state, action) => {
+      .addCase(fetchOrderList.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        productsApadter.setAll(state, action.payload);
+        orderListApadter.setAll(state, action.payload);
       })
-      .addCase(fetchCartProducts.rejected, (state, action) => {
+      .addCase(fetchOrderList.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
       });
   },
 });
 
-export const {
-  productAddedToCart,
-  productEditedInCart,
-  productRemovedFromCart,
-} = cartSlice.actions;
+export const { orderItemAdded, orderItemQuantityEdited, orderItemRemoved } =
+  cartSlice.actions;
 
 export const {
-  selectById: selectCartProductById,
-  selectIds: selectCartProductIds,
-  selectAll: selectAllCartProducts,
-} = productsApadter.getSelectors((state) => state.cart);
+  selectById: selectOrderItemById,
+  selectIds: selectOrderItemIds,
+  selectAll: selectOrderList,
+} = orderListApadter.getSelectors((state) => state.cart);
+
+export const selectOrderItemByProduct = (
+  state,
+  { productId, selectedAttributes }
+) => {
+  const orderList = selectOrderList(state);
+  const selectedOrderItem = orderList.find((orderItem) => {
+    const hasSameProductId = orderItem.productId === productId;
+    const hasSameSelectedAttributes =
+      JSON.stringify(orderItem.selectedAttributes) ===
+      JSON.stringify(selectedAttributes);
+    return hasSameProductId && hasSameSelectedAttributes;
+  });
+  return selectedOrderItem;
+};
 
 export const selectTotalCartItemQuantity = (state) => {
   let totalCartItemQuantity = 0;
-  const cartProducts = selectAllCartProducts(state);
-  cartProducts.forEach(
-    (cartProduct) => (totalCartItemQuantity += cartProduct.count)
+  const orderList = selectOrderList(state);
+  orderList.forEach(
+    (orderItem) => (totalCartItemQuantity += orderItem.quantity)
   );
   return totalCartItemQuantity;
 };
@@ -151,14 +174,14 @@ export const selectTotalPrice = (state) => {
   let totalPrice = 0;
   const selectedCurrency = selectSelectedCurrency(state);
   if (!selectedCurrency) return '';
-  const cartProducts = selectAllCartProducts(state);
-  // Loop through all products in cart to calculate the total price
-  cartProducts.forEach((cartProduct) => {
+  const orderList = selectOrderList(state);
+  // Loop through all order items in cart to calculate the total price
+  orderList.forEach((orderItem) => {
     // Select price based on the selected currency
-    const price = cartProduct.prices.find(
+    const price = orderItem.prices.find(
       (price) => price.currency.label === selectedCurrency.label
     );
-    totalPrice += price.amount * cartProduct.count;
+    totalPrice += price.amount * orderItem.quantity;
   });
   totalPrice = Number.parseFloat(totalPrice).toFixed(2);
   return `${selectedCurrency.symbol}${totalPrice}`;

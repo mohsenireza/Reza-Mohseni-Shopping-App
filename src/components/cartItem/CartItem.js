@@ -5,9 +5,9 @@ import { Link } from 'react-router-dom';
 import './CartItem.scss';
 import { Attribute, Counter } from '../index';
 import {
-  productEditedInCart,
-  productRemovedFromCart,
-  selectCartProductById,
+  orderItemRemoved,
+  orderItemQuantityEdited,
+  selectOrderItemById,
 } from '../../features/cart/cartSlice';
 import { selectSelectedCurrency } from '../../features/currencies/currenciesSlice';
 import arrowLeft from '../../assets/images/arrowLeft.svg';
@@ -23,27 +23,28 @@ class CartItemComp extends Component {
     };
 
     // Bind methods
-    this.handleCartProductRemove = this.handleCartProductRemove.bind(this);
-    this.handleCountChange = this.handleCountChange.bind(this);
+    this.handleOrderItemRemove = this.handleOrderItemRemove.bind(this);
+    this.handleOrderItemQuantityEdit =
+      this.handleOrderItemQuantityEdit.bind(this);
     this.handleImageShowNext = this.handleImageShowNext.bind(this);
     this.handleImageShowPrev = this.handleImageShowPrev.bind(this);
   }
 
-  handleCartProductRemove() {
-    this.props.dispatchProductRemovedFromCart(this.props.id);
+  handleOrderItemRemove() {
+    this.props.dispatchOrderItemRemoved(this.props.id);
   }
 
-  handleCountChange(count) {
-    this.props.dispatchProductEditedInCart({
-      productId: this.props.id,
-      count,
+  handleOrderItemQuantityEdit(quantity) {
+    this.props.dispatchOrderItemQuantityEdited({
+      orderItemId: this.props.id,
+      quantity,
     });
   }
 
   // Change selected image
   handleImageShowNext() {
-    const { id, selectCartProductById } = this.props;
-    const { gallery } = selectCartProductById(id);
+    const { id, selectOrderItemById } = this.props;
+    const { gallery } = selectOrderItemById(id);
     const lastImageIndex = gallery.length - 1;
     const { selectedImageIndex } = this.state;
     // Show the first image
@@ -60,8 +61,8 @@ class CartItemComp extends Component {
 
   // Change selected image
   handleImageShowPrev() {
-    const { id, selectCartProductById } = this.props;
-    const { gallery } = selectCartProductById(id);
+    const { id, selectOrderItemById } = this.props;
+    const { gallery } = selectOrderItemById(id);
     const lastImageIndex = gallery.length - 1;
     const { selectedImageIndex } = this.state;
     // Show the last image
@@ -77,17 +78,18 @@ class CartItemComp extends Component {
   }
 
   render() {
-    const { id, selectCartProductById, selectedCurrency, size } = this.props;
+    const { id, selectOrderItemById, selectedCurrency, size } = this.props;
 
     const {
+      productId,
       brand,
       name,
       prices,
       attributes,
       selectedAttributes,
-      count,
+      quantity,
       gallery,
-    } = selectCartProductById(id);
+    } = selectOrderItemById(id);
 
     // Select price based on the selected currency
     const price = prices.find(
@@ -101,10 +103,18 @@ class CartItemComp extends Component {
     return (
       <article className={`cartItem -${size}`}>
         <div className="cartItem__infoContainer">
-          <Link to={`/product/${id}`} className="cartItem__brand">
+          <Link
+            to={`/product/${productId}`}
+            onClick={this.props.onLinkClick}
+            className="cartItem__brand"
+          >
             {brand}
           </Link>
-          <Link to={`/product/${id}`} className="cartItem__name">
+          <Link
+            to={`/product/${productId}`}
+            onClick={this.props.onLinkClick}
+            className="cartItem__name"
+          >
             {name}
           </Link>
           <span className="cartItem__price">{`${price.currency.symbol}${price.amount}`}</span>
@@ -117,7 +127,11 @@ class CartItemComp extends Component {
               hasAttributeName={false}
               hasTooltip={size === 'big'}
               {...attribute}
-              selectedItemId={selectedAttributes[attribute.id]}
+              selectedItemId={
+                selectedAttributes.find(
+                  (selectedAttribute) => selectedAttribute.id === attribute.id
+                ).selectedItemId
+              }
               isDisabled={true}
               shouldFadeWhenDisabled={false}
             />
@@ -127,9 +141,9 @@ class CartItemComp extends Component {
           <Counter
             alignment="vertical"
             size={size}
-            count={count}
-            onCountChange={this.handleCountChange}
-            onRemove={this.handleCartProductRemove}
+            count={quantity}
+            onCountChange={this.handleOrderItemQuantityEdit}
+            onRemove={this.handleOrderItemRemove}
           />
           <figure className="cartItem__imageContainer">
             <img
@@ -176,25 +190,27 @@ class CartItemComp extends Component {
 
 CartItemComp.propTypes = {
   id: PropTypes.string.isRequired,
-  selectCartProductById: PropTypes.func.isRequired,
-  selectedCurrency: PropTypes.object,
   size: PropTypes.oneOf(['small', 'big']),
-  dispatchProductRemovedFromCart: PropTypes.func.isRequired,
-  dispatchProductEditedInCart: PropTypes.func.isRequired,
+  onLinkClick: PropTypes.func,
+  selectOrderItemById: PropTypes.func.isRequired,
+  selectedCurrency: PropTypes.object,
+  dispatchOrderItemRemoved: PropTypes.func.isRequired,
+  dispatchOrderItemQuantityEdited: PropTypes.func.isRequired,
 };
 
 CartItemComp.defaultProps = {
   size: 'small',
+  onLinkClick: () => {},
 };
 
 const mapStateToProps = (state) => ({
-  selectCartProductById: selectCartProductById.bind(this, state),
+  selectOrderItemById: selectOrderItemById.bind(this, state),
   selectedCurrency: selectSelectedCurrency(state),
 });
 
 const mapDispatchToProps = {
-  dispatchProductRemovedFromCart: productRemovedFromCart,
-  dispatchProductEditedInCart: productEditedInCart,
+  dispatchOrderItemRemoved: orderItemRemoved,
+  dispatchOrderItemQuantityEdited: orderItemQuantityEdited,
 };
 
 const CartItem = connect(mapStateToProps, mapDispatchToProps)(CartItemComp);
