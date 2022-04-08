@@ -79,7 +79,7 @@ export const productQuery = () => gql`
   }
 `;
 
-export const cartProductsQuery = (productIds) => {
+export const cartQuery = (productIds) => {
   const singleProductQueries = productIds.map((productId, index) => {
     return `product${index}: product(id: "${productId}") {
         id

@@ -89,8 +89,7 @@
         height: rem(185px);
         margin-left: rem(12px);
         position: relative;
-        &:hover,
-        &:focus-within {
+        &:hover {
           .cartItem__arrowButton {
             .cartItem__arrowContainer {
               background-color: $firstDark-color;
@@ -101,6 +100,11 @@
           position: absolute;
           top: 0;
           height: 100%;
+          &:focus-visible {
+            .cartItem__arrowContainer {
+              background-color: $firstDark-color;
+            }
+          }
           &.-prev {
             left: 0;
             .cartItem__arrowContainer {

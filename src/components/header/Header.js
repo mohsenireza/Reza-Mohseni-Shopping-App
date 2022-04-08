@@ -6,46 +6,11 @@ import './Header.scss';
 import logo from '../../assets/images/logo.svg';
 import { ReactComponent as Menu } from '../../assets/images/menu.svg';
 import { CurrencySwitcher, MiniCart, Drawer } from '../index';
-import { categorySelected } from '../../features/categories/categoriesSlice';
-import { withBreakpoint, withRouter } from '../../hoc';
-import { getParameterByName } from '../../utils';
+import { withBreakpoint } from '../../hoc';
 
 class HeaderComp extends Component {
   constructor(props) {
     super(props);
-
-    // Bind methods
-    this.getDataFromUrl = this.getDataFromUrl.bind(this);
-  }
-
-  // Fill store with URL on startup
-  componentDidMount() {
-    this.getDataFromUrl();
-  }
-
-  // Fill store with URL on every URL change
-  componentDidUpdate(prevProps) {
-    if (prevProps.router.location !== this.props.router.location) {
-      this.getDataFromUrl();
-    }
-  }
-
-  // Fill store with URL
-  // Because we get store data from URL,
-  // even after reloading, our app can hold its old state,
-  // like selected category
-  getDataFromUrl() {
-    const selectedCategoryFromQueryString = getParameterByName('category');
-    const categories = this.props.categories;
-    // If the category from URL exists in the store, we can use it as the selected category
-    if (categories.includes(selectedCategoryFromQueryString)) {
-      this.props.dispatchCategorySelected(selectedCategoryFromQueryString);
-    }
-    // Otherwise we select the first category Item in store as the selected category
-    else if (categories.length) {
-      const defaultCategory = categories[0];
-      this.props.dispatchCategorySelected(defaultCategory);
-    }
   }
 
   render() {
@@ -83,6 +48,7 @@ class HeaderComp extends Component {
               <Drawer
                 renderToggler={(onDrawerOpen) => (
                   <button
+                    data-testid="headerDrawerToggler"
                     className="header__drawerToggler"
                     onClick={(e) => {
                       // Prevent <DetectClickOutside /> to get the click event and close the drawer after opening it
@@ -127,8 +93,6 @@ class HeaderComp extends Component {
 HeaderComp.propTypes = {
   categories: PropTypes.array.isRequired,
   selectedCategory: PropTypes.string,
-  dispatchCategorySelected: PropTypes.func.isRequired,
-  router: PropTypes.object,
   breakpoint: PropTypes.string,
 };
 
@@ -137,12 +101,6 @@ const mapStateToProps = (state) => ({
   selectedCategory: state.categories.selectedCategory,
 });
 
-const mapDispatchToProps = {
-  dispatchCategorySelected: categorySelected,
-};
-
-const Header = withBreakpoint(
-  withRouter(connect(mapStateToProps, mapDispatchToProps)(HeaderComp))
-);
+const Header = withBreakpoint(connect(mapStateToProps)(HeaderComp));
 
 export { Header };

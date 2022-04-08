@@ -27,7 +27,7 @@ class ModalContainer extends Component {
 
   // Close modal when escape key is pressed
   handleEscapeKeyDown(e) {
-    if (e.keyCode === 27) {
+    if (e.key === 'Escape') {
       this.handleModalClose();
     }
   }

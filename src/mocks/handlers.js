@@ -62,10 +62,10 @@ export const handlers = [
   graphql.query('cart', (req, res, ctx) => {
     // Send products which their ids are inside localStorage
     const data = {};
-    const cartProductList = storage.load('cartProductList');
-    cartProductList.forEach((cartProductItem, index) => {
+    const orderList = storage.load('orderList');
+    orderList.forEach((orderItem, index) => {
       const product = fakeProducts.find(
-        (fakeProduct) => fakeProduct.id === cartProductItem.id
+        (fakeProduct) => fakeProduct.id === orderItem.productId
       );
       data[`product${index}`] = product;
     });

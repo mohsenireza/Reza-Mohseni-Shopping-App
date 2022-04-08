@@ -10,8 +10,7 @@
   height: rem(444px);
   padding: rem(15px) rem(15px) rem(19px) rem(15px);
   transition: 0.3s;
-  &:hover,
-  &:focus-within {
+  &:hover {
     box-shadow: 0 rem(4px) rem(35px) rem(10px) rgba(168, 172, 176, 0.19);
     .productCard__imageContainer {
       .productCard__addToCart {
@@ -52,13 +51,21 @@
       position: absolute;
       right: rem(15px);
       bottom: rem(-26px);
+      width: rem(52px);
+      height: rem(52px);
       border-radius: 100%;
       overflow: hidden;
       cursor: pointer;
       transition: 0.3s;
+      @include breakpoint(sm) {
+        opacity: 100%;
+      }
+      &:focus-visible {
+        opacity: 100%;
+      }
       .productCard__addToCartImage {
-        width: rem(52px);
-        height: rem(52px);
+        height: 100%;
+        width: 100%;
       }
     }
   }

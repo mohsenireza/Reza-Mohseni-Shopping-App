@@ -24,7 +24,7 @@ test('should show the modal', async () => {
   expect(modalChildrenElement).toBeInTheDocument();
 });
 
-test('modal should be closed', async () => {
+test('modal should be closed by clicking on the close button', async () => {
   // Prepare initial data and render the component
   const onModalClose = jest.fn();
   const { user } = await render(
@@ -33,9 +33,25 @@ test('modal should be closed', async () => {
     </ModalContainer>
   );
 
-  // Clicking on the close button
+  // Click on the close button
   const closeButtonElement = screen.getByRole('button');
   await user.click(closeButtonElement);
+
+  // Now the modal should be closed
+  expect(onModalClose).toBeCalled();
+});
+
+test('modal should be closed by pressing Escape button', async () => {
+  // Prepare initial data and render the component
+  const onModalClose = jest.fn();
+  const { user } = await render(
+    <ModalContainer onModalClose={onModalClose}>
+      <h1>modal content</h1>
+    </ModalContainer>
+  );
+
+  // Press escape button
+  await user.keyboard('{Escape}');
 
   // Now the modal should be closed
   expect(onModalClose).toBeCalled();

@@ -5,7 +5,7 @@ import './MiniCart.scss';
 import cartImage from '../../assets/images/cart.svg';
 import { CartItem, DetectClickOutside, Button } from '../index';
 import {
-  selectCartProductIds,
+  selectOrderItemIds,
   selectTotalCartItemQuantity,
   selectTotalPrice,
 } from '../../features/cart/cartSlice';
@@ -50,8 +50,8 @@ class MiniCartComp extends Component {
       }
     }
 
-    // Reset the focus trapper if a cartProduct gets removed and focusable elements inside <MiniCart />'s overlay change
-    if (prevProps.cartProductIds.length != this.props.cartProductIds.length) {
+    // Reset the focus trapper if an orderItem gets removed and focusable elements inside <MiniCart />'s overlay change
+    if (prevProps.orderItemIds.length !== this.props.orderItemIds.length) {
       if (this.state.isOpen) this.focusTrapper.reset();
     }
 
@@ -116,13 +116,13 @@ class MiniCartComp extends Component {
 
   // Close <MiniCart />'s overlay when escape key is pressed
   handleEscapeKeyDown(e) {
-    if (e.keyCode === 27) {
+    if (e.key === 'Escape') {
       this.handleToggle(false);
     }
   }
 
   render() {
-    const { cartProductIds, totalCartItemQuantity, totalPrice } = this.props;
+    const { orderItemIds, totalCartItemQuantity, totalPrice } = this.props;
 
     const renderedHeaderContent = (
       <div className="miniCart__iconContainer">
@@ -169,8 +169,12 @@ class MiniCartComp extends Component {
                 </h3>
 
                 <div className="miniCart__cartItems">
-                  {cartProductIds.map((cartProductId) => (
-                    <CartItem key={cartProductId} id={cartProductId} />
+                  {orderItemIds.map((orderItemId) => (
+                    <CartItem
+                      key={orderItemId}
+                      id={orderItemId}
+                      onLinkClick={() => this.handleToggle(false)}
+                    />
                   ))}
                 </div>
 
@@ -204,7 +208,7 @@ class MiniCartComp extends Component {
 }
 
 MiniCartComp.propTypes = {
-  cartProductIds: PropTypes.array.isRequired,
+  orderItemIds: PropTypes.array.isRequired,
   totalCartItemQuantity: PropTypes.number.isRequired,
   totalPrice: PropTypes.string.isRequired,
   router: PropTypes.object.isRequired,
@@ -212,11 +216,11 @@ MiniCartComp.propTypes = {
 };
 
 MiniCartComp.defaultProps = {
-  cartProductIds: [],
+  orderItemIds: [],
 };
 
 const mapStateToProps = (state) => ({
-  cartProductIds: selectCartProductIds(state),
+  orderItemIds: selectOrderItemIds(state),
   totalCartItemQuantity: selectTotalCartItemQuantity(state),
   totalPrice: selectTotalPrice(state),
 });

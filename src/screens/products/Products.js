@@ -5,23 +5,62 @@ import './Products.scss';
 import { PageWrapper, ProductCard } from '../../components';
 import {
   fetchProducts,
+  productsStateCleared,
   selectProductIds,
 } from '../../features/products/productsSlice';
+import {
+  categorySelected,
+  selectedCategoryCleared,
+} from '../../features/categories/categoriesSlice';
+import { getParameterByName } from '../../utils';
+import { withRouter } from '../../hoc';
 
 class ProductsComp extends Component {
   constructor(props) {
     super(props);
+
+    // Bind methods
+    this.getSelectedCategoryFromUrl =
+      this.getSelectedCategoryFromUrl.bind(this);
   }
 
-  // Fetch products on startup
   componentDidMount() {
-    this.props.dispatchFetchProducts();
+    // Get selectedCategory from URL when component mounts
+    this.getSelectedCategoryFromUrl();
   }
 
-  // Fetch products when category changes
   componentDidUpdate(prevProps) {
+    // Get selectedCategory from URL when URL change
+    if (prevProps.router.location !== this.props.router.location) {
+      this.getSelectedCategoryFromUrl();
+    }
+    // Fetch products when category changes
     if (prevProps.selectedCategory !== this.props.selectedCategory) {
       this.props.dispatchFetchProducts();
+    }
+  }
+
+  componentWillUnmount() {
+    // Clear selectedCategory when leaving the page
+    this.props.dispatchSelectedCategoryCleared();
+    // Clear products state when leaving the page
+    this.props.dispatchProductsStateCleared();
+  }
+
+  // Fill selectedCategory in store with URL
+  // Because we get selectedCategory from URL,
+  // even after reloading, our app can hold its old selectedCategory,
+  getSelectedCategoryFromUrl() {
+    const selectedCategoryFromQueryString = getParameterByName('category');
+    const categories = this.props.categories;
+    // If the category from URL exists in the store, we can use it as the selected category
+    if (categories.includes(selectedCategoryFromQueryString)) {
+      this.props.dispatchCategorySelected(selectedCategoryFromQueryString);
+    }
+    // Otherwise we select the first category Item in store as the selected category
+    else if (categories.length) {
+      const defaultCategory = categories[0];
+      this.props.dispatchCategorySelected(defaultCategory);
     }
   }
 
@@ -53,13 +92,19 @@ class ProductsComp extends Component {
 }
 
 ProductsComp.propTypes = {
+  router: PropTypes.object,
+  categories: PropTypes.array.isRequired,
   selectedCategory: PropTypes.string,
   productIds: PropTypes.array.isRequired,
   fetchProductsStatus: PropTypes.string.isRequired,
   dispatchFetchProducts: PropTypes.func.isRequired,
+  dispatchCategorySelected: PropTypes.func.isRequired,
+  dispatchSelectedCategoryCleared: PropTypes.func.isRequired,
+  dispatchProductsStateCleared: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
+  categories: state.categories.categories,
   selectedCategory: state.categories.selectedCategory,
   productIds: selectProductIds(state),
   fetchProductsStatus: state.products.status,
@@ -67,8 +112,13 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   dispatchFetchProducts: fetchProducts,
+  dispatchCategorySelected: categorySelected,
+  dispatchSelectedCategoryCleared: selectedCategoryCleared,
+  dispatchProductsStateCleared: productsStateCleared,
 };
 
-const Products = connect(mapStateToProps, mapDispatchToProps)(ProductsComp);
+const Products = withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(ProductsComp)
+);
 
 export default Products;

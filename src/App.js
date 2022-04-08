@@ -5,7 +5,7 @@ import { Routes } from './Routes';
 import { Header, PageWrapper } from './components';
 import { fetchCategories } from './features/categories/categoriesSlice';
 import { fetchCurrencies } from './features/currencies/currenciesSlice';
-import { fetchCartProducts } from './features/cart/cartSlice';
+import { fetchOrderList } from './features/cart/cartSlice';
 
 class App extends Component {
   constructor(props) {
@@ -23,20 +23,20 @@ class App extends Component {
   fetchInitialData() {
     this.props.dispatchFetchCategories();
     this.props.dispatchFetchCurrencies();
-    this.props.dispatchFetchCartProducts();
+    this.props.dispatchFetchOrderList();
   }
 
   render() {
     const {
       fetchCategoriesStatus,
       fetchCurrenciesStatus,
-      fetchCartProductsStatus,
+      fetchOrderListStatus,
     } = this.props;
 
     const fetchInitialDataStatuses = [
       fetchCategoriesStatus,
       fetchCurrenciesStatus,
-      fetchCartProductsStatus,
+      fetchOrderListStatus,
     ];
 
     // Render the app after initial data gets loaded, otherwise render loading
@@ -61,22 +61,22 @@ class App extends Component {
 App.propTypes = {
   fetchCategoriesStatus: PropTypes.string.isRequired,
   fetchCurrenciesStatus: PropTypes.string.isRequired,
-  fetchCartProductsStatus: PropTypes.string.isRequired,
+  fetchOrderListStatus: PropTypes.string.isRequired,
   dispatchFetchCategories: PropTypes.func.isRequired,
   dispatchFetchCurrencies: PropTypes.func.isRequired,
-  dispatchFetchCartProducts: PropTypes.func.isRequired,
+  dispatchFetchOrderList: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   fetchCategoriesStatus: state.categories.status,
   fetchCurrenciesStatus: state.currencies.status,
-  fetchCartProductsStatus: state.cart.status,
+  fetchOrderListStatus: state.cart.status,
 });
 
 const mapDispatchToProps = {
   dispatchFetchCategories: fetchCategories,
   dispatchFetchCurrencies: fetchCurrencies,
-  dispatchFetchCartProducts: fetchCartProducts,
+  dispatchFetchOrderList: fetchOrderList,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

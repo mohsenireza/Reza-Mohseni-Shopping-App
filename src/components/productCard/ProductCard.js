@@ -17,10 +17,10 @@ class ProductCardComp extends Component {
     this.product = this.props.selectProductById(this.props.productId);
 
     // Bind methods
-    this.handleCartProductAdd = this.handleCartProductAdd.bind(this);
+    this.handleCartModalOpen = this.handleCartModalOpen.bind(this);
   }
 
-  handleCartProductAdd() {
+  handleCartModalOpen() {
     modalController.openModal({
       modalId: 'productInfoModal',
       Component: ProductInfoModal,
@@ -54,7 +54,7 @@ class ProductCardComp extends Component {
           {inStock && (
             <button
               className="productCard__addToCart"
-              onClick={this.handleCartProductAdd}
+              onClick={this.handleCartModalOpen}
             >
               <img
                 alt="Add Product to Cart"

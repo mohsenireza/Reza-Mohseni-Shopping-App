@@ -1,4 +1,4 @@
-import { render, screen } from '../../test/utils/utils';
+import { render, screen, prettyDOM } from '../../test/utils/utils';
 import { Header } from './Header';
 
 jest.mock('../currencySwitcher/CurrencySwitcher', () => {
@@ -10,15 +10,9 @@ jest.mock('../currencySwitcher/CurrencySwitcher', () => {
 test('should render categories', async () => {
   // Declare component props
   const categories = ['all', 'clothes', 'cars'];
-  const dispatchCategorySelected = jest.fn();
 
   // Render the component
-  await render(
-    <Header
-      categories={categories}
-      dispatchCategorySelected={dispatchCategorySelected}
-    />
-  );
+  await render(<Header categories={categories} />);
 
   // Expect to find categories in the screen
   expect(screen.getByText('all')).toBeInTheDocument();
@@ -29,16 +23,11 @@ test('should render categories', async () => {
 test('selected category should get -selected class, to have different UI', async () => {
   // Declare component props
   const categories = ['all', 'clothes', 'cars'];
-  const dispatchCategorySelected = jest.fn();
   const selectedCategory = 'cars';
 
   // Render the component
   await render(
-    <Header
-      categories={categories}
-      dispatchCategorySelected={dispatchCategorySelected}
-      selectedCategory={selectedCategory}
-    />
+    <Header categories={categories} selectedCategory={selectedCategory} />
   );
 
   // Expect selected category item to have -selected class
@@ -48,15 +37,9 @@ test('selected category should get -selected class, to have different UI', async
 test('should change url when a category gets selected', async () => {
   // Declare component props
   const categories = ['all', 'clothes', 'cars'];
-  const dispatchCategorySelected = jest.fn();
 
   // Render the component
-  const { user } = await render(
-    <Header
-      categories={categories}
-      dispatchCategorySelected={dispatchCategorySelected}
-    />
-  );
+  const { user } = await render(<Header categories={categories} />);
 
   // Click on a cetegory to select it
   await user.click(screen.getByRole('link', { name: 'cars' }));
@@ -65,58 +48,12 @@ test('should change url when a category gets selected', async () => {
   expect(window.location.search.includes('category=cars')).toBeTruthy();
 });
 
-test('should save selected category to the store', async () => {
-  // Declare component props
-  const categories = ['all', 'clothes', 'cars'];
-  const dispatchCategorySelected = jest.fn();
-
-  // Render the component
-  const { user } = await render(
-    <Header
-      categories={categories}
-      dispatchCategorySelected={dispatchCategorySelected}
-    />
-  );
-
-  // Click on a cetegory to select it
-  await user.click(screen.getByRole('link', { name: 'cars' }));
-
-  // Expect the selected category to be saved to the store
-  expect(dispatchCategorySelected).toBeCalled();
-  expect(dispatchCategorySelected).toBeCalledWith('cars');
-});
-
-test('should get selected category from URL', async () => {
-  // Declare component props
-  const categories = ['all', 'clothes', 'cars'];
-  const dispatchCategorySelected = jest.fn();
-
-  // Render the component
-  await render(
-    <Header
-      categories={categories}
-      dispatchCategorySelected={dispatchCategorySelected}
-    />,
-    { route: '/products?category=cars' }
-  );
-
-  // The selected category from URL should be saved to the store
-  expect(dispatchCategorySelected).toBeCalled();
-  expect(dispatchCategorySelected).toBeCalledWith('cars');
-});
-
 test('should redirect to /products page when the logo gets clicked', async () => {
   // Declare component props
   const categories = ['all', 'clothes', 'cars'];
-  const dispatchCategorySelected = jest.fn();
 
   // Render the component
-  const { user } = await render(
-    <Header
-      categories={categories}
-      dispatchCategorySelected={dispatchCategorySelected}
-    />
-  );
+  const { user } = await render(<Header categories={categories} />);
 
   // Click on the logo
   await user.click(screen.getByAltText('Logo'));
@@ -124,4 +61,22 @@ test('should redirect to /products page when the logo gets clicked', async () =>
   // The URL should be '/products'
   expect(window.location.pathname).toBe('/products');
   expect(window.location.search).toBe('');
+});
+
+test('should render drawer when width is <= 768', async () => {
+  // Declare initial data and render the component
+  window.innerWidth = 768;
+  const categories = ['all', 'clothes', 'cars'];
+  const { user } = await render(<Header categories={categories} />);
+
+  // Drawer's toggler should be in the UI
+  const headerDrawerToggler = screen.getByTestId('headerDrawerToggler');
+  expect(headerDrawerToggler).toBeInTheDocument();
+
+  // Click on the drawer's toggler to open the drawer
+  await user.click(headerDrawerToggler);
+
+  // Drawer's header should be in the UI (it means the drawer is open)
+  const drawerHeader = screen.getByTestId('drawerHeader');
+  expect(drawerHeader).toBeInTheDocument();
 });

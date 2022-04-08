@@ -1,9 +1,9 @@
 import { render, screen } from '../../test/utils';
 import {
   fakeCurrencies,
-  fakeCartProducts,
   fakeShoesProduct,
   fakeIphone12Product,
+  fakeOrderList,
 } from '../../mocks';
 import { ProductInfo } from './ProductInfo';
 
@@ -11,18 +11,18 @@ test('should show product info', async () => {
   // Prepare initial data and render the component
   const product = fakeShoesProduct;
   const selectedCurrency = fakeCurrencies[0];
-  const selectCartProductById = () => null;
-  const dispatchProductAddedToCart = jest.fn();
-  const dispatchProductEditedInCart = jest.fn();
-  const dispatchProductRemovedFromCart = jest.fn();
+  const selectOrderItemByProduct = () => null;
+  const dispatchOrderItemAdded = jest.fn();
+  const dispatchOrderItemQuantityEdited = jest.fn();
+  const dispatchOrderItemRemoved = jest.fn();
   await render(
     <ProductInfo
       product={product}
       selectedCurrency={selectedCurrency}
-      selectCartProductById={selectCartProductById}
-      dispatchProductAddedToCart={dispatchProductAddedToCart}
-      dispatchProductEditedInCart={dispatchProductEditedInCart}
-      dispatchProductRemovedFromCart={dispatchProductRemovedFromCart}
+      selectOrderItemByProduct={selectOrderItemByProduct}
+      dispatchOrderItemAdded={dispatchOrderItemAdded}
+      dispatchOrderItemQuantityEdited={dispatchOrderItemQuantityEdited}
+      dispatchOrderItemRemoved={dispatchOrderItemRemoved}
     />
   );
 
@@ -60,19 +60,19 @@ test('add product to cart', async () => {
   // Prepare initial data and render the component
   const product = fakeShoesProduct;
   const selectedCurrency = fakeCurrencies[0];
-  // selectCartProductById returns null, means the product is not added to cart yet
-  const selectCartProductById = () => null;
-  const dispatchProductAddedToCart = jest.fn();
-  const dispatchProductEditedInCart = jest.fn();
-  const dispatchProductRemovedFromCart = jest.fn();
+  // selectOrderItemByProduct returns null, means the product is not added to cart yet
+  const selectOrderItemByProduct = () => null;
+  const dispatchOrderItemAdded = jest.fn();
+  const dispatchOrderItemQuantityEdited = jest.fn();
+  const dispatchOrderItemRemoved = jest.fn();
   const { user } = await render(
     <ProductInfo
       product={product}
       selectedCurrency={selectedCurrency}
-      selectCartProductById={selectCartProductById}
-      dispatchProductAddedToCart={dispatchProductAddedToCart}
-      dispatchProductEditedInCart={dispatchProductEditedInCart}
-      dispatchProductRemovedFromCart={dispatchProductRemovedFromCart}
+      selectOrderItemByProduct={selectOrderItemByProduct}
+      dispatchOrderItemAdded={dispatchOrderItemAdded}
+      dispatchOrderItemQuantityEdited={dispatchOrderItemQuantityEdited}
+      dispatchOrderItemRemoved={dispatchOrderItemRemoved}
     />
   );
 
@@ -84,26 +84,26 @@ test('add product to cart', async () => {
 
   // Clicking on the addToCartButtonElement should add product to cart
   await user.click(addToCartButtonElement);
-  expect(dispatchProductAddedToCart).toBeCalled();
+  expect(dispatchOrderItemAdded).toBeCalled();
 });
 
 test('increase product count', async () => {
   // Prepare initial data and render the component
   const product = fakeShoesProduct;
   const selectedCurrency = fakeCurrencies[0];
-  // selectCartProductById returns a product, means the product is already added to cart
-  const selectCartProductById = () => fakeCartProducts[0];
-  const dispatchProductAddedToCart = jest.fn();
-  const dispatchProductEditedInCart = jest.fn();
-  const dispatchProductRemovedFromCart = jest.fn();
+  // selectOrderItemByProduct returns a product, means the product is already added to cart
+  const selectOrderItemByProduct = () => fakeOrderList[0];
+  const dispatchOrderItemAdded = jest.fn();
+  const dispatchOrderItemQuantityEdited = jest.fn();
+  const dispatchOrderItemRemoved = jest.fn();
   const { user } = await render(
     <ProductInfo
       product={product}
       selectedCurrency={selectedCurrency}
-      selectCartProductById={selectCartProductById}
-      dispatchProductAddedToCart={dispatchProductAddedToCart}
-      dispatchProductEditedInCart={dispatchProductEditedInCart}
-      dispatchProductRemovedFromCart={dispatchProductRemovedFromCart}
+      selectOrderItemByProduct={selectOrderItemByProduct}
+      dispatchOrderItemAdded={dispatchOrderItemAdded}
+      dispatchOrderItemQuantityEdited={dispatchOrderItemQuantityEdited}
+      dispatchOrderItemRemoved={dispatchOrderItemRemoved}
     />
   );
 
@@ -112,83 +112,52 @@ test('increase product count', async () => {
     name: /Increase Count/,
   });
   await user.click(increaseButtonElement);
-  expect(dispatchProductEditedInCart).toBeCalled();
+  expect(dispatchOrderItemQuantityEdited).toBeCalled();
 });
 
 test('decrease product count', async () => {
   // Prepare initial data and render the component
   const product = fakeIphone12Product;
   const selectedCurrency = fakeCurrencies[0];
-  // selectCartProductById returns a product, means the product is already added to cart
-  const selectCartProductById = () => fakeCartProducts[1];
-  const dispatchProductAddedToCart = jest.fn();
-  const dispatchProductEditedInCart = jest.fn();
-  const dispatchProductRemovedFromCart = jest.fn();
+  // selectOrderItemByProduct returns a product, means the product is already added to cart
+  const selectOrderItemByProduct = () => fakeOrderList[1];
+  const dispatchOrderItemAdded = jest.fn();
+  const dispatchOrderItemQuantityEdited = jest.fn();
+  const dispatchOrderItemRemoved = jest.fn();
   const { user } = await render(
     <ProductInfo
       product={product}
       selectedCurrency={selectedCurrency}
-      selectCartProductById={selectCartProductById}
-      dispatchProductAddedToCart={dispatchProductAddedToCart}
-      dispatchProductEditedInCart={dispatchProductEditedInCart}
-      dispatchProductRemovedFromCart={dispatchProductRemovedFromCart}
+      selectOrderItemByProduct={selectOrderItemByProduct}
+      dispatchOrderItemAdded={dispatchOrderItemAdded}
+      dispatchOrderItemQuantityEdited={dispatchOrderItemQuantityEdited}
+      dispatchOrderItemRemoved={dispatchOrderItemRemoved}
     />
   );
 
   // Clicking on the decrease count button should decrease the count in cart
   const decreaseButtonElement = screen.getByTestId('counterDecreaseButton');
   await user.click(decreaseButtonElement);
-  expect(dispatchProductEditedInCart).toBeCalled();
-});
-
-test('edit cartProduct selected attribute item', async () => {
-  // Prepare initial data and render the component
-  const product = fakeShoesProduct;
-  const selectedCurrency = fakeCurrencies[0];
-  // selectCartProductById returns a product, means the product is already added to cart
-  const selectCartProductById = () => fakeCartProducts[0];
-  const dispatchProductAddedToCart = jest.fn();
-  const dispatchProductEditedInCart = jest.fn();
-  const dispatchProductRemovedFromCart = jest.fn();
-  const { user } = await render(
-    <ProductInfo
-      product={product}
-      selectedCurrency={selectedCurrency}
-      selectCartProductById={selectCartProductById}
-      dispatchProductAddedToCart={dispatchProductAddedToCart}
-      dispatchProductEditedInCart={dispatchProductEditedInCart}
-      dispatchProductRemovedFromCart={dispatchProductRemovedFromCart}
-    />
-  );
-
-  // Click on an attribute item
-  const attributeItemToSelect = product.attributes[0].items[1].value;
-  const attributeItemToSelectElement = screen.getByRole('button', {
-    name: attributeItemToSelect,
-  });
-  await user.click(attributeItemToSelectElement);
-
-  // cartProduct should be edited
-  expect(dispatchProductEditedInCart).toBeCalled();
+  expect(dispatchOrderItemQuantityEdited).toBeCalled();
 });
 
 test('remove product from cart by remove button', async () => {
   // Prepare initial data and render the component
   const product = fakeShoesProduct;
   const selectedCurrency = fakeCurrencies[0];
-  // selectCartProductById returns a product, means the product is already added to cart
-  const selectCartProductById = () => fakeCartProducts[0];
-  const dispatchProductAddedToCart = jest.fn();
-  const dispatchProductEditedInCart = jest.fn();
-  const dispatchProductRemovedFromCart = jest.fn();
+  // selectOrderItemByProduct returns a product, means the product is already added to cart
+  const selectOrderItemByProduct = () => fakeOrderList[0];
+  const dispatchOrderItemAdded = jest.fn();
+  const dispatchOrderItemQuantityEdited = jest.fn();
+  const dispatchOrderItemRemoved = jest.fn();
   const { user } = await render(
     <ProductInfo
       product={product}
       selectedCurrency={selectedCurrency}
-      selectCartProductById={selectCartProductById}
-      dispatchProductAddedToCart={dispatchProductAddedToCart}
-      dispatchProductEditedInCart={dispatchProductEditedInCart}
-      dispatchProductRemovedFromCart={dispatchProductRemovedFromCart}
+      selectOrderItemByProduct={selectOrderItemByProduct}
+      dispatchOrderItemAdded={dispatchOrderItemAdded}
+      dispatchOrderItemQuantityEdited={dispatchOrderItemQuantityEdited}
+      dispatchOrderItemRemoved={dispatchOrderItemRemoved}
     />
   );
 
@@ -200,52 +169,52 @@ test('remove product from cart by remove button', async () => {
 
   // Clicking on the removeFromCartButtonElement should remove the product from cart
   await user.click(removeFromCartButtonElement);
-  expect(dispatchProductRemovedFromCart).toBeCalled();
+  expect(dispatchOrderItemRemoved).toBeCalled();
 });
 
 test('remove product from cart by <Counter />', async () => {
   // Prepare initial data and render the component
   const product = fakeShoesProduct;
   const selectedCurrency = fakeCurrencies[0];
-  // selectCartProductById returns a product, means the product is already added to cart
-  const selectCartProductById = () => fakeCartProducts[0];
-  const dispatchProductAddedToCart = jest.fn();
-  const dispatchProductEditedInCart = jest.fn();
-  const dispatchProductRemovedFromCart = jest.fn();
+  // selectOrderItemByProduct returns a product, means the product is already added to cart
+  const selectOrderItemByProduct = () => fakeOrderList[0];
+  const dispatchOrderItemAdded = jest.fn();
+  const dispatchOrderItemQuantityEdited = jest.fn();
+  const dispatchOrderItemRemoved = jest.fn();
   const { user } = await render(
     <ProductInfo
       product={product}
       selectedCurrency={selectedCurrency}
-      selectCartProductById={selectCartProductById}
-      dispatchProductAddedToCart={dispatchProductAddedToCart}
-      dispatchProductEditedInCart={dispatchProductEditedInCart}
-      dispatchProductRemovedFromCart={dispatchProductRemovedFromCart}
+      selectOrderItemByProduct={selectOrderItemByProduct}
+      dispatchOrderItemAdded={dispatchOrderItemAdded}
+      dispatchOrderItemQuantityEdited={dispatchOrderItemQuantityEdited}
+      dispatchOrderItemRemoved={dispatchOrderItemRemoved}
     />
   );
 
   // Clicking on the decrease count button should remove the product from cart, because count is 1
   const decreaseButtonElement = screen.getByTestId('counterDecreaseButton');
   await user.click(decreaseButtonElement);
-  expect(dispatchProductRemovedFromCart).toBeCalled();
+  expect(dispatchOrderItemRemoved).toBeCalled();
 });
 
 test('dont show description isVerbose prop is false', async () => {
   // Prepare initial data and render the component
   const product = fakeShoesProduct;
   const selectedCurrency = fakeCurrencies[0];
-  // selectCartProductById returns a product, means the product is already added to cart
-  const selectCartProductById = () => fakeCartProducts[0];
-  const dispatchProductAddedToCart = jest.fn();
-  const dispatchProductEditedInCart = jest.fn();
-  const dispatchProductRemovedFromCart = jest.fn();
+  // selectOrderItemByProduct returns a product, means the product is already added to cart
+  const selectOrderItemByProduct = () => fakeOrderList[0];
+  const dispatchOrderItemAdded = jest.fn();
+  const dispatchOrderItemQuantityEdited = jest.fn();
+  const dispatchOrderItemRemoved = jest.fn();
   await render(
     <ProductInfo
       product={product}
       selectedCurrency={selectedCurrency}
-      selectCartProductById={selectCartProductById}
-      dispatchProductAddedToCart={dispatchProductAddedToCart}
-      dispatchProductEditedInCart={dispatchProductEditedInCart}
-      dispatchProductRemovedFromCart={dispatchProductRemovedFromCart}
+      selectOrderItemByProduct={selectOrderItemByProduct}
+      dispatchOrderItemAdded={dispatchOrderItemAdded}
+      dispatchOrderItemQuantityEdited={dispatchOrderItemQuantityEdited}
+      dispatchOrderItemRemoved={dispatchOrderItemRemoved}
       isVerbose={false}
     />
   );

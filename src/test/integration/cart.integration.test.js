@@ -5,6 +5,7 @@ import {
   fakeIphone12Product,
   fakeCurrencies,
   fakeShoesProduct,
+  fakeStorageOrderList,
 } from '../../mocks';
 import App from '../../App';
 import { client } from '../../config';
@@ -28,17 +29,11 @@ afterEach(async () => {
 
 afterAll(() => server.close());
 
-test('load cartProducts', async () => {
+test('load order list', async () => {
   // Prepare initial data and render the component
   // Add a product to cart by adding it to localStorage
-  const initialCartProductList = [
-    {
-      id: fakeShoesProduct.id,
-      selectedAttributes: { Size: '40' },
-      count: 1,
-    },
-  ];
-  storage.save('cartProductList', initialCartProductList);
+  const initialOrderList = [fakeStorageOrderList[0]];
+  storage.save('orderList', initialOrderList);
   await render(<App />, { route: '/cart' });
 
   // Brand should be in the UI
@@ -58,8 +53,8 @@ test('load cartProducts', async () => {
   const priceBasedOnSelectedCurrency = fakeShoesProduct.prices.find(
     (price) => price.currency.label === defaultSelectedCurrency.label
   ).amount;
-  const cartProductElement = screen.getByRole('article');
-  const priceElement = within(cartProductElement).getByText(
+  const orderItemElement = screen.getByRole('article');
+  const priceElement = within(orderItemElement).getByText(
     `${defaultSelectedCurrency.symbol}${priceBasedOnSelectedCurrency}`
   );
   expect(priceElement).toBeInTheDocument();
@@ -94,40 +89,28 @@ test('load cartProducts', async () => {
 test('remove product from cart by <Counter />', async () => {
   // Prepare initial data and render the component
   // Add a product to cart by adding it to localStorage
-  const initialCartProductList = [
-    {
-      id: fakeShoesProduct.id,
-      selectedAttributes: { Size: '40' },
-      count: 1,
-    },
-  ];
-  storage.save('cartProductList', initialCartProductList);
+  const initialOrderList = [fakeStorageOrderList[0]];
+  storage.save('orderList', initialOrderList);
   const { user } = await render(<App />, { route: '/cart' });
 
   // Click on the decrease count button
   const decreaseButtonElement = screen.getByTestId('counterDecreaseButton');
   await user.click(decreaseButtonElement);
 
-  // The cartProduct should be removed
-  const cartProductElement = screen.queryByRole('article');
-  expect(cartProductElement).not.toBeInTheDocument();
+  // The orderItem should be removed
+  const orderItemElement = screen.queryByRole('article');
+  expect(orderItemElement).not.toBeInTheDocument();
 
   // The product should be removed from localStorage
-  const cartProductList = storage.load('cartProductList');
-  expect(cartProductList).toEqual([]);
+  const orderList = storage.load('orderList');
+  expect(orderList).toEqual([]);
 });
 
 test('increase product count', async () => {
   // Prepare initial data and render the component
   // Add a product to cart by adding it to localStorage
-  const initialCartProductList = [
-    {
-      id: fakeShoesProduct.id,
-      selectedAttributes: { Size: '40' },
-      count: 1,
-    },
-  ];
-  storage.save('cartProductList', initialCartProductList);
+  const initialOrderList = [fakeStorageOrderList[0]];
+  storage.save('orderList', initialOrderList);
   const { user } = await render(<App />, { route: '/cart' });
 
   // Click on the increase count button
@@ -141,21 +124,15 @@ test('increase product count', async () => {
   expect(countElement).toHaveTextContent(2);
 
   // The product should be updated in localStorage
-  const cartProductList = storage.load('cartProductList');
-  expect(cartProductList[0].count).toBe(2);
+  const orderList = storage.load('orderList');
+  expect(orderList[0].quantity).toBe(2);
 });
 
 test('decrease product count', async () => {
   // Prepare initial data and render the component
   // Add a product to cart by adding it to localStorage
-  const initialCartProductList = [
-    {
-      id: fakeShoesProduct.id,
-      selectedAttributes: { Size: '40' },
-      count: 2,
-    },
-  ];
-  storage.save('cartProductList', initialCartProductList);
+  const initialOrderList = [{ ...fakeStorageOrderList[0], quantity: 2 }];
+  storage.save('orderList', initialOrderList);
   const { user } = await render(<App />, { route: '/cart' });
 
   // Click on the decrease count button
@@ -169,21 +146,15 @@ test('decrease product count', async () => {
   expect(countElement).toHaveTextContent(1);
 
   // The product should be updated in localStorage
-  const cartProductList = storage.load('cartProductList');
-  expect(cartProductList[0].count).toBe(1);
+  const orderList = storage.load('orderList');
+  expect(orderList[0].quantity).toBe(1);
 });
 
 test('show next and prev product image', async () => {
   // Prepare initial data and render the component
   // Add a product to cart by adding it to localStorage
-  const initialCartProductList = [
-    {
-      id: fakeShoesProduct.id,
-      selectedAttributes: { Size: '40' },
-      count: 1,
-    },
-  ];
-  storage.save('cartProductList', initialCartProductList);
+  const initialOrderList = [fakeStorageOrderList[0]];
+  storage.save('orderList', initialOrderList);
   const { user } = await render(<App />, { route: '/cart' });
 
   // Click on the next image button
@@ -211,14 +182,8 @@ test('show next and prev product image', async () => {
 test('loop through product images when reaches to the first or last image', async () => {
   // Prepare initial data and render the component
   // Add a product to cart by adding it to localStorage
-  const initialCartProductList = [
-    {
-      id: fakeShoesProduct.id,
-      selectedAttributes: { Size: '40' },
-      count: 1,
-    },
-  ];
-  storage.save('cartProductList', initialCartProductList);
+  const initialOrderList = [fakeStorageOrderList[0]];
+  storage.save('orderList', initialOrderList);
   const { user } = await render(<App />, { route: '/cart' });
 
   // Click on the prev image button
@@ -248,19 +213,8 @@ test('loop through product images when reaches to the first or last image', asyn
 test('show total price', async () => {
   // Prepare initial data and render the component
   // Add a product to cart by adding it to localStorage
-  const initialCartProductList = [
-    {
-      id: fakeShoesProduct.id,
-      selectedAttributes: { Size: '40' },
-      count: 1,
-    },
-    {
-      id: fakeIphone12Product.id,
-      selectedAttributes: { Capacity: '512G' },
-      count: 2,
-    },
-  ];
-  storage.save('cartProductList', initialCartProductList);
+  const initialOrderList = fakeStorageOrderList;
+  storage.save('orderList', initialOrderList);
   await render(<App />, { route: '/cart' });
 
   // Price based on the selected category should be in the UI

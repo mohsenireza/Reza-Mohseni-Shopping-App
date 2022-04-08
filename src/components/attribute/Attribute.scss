@@ -74,8 +74,14 @@
             }
           }
         }
-        &:hover,
-        &:focus {
+        @include ifDeviceCanHover() {
+          &:hover {
+            + .attribute__itemTooltip {
+              opacity: 100%;
+            }
+          }
+        }
+        &:focus-visible {
           + .attribute__itemTooltip {
             opacity: 100%;
           }

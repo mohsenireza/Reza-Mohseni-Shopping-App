@@ -49,10 +49,6 @@
           padding-bottom: rem(21px);
         }
       }
-      &:hover,
-      &:focus-within {
-        background-color: rgba(0, 0, 0, 0.03);
-      }
       &.-selected {
         background-color: rgba(0, 0, 0, 0.07);
       }
@@ -63,6 +59,10 @@
         font-weight: 500;
         font-size: rem(18px);
         transition: 0.3s;
+        &:hover,
+        &:focus-visible {
+          background-color: rgba(0, 0, 0, 0.03);
+        }
       }
     }
   }

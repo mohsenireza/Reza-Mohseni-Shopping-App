@@ -1,32 +1,32 @@
 import { render, screen } from '../../test/utils';
-import { fakeCartProducts, fakeCurrencies } from '../../mocks';
+import { fakeOrderList, fakeCurrencies, fakeAttributes } from '../../mocks';
 import { CartItem } from './CartItem';
 
 test('should render data', async () => {
   // Prepare initial data and render the component
-  const cartProduct = fakeCartProducts[0];
+  const orderItem = fakeOrderList[0];
   const selectedCurrency = fakeCurrencies[0];
   await render(
     <CartItem
-      id={cartProduct.id}
-      selectCartProductById={() => cartProduct}
+      id={orderItem.id}
+      selectOrderItemById={() => orderItem}
       selectedCurrency={selectedCurrency}
       size="big"
-      dispatchProductRemovedFromCart={() => {}}
-      dispatchProductEditedInCart={() => {}}
+      dispatchOrderItemRemoved={() => {}}
+      dispatchOrderItemQuantityEdited={() => {}}
     />
   );
 
   // Brand should be in the UI
-  const brandElement = screen.getByRole('link', { name: cartProduct.brand });
+  const brandElement = screen.getByRole('link', { name: orderItem.brand });
   expect(brandElement).toBeInTheDocument();
 
   // Name should be in the UI
-  const nameElement = screen.getByRole('link', { name: cartProduct.name });
+  const nameElement = screen.getByRole('link', { name: orderItem.name });
   expect(nameElement).toBeInTheDocument();
 
   // Price based on the selected category should be in the UI
-  const priceBasedOnSelectedCurrency = cartProduct.prices.find(
+  const priceBasedOnSelectedCurrency = orderItem.prices.find(
     (price) => price.currency.label === selectedCurrency.label
   ).amount;
   const priceElement = screen.getByText(
@@ -35,7 +35,7 @@ test('should render data', async () => {
   expect(priceElement).toBeInTheDocument();
 
   // All attribute items should be in the UI
-  cartProduct.attributes.forEach((attribute) => {
+  orderItem.attributes.forEach((attribute) => {
     attribute.items.forEach((attributeItem) => {
       const attributeItemElement = screen.getByRole('button', {
         name: attributeItem.value,
@@ -46,83 +46,91 @@ test('should render data', async () => {
 
   // Count should be in the UI
   const countElement = screen.getByTestId('counterCount');
-  expect(countElement).toHaveTextContent(cartProduct.count);
+  expect(countElement).toHaveTextContent(orderItem.quantity);
 
   // An image of product should be in the UI
   const productImageElement = screen.getByRole('img', {
-    name: `${cartProduct.brand} - ${cartProduct.name}`,
+    name: `${orderItem.brand} - ${orderItem.name}`,
   });
   expect(productImageElement).toBeInTheDocument();
 });
 
 test('selected attribute items are dark when size prop is big', async () => {
   // Prepare initial data and render the component
-  const cartProduct = fakeCartProducts[0];
+  const orderItem = fakeOrderList[0];
   const selectedCurrency = fakeCurrencies[0];
   await render(
     <CartItem
-      id={cartProduct.id}
-      selectCartProductById={() => cartProduct}
+      id={orderItem.id}
+      selectOrderItemById={() => orderItem}
       selectedCurrency={selectedCurrency}
       size="big"
-      dispatchProductRemovedFromCart={() => {}}
-      dispatchProductEditedInCart={() => {}}
+      dispatchOrderItemRemoved={() => {}}
+      dispatchOrderItemQuantityEdited={() => {}}
     />
   );
 
   // Selected attribute items should be dark
-  for (const key in cartProduct.selectedAttributes) {
-    if (Object.hasOwnProperty.call(cartProduct.selectedAttributes, key)) {
-      const selectedAttributeItem = cartProduct.selectedAttributes[key];
-      const selectedAttributeItemElement = screen.getByRole('button', {
-        name: selectedAttributeItem,
-      });
-      expect(selectedAttributeItemElement).toHaveClass('-dark');
-    }
-  }
+  orderItem.selectedAttributes.forEach((selectedAttribute) => {
+    const attribute = fakeAttributes.find(
+      (attribute) => attribute.id === selectedAttribute.id
+    );
+    const selectedAttributeItemId = selectedAttribute.selectedItemId;
+    const selectedAttributeItem = attribute.items.find(
+      (attributeItem) => attributeItem.id === selectedAttributeItemId
+    );
+    const selectedAttributeItemElement = screen.getByRole('button', {
+      name: selectedAttributeItem.value,
+    });
+    expect(selectedAttributeItemElement).toHaveClass('-dark');
+  });
 });
 
 test('selected attribute items are light when size prop is small', async () => {
   // Prepare initial data and render the component
-  const cartProduct = fakeCartProducts[0];
+  const orderItem = fakeOrderList[0];
   const selectedCurrency = fakeCurrencies[0];
   await render(
     <CartItem
-      id={cartProduct.id}
-      selectCartProductById={() => cartProduct}
+      id={orderItem.id}
+      selectOrderItemById={() => orderItem}
       selectedCurrency={selectedCurrency}
       size="small"
-      dispatchProductRemovedFromCart={() => {}}
-      dispatchProductEditedInCart={() => {}}
+      dispatchOrderItemRemoved={() => {}}
+      dispatchOrderItemQuantityEdited={() => {}}
     />
   );
 
   // Selected attribute items should be light
-  for (const key in cartProduct.selectedAttributes) {
-    if (Object.hasOwnProperty.call(cartProduct.selectedAttributes, key)) {
-      const selectedAttributeItem = cartProduct.selectedAttributes[key];
-      const selectedAttributeItemElement = screen.getByRole('button', {
-        name: selectedAttributeItem,
-      });
-      expect(selectedAttributeItemElement).toHaveClass('-light');
-    }
-  }
+  orderItem.selectedAttributes.forEach((selectedAttribute) => {
+    const attribute = fakeAttributes.find(
+      (attribute) => attribute.id === selectedAttribute.id
+    );
+    const selectedAttributeItemId = selectedAttribute.selectedItemId;
+    const selectedAttributeItem = attribute.items.find(
+      (attributeItem) => attributeItem.id === selectedAttributeItemId
+    );
+    const selectedAttributeItemElement = screen.getByRole('button', {
+      name: selectedAttributeItem.value,
+    });
+    expect(selectedAttributeItemElement).toHaveClass('-light');
+  });
 });
 
 test('should be able to remove the product', async () => {
   // Prepare initial data and render the component
-  const cartProduct = fakeCartProducts[0];
+  const orderItem = fakeOrderList[0];
   const selectedCurrency = fakeCurrencies[0];
-  const dispatchProductRemovedFromCart = jest.fn();
-  const dispatchProductEditedInCart = jest.fn();
+  const dispatchOrderItemRemoved = jest.fn();
+  const dispatchOrderItemQuantityEdited = jest.fn();
   const { user } = await render(
     <CartItem
-      id={cartProduct.id}
-      selectCartProductById={() => cartProduct}
+      id={orderItem.id}
+      selectOrderItemById={() => orderItem}
       selectedCurrency={selectedCurrency}
       size="big"
-      dispatchProductRemovedFromCart={dispatchProductRemovedFromCart}
-      dispatchProductEditedInCart={dispatchProductEditedInCart}
+      dispatchOrderItemRemoved={dispatchOrderItemRemoved}
+      dispatchOrderItemQuantityEdited={dispatchOrderItemQuantityEdited}
     />
   );
 
@@ -132,24 +140,24 @@ test('should be able to remove the product', async () => {
   // Click on the decrease count button
   await user.click(decreaseButtonElement);
 
-  // 'dispatchProductRemovedFromCart' should be called
-  expect(dispatchProductRemovedFromCart).toBeCalledTimes(1);
+  // 'dispatchOrderItemRemoved' should be called
+  expect(dispatchOrderItemRemoved).toBeCalledTimes(1);
 });
 
 test('should be able to increase the product count', async () => {
   // Prepare initial data and render the component
-  const cartProduct = fakeCartProducts[0];
+  const orderItem = fakeOrderList[0];
   const selectedCurrency = fakeCurrencies[0];
-  const dispatchProductRemovedFromCart = jest.fn();
-  const dispatchProductEditedInCart = jest.fn();
+  const dispatchOrderItemRemoved = jest.fn();
+  const dispatchOrderItemQuantityEdited = jest.fn();
   const { user } = await render(
     <CartItem
-      id={cartProduct.id}
-      selectCartProductById={() => cartProduct}
+      id={orderItem.id}
+      selectOrderItemById={() => orderItem}
       selectedCurrency={selectedCurrency}
       size="big"
-      dispatchProductRemovedFromCart={dispatchProductRemovedFromCart}
-      dispatchProductEditedInCart={dispatchProductEditedInCart}
+      dispatchOrderItemRemoved={dispatchOrderItemRemoved}
+      dispatchOrderItemQuantityEdited={dispatchOrderItemQuantityEdited}
     />
   );
 
@@ -161,24 +169,24 @@ test('should be able to increase the product count', async () => {
   // Click on the increase count button
   await user.click(increaseButtonElement);
 
-  // 'dispatchProductEditedInCart' should be called
-  expect(dispatchProductEditedInCart).toBeCalledTimes(1);
+  // 'dispatchOrderItemQuantityEdited' should be called
+  expect(dispatchOrderItemQuantityEdited).toBeCalledTimes(1);
 });
 
 test('should be able to decrease the product count', async () => {
   // Prepare initial data and render the component
-  const cartProduct = fakeCartProducts[1];
+  const orderItem = fakeOrderList[1];
   const selectedCurrency = fakeCurrencies[0];
-  const dispatchProductRemovedFromCart = jest.fn();
-  const dispatchProductEditedInCart = jest.fn();
+  const dispatchOrderItemRemoved = jest.fn();
+  const dispatchOrderItemQuantityEdited = jest.fn();
   const { user } = await render(
     <CartItem
-      id={cartProduct.id}
-      selectCartProductById={() => cartProduct}
+      id={orderItem.id}
+      selectOrderItemById={() => orderItem}
       selectedCurrency={selectedCurrency}
       size="big"
-      dispatchProductRemovedFromCart={dispatchProductRemovedFromCart}
-      dispatchProductEditedInCart={dispatchProductEditedInCart}
+      dispatchOrderItemRemoved={dispatchOrderItemRemoved}
+      dispatchOrderItemQuantityEdited={dispatchOrderItemQuantityEdited}
     />
   );
 
@@ -190,24 +198,24 @@ test('should be able to decrease the product count', async () => {
   // Click on the decrease count button
   await user.click(decreaseButtonElement);
 
-  // 'dispatchProductEditedInCart' should be called
-  expect(dispatchProductEditedInCart).toBeCalledTimes(1);
+  // 'dispatchOrderItemQuantityEdited' should be called
+  expect(dispatchOrderItemQuantityEdited).toBeCalledTimes(1);
 });
 
 test('show next and prev product image', async () => {
   // Prepare initial data and render the component
-  const cartProduct = fakeCartProducts[0];
+  const orderItem = fakeOrderList[0];
   const selectedCurrency = fakeCurrencies[0];
-  const dispatchProductRemovedFromCart = jest.fn();
-  const dispatchProductEditedInCart = jest.fn();
+  const dispatchOrderItemRemoved = jest.fn();
+  const dispatchOrderItemQuantityEdited = jest.fn();
   const { user } = await render(
     <CartItem
-      id={cartProduct.id}
-      selectCartProductById={() => cartProduct}
+      id={orderItem.id}
+      selectOrderItemById={() => orderItem}
       selectedCurrency={selectedCurrency}
       size="big"
-      dispatchProductRemovedFromCart={dispatchProductRemovedFromCart}
-      dispatchProductEditedInCart={dispatchProductEditedInCart}
+      dispatchOrderItemRemoved={dispatchOrderItemRemoved}
+      dispatchOrderItemQuantityEdited={dispatchOrderItemQuantityEdited}
     />
   );
 
@@ -219,9 +227,9 @@ test('show next and prev product image', async () => {
 
   // the 2 image of product should be visible
   const imageElement = screen.getByRole('img', {
-    name: `${cartProduct.brand} - ${cartProduct.name}`,
+    name: `${orderItem.brand} - ${orderItem.name}`,
   });
-  expect(imageElement.src).toBe(cartProduct.gallery[1]);
+  expect(imageElement.src).toBe(orderItem.gallery[1]);
 
   // Click on the prev image button
   const prevImageButtonElement = screen.getByRole('img', {
@@ -230,23 +238,23 @@ test('show next and prev product image', async () => {
   await user.click(prevImageButtonElement);
 
   // the 1 image of product should be visible
-  expect(imageElement.src).toBe(cartProduct.gallery[0]);
+  expect(imageElement.src).toBe(orderItem.gallery[0]);
 });
 
 test('loop through images when reaches to the first or last image', async () => {
   // Prepare initial data and render the component
-  const cartProduct = fakeCartProducts[0];
+  const orderItem = fakeOrderList[0];
   const selectedCurrency = fakeCurrencies[0];
-  const dispatchProductRemovedFromCart = jest.fn();
-  const dispatchProductEditedInCart = jest.fn();
+  const dispatchOrderItemRemoved = jest.fn();
+  const dispatchOrderItemQuantityEdited = jest.fn();
   const { user } = await render(
     <CartItem
-      id={cartProduct.id}
-      selectCartProductById={() => cartProduct}
+      id={orderItem.id}
+      selectOrderItemById={() => orderItem}
       selectedCurrency={selectedCurrency}
       size="big"
-      dispatchProductRemovedFromCart={dispatchProductRemovedFromCart}
-      dispatchProductEditedInCart={dispatchProductEditedInCart}
+      dispatchOrderItemRemoved={dispatchOrderItemRemoved}
+      dispatchOrderItemQuantityEdited={dispatchOrderItemQuantityEdited}
     />
   );
 
@@ -258,10 +266,10 @@ test('loop through images when reaches to the first or last image', async () => 
 
   // the last image of product should be visible
   const imageElement = screen.getByRole('img', {
-    name: `${cartProduct.brand} - ${cartProduct.name}`,
+    name: `${orderItem.brand} - ${orderItem.name}`,
   });
   expect(imageElement.src).toBe(
-    cartProduct.gallery[cartProduct.gallery.length - 1]
+    orderItem.gallery[orderItem.gallery.length - 1]
   );
 
   // Click on the next image button
@@ -271,5 +279,5 @@ test('loop through images when reaches to the first or last image', async () => 
   await user.click(nextImageButtonElement);
 
   // the 1 image of product should be visible
-  expect(imageElement.src).toBe(cartProduct.gallery[0]);
+  expect(imageElement.src).toBe(orderItem.gallery[0]);
 });

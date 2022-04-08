@@ -57,4 +57,36 @@ export const fakeAttributes = [
       },
     ],
   },
+  {
+    id: 'Size',
+    name: 'Size',
+    type: 'text',
+    items: [
+      {
+        id: '40',
+        displayValue: '40',
+        value: '40',
+        __typename: 'Attribute',
+      },
+      {
+        id: '41',
+        displayValue: '41',
+        value: '41',
+        __typename: 'Attribute',
+      },
+      {
+        id: '42',
+        displayValue: '42',
+        value: '42',
+        __typename: 'Attribute',
+      },
+      {
+        id: '43',
+        displayValue: '43',
+        value: '43',
+        __typename: 'Attribute',
+      },
+    ],
+    __typename: 'AttributeSet',
+  },
 ];

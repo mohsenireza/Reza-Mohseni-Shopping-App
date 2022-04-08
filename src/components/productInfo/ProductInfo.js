@@ -4,23 +4,25 @@ import { connect } from 'react-redux';
 import './ProductInfo.scss';
 import { Attribute, Button, Counter } from '../index';
 import {
-  productAddedToCart,
-  productEditedInCart,
-  productRemovedFromCart,
-  selectCartProductById,
+  orderItemAdded,
+  orderItemQuantityEdited,
+  orderItemRemoved,
+  selectOrderItemByProduct,
 } from '../../features/cart/cartSlice';
 import { selectSelectedCurrency } from '../../features/currencies/currenciesSlice';
+import { jsonDeepClone } from '../../utils';
 
 class ProductInfoComp extends Component {
   constructor(props) {
     super(props);
 
     // Save selected attribute items in this format:
-    // selectedAttributes: {
-    //   [attribute.id]: attributeItem.id
-    // }
+    // selectedAttributes: [
+    //   {id: 'Size', selectedItemId: '40'},
+    //   {id: 'Color', selectedItemId: 'blue'}
+    // ]
     this.state = {
-      selectedAttributes: {},
+      selectedAttributes: [],
     };
 
     // Bind methods
@@ -28,9 +30,10 @@ class ProductInfoComp extends Component {
     this.handleAttributeSelect = this.handleAttributeSelect.bind(this);
     this.getAttributeSelectedItemId =
       this.getAttributeSelectedItemId.bind(this);
-    this.handleCartProductAdd = this.handleCartProductAdd.bind(this);
-    this.handleCartProductRemove = this.handleCartProductRemove.bind(this);
-    this.handleCartProductEdit = this.handleCartProductEdit.bind(this);
+    this.handleOrderItemAdd = this.handleOrderItemAdd.bind(this);
+    this.handleOrderItemRemove = this.handleOrderItemRemove.bind(this);
+    this.handleOrderItemQuantityEdit =
+      this.handleOrderItemQuantityEdit.bind(this);
   }
 
   componentDidMount() {
@@ -45,74 +48,64 @@ class ProductInfoComp extends Component {
   initializeAttributes() {
     // If a product is out of stock, then attributes should not be selected
     if (!this.props.product.inStock) return;
-    // Check if the product is added to cart
-    const correspondingCartProduct = this.props.selectCartProductById(
-      this.props.product.id
-    );
-    let selectedAttributes = {};
 
-    // If the product is already added to cart, then get initial attributes from there
-    if (correspondingCartProduct) {
-      selectedAttributes = correspondingCartProduct.selectedAttributes;
-    }
-    // If the product is not added to cart, then for each attribute, select the first item as default
-    else {
-      this.props.product.attributes.forEach((attribute) => {
-        selectedAttributes[attribute.id] = attribute.items[0].id;
-      });
-    }
+    // For each attribute, select the first item as default
+    const selectedAttributes = this.props.product.attributes.map(
+      (attribute) => ({
+        id: attribute.id,
+        selectedItemId: attribute.items[0].id,
+      })
+    );
 
     // Set selectedAttributes in the state
-    this.setState((state) => ({
-      ...state,
-      selectedAttributes,
-    }));
+    this.setState({ selectedAttributes });
   }
 
   handleAttributeSelect({ attributeId, attributeSelectedItemId }) {
     // Save selected attributes in the state
-    this.setState((state) => ({
-      ...state,
-      selectedAttributes: {
-        ...state.selectedAttributes,
-        [attributeId]: attributeSelectedItemId,
-      },
-    }));
-    // If the product is in cart, then update the cart;
-    const correspondingCartProduct = this.props.selectCartProductById(
-      this.props.product.id
+    const selectedAttributes = jsonDeepClone(this.state.selectedAttributes);
+    const modifiedAttribute = selectedAttributes.find(
+      (attribute) => attribute.id === attributeId
     );
-    const isProductAddedToCard = Boolean(correspondingCartProduct);
-    if (isProductAddedToCard) {
-      this.handleCartProductEdit({ attributeId, attributeSelectedItemId });
-    }
+    modifiedAttribute.selectedItemId = attributeSelectedItemId;
+    this.setState({ selectedAttributes });
   }
 
   // Return selected item id for a specific attribute
   getAttributeSelectedItemId(attributeId) {
-    return this.state.selectedAttributes[attributeId];
+    const attribute = this.state.selectedAttributes.find(
+      (attribute) => attribute.id === attributeId
+    );
+    if (attribute) return attribute.selectedItemId;
   }
 
   // Add the product to cart
-  handleCartProductAdd() {
-    const product = {
-      ...this.props.product,
+  handleOrderItemAdd() {
+    const { id, ...otherProps } = this.props.product;
+    const orderItem = {
+      productId: id,
+      ...otherProps,
       selectedAttributes: this.state.selectedAttributes,
-      count: 1,
     };
-    this.props.dispatchProductAddedToCart(product);
+    this.props.dispatchOrderItemAdded(orderItem);
   }
 
-  handleCartProductRemove() {
-    this.props.dispatchProductRemovedFromCart(this.props.product.id);
-  }
-
-  handleCartProductEdit({ count, attributeId, attributeSelectedItemId }) {
-    this.props.dispatchProductEditedInCart({
+  handleOrderItemRemove() {
+    const orderItem = this.props.selectOrderItemByProduct({
       productId: this.props.product.id,
-      count,
-      attributeId,
-      attributeSelectedItemId,
+      selectedAttributes: this.state.selectedAttributes,
+    });
+    this.props.dispatchOrderItemRemoved(orderItem.id);
+  }
+
+  handleOrderItemQuantityEdit(quantity) {
+    const orderItem = this.props.selectOrderItemByProduct({
+      productId: this.props.product.id,
+      selectedAttributes: this.state.selectedAttributes,
+    });
+    this.props.dispatchOrderItemQuantityEdited({
+      orderItemId: orderItem.id,
+      quantity,
     });
   }
 
@@ -121,7 +114,7 @@ class ProductInfoComp extends Component {
       className,
       isVerbose,
       selectedCurrency,
-      selectCartProductById,
+      selectOrderItemByProduct,
       product: { id, name, brand, attributes, prices, description, inStock },
     } = this.props;
 
@@ -131,8 +124,11 @@ class ProductInfoComp extends Component {
     );
 
     // Check if the product is in the cart or not
-    const correspondingCartProduct = selectCartProductById(id);
-    const isProductAddedToCard = Boolean(correspondingCartProduct);
+    const orderItem = selectOrderItemByProduct({
+      productId: id,
+      selectedAttributes: this.state.selectedAttributes,
+    });
+    const isProductAddedToCard = Boolean(orderItem);
 
     return (
       <div className={`productInfo ${className}`}>
@@ -157,9 +153,9 @@ class ProductInfoComp extends Component {
             <span className="productInfo__sectionTitle">Count:</span>
             <Counter
               className="productInfo__count"
-              count={correspondingCartProduct.count}
-              onCountChange={(count) => this.handleCartProductEdit({ count })}
-              onRemove={this.handleCartProductRemove}
+              count={orderItem.quantity}
+              onCountChange={this.handleOrderItemQuantityEdit}
+              onRemove={this.handleOrderItemRemove}
             />
           </>
         )}
@@ -167,14 +163,14 @@ class ProductInfoComp extends Component {
           <Button
             className="productInfo__cartButton"
             title="ADD TO CART"
-            onClick={this.handleCartProductAdd}
+            onClick={this.handleOrderItemAdd}
           />
         ) : inStock && isProductAddedToCard ? (
           <Button
             theme="red"
             className="productInfo__cartButton"
             title="Remove From Cart"
-            onClick={this.handleCartProductRemove}
+            onClick={this.handleOrderItemRemove}
           />
         ) : (
           <span className="productInfo__outOfStock">OUT OF STOCK</span>
@@ -197,10 +193,10 @@ ProductInfoComp.propTypes = {
   isVerbose: PropTypes.bool,
   onComponentDidUpdate: PropTypes.func,
   selectedCurrency: PropTypes.object,
-  selectCartProductById: PropTypes.func.isRequired,
-  dispatchProductAddedToCart: PropTypes.func.isRequired,
-  dispatchProductEditedInCart: PropTypes.func.isRequired,
-  dispatchProductRemovedFromCart: PropTypes.func.isRequired,
+  selectOrderItemByProduct: PropTypes.func.isRequired,
+  dispatchOrderItemAdded: PropTypes.func.isRequired,
+  dispatchOrderItemQuantityEdited: PropTypes.func.isRequired,
+  dispatchOrderItemRemoved: PropTypes.func.isRequired,
 };
 
 ProductInfoComp.defaultProps = {
@@ -211,13 +207,13 @@ ProductInfoComp.defaultProps = {
 
 const mapStateToProps = (state) => ({
   selectedCurrency: selectSelectedCurrency(state),
-  selectCartProductById: selectCartProductById.bind(this, state),
+  selectOrderItemByProduct: selectOrderItemByProduct.bind(this, state),
 });
 
 const mapDispatchToProps = {
-  dispatchProductAddedToCart: productAddedToCart,
-  dispatchProductEditedInCart: productEditedInCart,
-  dispatchProductRemovedFromCart: productRemovedFromCart,
+  dispatchOrderItemAdded: orderItemAdded,
+  dispatchOrderItemQuantityEdited: orderItemQuantityEdited,
+  dispatchOrderItemRemoved: orderItemRemoved,
 };
 
 const ProductInfo = connect(
