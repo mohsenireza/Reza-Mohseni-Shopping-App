@@ -40,7 +40,7 @@
               font-size: rem(16px);
               transition: 0.2s;
               &:hover,
-              &:focus {
+              &:focus-visible {
                 @include breakpoint(sm) {
                   background-color: $secondLight-color;
                   color: $firstDark-color;

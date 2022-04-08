@@ -44,3 +44,10 @@
     }
   }
 }
+
+// If a device can hover
+@mixin ifDeviceCanHover {
+  @media (hover: hover) {
+    @content;
+  }
+}
