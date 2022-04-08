@@ -111,3 +111,35 @@ test('clicking outside of the drawer will close it', async () => {
   drawerBody = screen.queryByRole('heading', { name: 'drawer body' });
   expect(drawerBody).not.toBeInTheDocument();
 });
+
+test('pressing Escape button will close the drawer', async () => {
+  // Prepare initial data and render the component
+  const renderToggler = (toggleDrawer) => (
+    <button onClick={toggleDrawer}>open</button>
+  );
+  const renderDrawerBody = () => <h1>drawer body</h1>;
+  const { user } = await render(
+    <>
+      <h1>outside</h1>
+      <Drawer
+        renderToggler={renderToggler}
+        renderDrawerBody={renderDrawerBody}
+      />
+    </>
+  );
+
+  // Click on the toggler to open the drawer
+  const togglerElement = screen.getByRole('button', { name: 'open' });
+  await user.click(togglerElement);
+
+  // Drawer should be open and its body should be shown
+  let drawerBody = screen.getByRole('heading', { name: 'drawer body' });
+  expect(drawerBody).toBeInTheDocument();
+
+  // Press escape button
+  await user.keyboard('{Escape}');
+
+  // The drawer should be closed and its body should not be visible anymore
+  drawerBody = screen.queryByRole('heading', { name: 'drawer body' });
+  expect(drawerBody).not.toBeInTheDocument();
+});

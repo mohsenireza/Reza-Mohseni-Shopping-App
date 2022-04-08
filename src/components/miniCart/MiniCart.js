@@ -116,7 +116,7 @@ class MiniCartComp extends Component {
 
   // Close <MiniCart />'s overlay when escape key is pressed
   handleEscapeKeyDown(e) {
-    if (e.keyCode === 27) {
+    if (e.key === 'Escape') {
       this.handleToggle(false);
     }
   }

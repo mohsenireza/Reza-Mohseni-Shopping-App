@@ -60,7 +60,7 @@ class Drawer extends Component {
 
   // Close drawer when escape key is pressed
   handleEscapeKeyDown(e) {
-    if (e.keyCode === 27) {
+    if (e.key === 'Escape') {
       this.handleDrawerClose();
     }
   }

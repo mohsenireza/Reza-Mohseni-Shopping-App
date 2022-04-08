@@ -76,3 +76,31 @@ test('should be able to remove the count', async () => {
   // 'onRemove' should be called
   expect(onRemove).toBeCalledTimes(1);
 });
+
+test('increase button will be disabled if count reaches to max', async () => {
+  // Prepare initial data and render the component
+  const count = 50;
+  const max = 50;
+  const onCountChange = jest.fn();
+  const onRemove = jest.fn();
+  const { user } = await render(
+    <Counter
+      count={count}
+      max={max}
+      onCountChange={onCountChange}
+      onRemove={onRemove}
+    />
+  );
+
+  // Find the increase count button
+  const increaseButtonElement = screen.getByRole('button', {
+    name: 'Increase Count',
+  });
+
+  // The increase count button should have -disabled class
+  expect(increaseButtonElement).toHaveClass('-disabled');
+
+  // Clicking on the increase count button should not call onCountChange
+  await user.click(increaseButtonElement);
+  expect(onCountChange).not.toBeCalled();
+});

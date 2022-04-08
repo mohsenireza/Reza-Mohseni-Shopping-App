@@ -44,6 +44,14 @@ test('should fetch categories and show them in the UI', async () => {
   expect(thirdCategory).toBeInTheDocument();
 });
 
+test('should get selected category from URL', async () => {
+  await render(<App />, { route: '/products?category=clothes' });
+
+  // The selected category element should have -selected class
+  const selectedCategoryElement = screen.getByRole('link', { name: 'clothes' });
+  expect(selectedCategoryElement).toHaveClass('-selected');
+});
+
 test('should fetch currencies and show them in the UI', async () => {
   const { user } = await render(<App />);
 

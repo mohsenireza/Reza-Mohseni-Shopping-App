@@ -131,7 +131,7 @@ test('Clicking on "VIEW BAG" button navigates to /cart page', async () => {
   documentGetElementById.mockRestore();
 });
 
-test('should close miniCart', async () => {
+test('should close miniCart by clicking on the cart icon', async () => {
   // Mock document.getElementById
   const documentGetElementById = jest
     .spyOn(document, 'getElementById')
@@ -167,6 +167,53 @@ test('should close miniCart', async () => {
 
   // Click on the cart icon again to close the miniCart
   await user.click(cartIconButton);
+
+  // totalCartItemQuantity should not be in the UI
+  totalCountElement = screen.queryByRole('heading', {
+    name: /3 items/,
+  });
+  expect(totalCountElement).not.toBeInTheDocument();
+
+  // Restore document.getElementById mock
+  documentGetElementById.mockRestore();
+});
+
+test('should close by pressing Escape button', async () => {
+  // Mock document.getElementById
+  const documentGetElementById = jest
+    .spyOn(document, 'getElementById')
+    .mockImplementation(() => {
+      return document.createElement('div');
+    });
+
+  // Prepare initial data and render the component
+  const orderItemIds = [fakeOrderList[0].id, fakeOrderList[1].id];
+  const totalCartItemQuantity = 3;
+  const totalPrice = '$100';
+  const router = {
+    navigate: () => console.log('testttttttttt'),
+  };
+  const { user } = await render(
+    <MiniCart
+      orderItemIds={orderItemIds}
+      totalCartItemQuantity={totalCartItemQuantity}
+      totalPrice={totalPrice}
+      router={router}
+    />
+  );
+
+  // Click on the cart icon to open the miniCart
+  const cartIconButton = screen.getByTestId('miniCartHeader');
+  await user.click(cartIconButton);
+
+  // totalCartItemQuantity should be in the UI
+  let totalCountElement = screen.getByRole('heading', {
+    name: /3 items/,
+  });
+  expect(totalCountElement).toBeInTheDocument();
+
+  // Press escape button
+  await user.keyboard('{Escape}');
 
   // totalCartItemQuantity should not be in the UI
   totalCountElement = screen.queryByRole('heading', {
