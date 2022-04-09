@@ -27,7 +27,7 @@ class ProductInfoComp extends Component {
     };
 
     // Bind methods
-    this.initializeAttributes = this.initializeAttributes.bind(this);
+    this.updateSelectedAttributes = this.updateSelectedAttributes.bind(this);
     this.handleAttributeSelect = this.handleAttributeSelect.bind(this);
     this.addAttributeToUrl = this.addAttributeToUrl.bind(this);
     this.getAttributeSelectedItemId =
@@ -40,14 +40,19 @@ class ProductInfoComp extends Component {
 
   // Initialize state.selectedAttributes when component mounts
   componentDidMount() {
-    this.initializeAttributes();
+    this.updateSelectedAttributes();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     this.props.onComponentDidUpdate();
+
+    // Update state.selectedAttributes when URL changes
+    if (prevProps.router.location !== this.props.router.location) {
+      this.props.shouldAddAttributesToUrl && this.updateSelectedAttributes();
+    }
   }
 
-  initializeAttributes() {
+  updateSelectedAttributes() {
     const {
       shouldAddAttributesToUrl,
       product,
@@ -87,17 +92,19 @@ class ProductInfoComp extends Component {
   }
 
   handleAttributeSelect({ attributeId, attributeSelectedItemId }) {
-    // Save selected attributes in the state
-    const selectedAttributes = jsonDeepClone(this.state.selectedAttributes);
-    const modifiedAttribute = selectedAttributes.find(
-      (attribute) => attribute.id === attributeId
-    );
-    modifiedAttribute.selectedItemId = attributeSelectedItemId;
-    this.setState({ selectedAttributes });
-
-    // If shouldAddAttributesToUrl is true, then add the attribute to the URL
+    // If shouldAddAttributesToUrl is true, add the attribute to the URL
+    // then state.selectedAttributes will be updated in componentDidUpdate
     if (this.props.shouldAddAttributesToUrl) {
       this.addAttributeToUrl({ attributeId, attributeSelectedItemId });
+    }
+    // If shouldAddAttributesToUrl is false, update the state directly from here
+    else {
+      const selectedAttributes = jsonDeepClone(this.state.selectedAttributes);
+      const modifiedAttribute = selectedAttributes.find(
+        (attribute) => attribute.id === attributeId
+      );
+      modifiedAttribute.selectedItemId = attributeSelectedItemId;
+      this.setState({ selectedAttributes });
     }
   }
 

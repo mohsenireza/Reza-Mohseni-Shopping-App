@@ -100,18 +100,31 @@ class CartItemComp extends Component {
     const selectedImage =
       gallery.length && gallery[this.state.selectedImageIndex];
 
+    // Generate a link to corresponding product page with selected attributes
+    let linkToProductPage = `/product/${productId}`;
+    selectedAttributes.forEach((attribute, index) => {
+      let queryString = '';
+      const isTheFirstAttribute = index === 0;
+      const isTheLastAttribute = index === selectedAttributes.length - 1;
+      if (isTheFirstAttribute) queryString += '?';
+      queryString += `${attribute.id}=${attribute.selectedItemId}`;
+      if (!isTheLastAttribute) queryString += '&';
+      linkToProductPage += queryString;
+    });
+    linkToProductPage = encodeURI(linkToProductPage);
+
     return (
       <article className={`cartItem -${size}`}>
         <div className="cartItem__infoContainer">
           <Link
-            to={`/product/${productId}`}
+            to={linkToProductPage}
             onClick={this.props.onLinkClick}
             className="cartItem__brand"
           >
             {brand}
           </Link>
           <Link
-            to={`/product/${productId}`}
+            to={linkToProductPage}
             onClick={this.props.onLinkClick}
             className="cartItem__name"
           >
@@ -148,7 +161,7 @@ class CartItemComp extends Component {
           <figure className="cartItem__imageContainer">
             {size === 'small' ? (
               <Link
-                to={`/product/${productId}`}
+                to={linkToProductPage}
                 onClick={this.props.onLinkClick}
                 className="cartItem__imageLink"
               >
