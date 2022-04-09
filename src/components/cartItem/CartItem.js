@@ -146,11 +146,25 @@ class CartItemComp extends Component {
             onRemove={this.handleOrderItemRemove}
           />
           <figure className="cartItem__imageContainer">
-            <img
-              className="cartItem__image"
-              src={selectedImage}
-              alt={`${brand} - ${name}`}
-            />
+            {size === 'small' ? (
+              <Link
+                to={`/product/${productId}`}
+                onClick={this.props.onLinkClick}
+                className="cartItem__imageLink"
+              >
+                <img
+                  className="cartItem__image"
+                  src={selectedImage}
+                  alt={`${brand} - ${name}`}
+                />
+              </Link>
+            ) : (
+              <img
+                className="cartItem__image"
+                src={selectedImage}
+                alt={`${brand} - ${name}`}
+              />
+            )}
             {size === 'big' && gallery.length > 1 && (
               <>
                 <button
