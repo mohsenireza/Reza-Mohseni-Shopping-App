@@ -100,18 +100,31 @@ class CartItemComp extends Component {
     const selectedImage =
       gallery.length && gallery[this.state.selectedImageIndex];
 
+    // Generate a link to corresponding product page with selected attributes
+    let linkToProductPage = `/product/${productId}`;
+    selectedAttributes.forEach((attribute, index) => {
+      let queryString = '';
+      const isTheFirstAttribute = index === 0;
+      const isTheLastAttribute = index === selectedAttributes.length - 1;
+      if (isTheFirstAttribute) queryString += '?';
+      queryString += `${attribute.id}=${attribute.selectedItemId}`;
+      if (!isTheLastAttribute) queryString += '&';
+      linkToProductPage += queryString;
+    });
+    linkToProductPage = encodeURI(linkToProductPage);
+
     return (
       <article className={`cartItem -${size}`}>
         <div className="cartItem__infoContainer">
           <Link
-            to={`/product/${productId}`}
+            to={linkToProductPage}
             onClick={this.props.onLinkClick}
             className="cartItem__brand"
           >
             {brand}
           </Link>
           <Link
-            to={`/product/${productId}`}
+            to={linkToProductPage}
             onClick={this.props.onLinkClick}
             className="cartItem__name"
           >
@@ -146,11 +159,25 @@ class CartItemComp extends Component {
             onRemove={this.handleOrderItemRemove}
           />
           <figure className="cartItem__imageContainer">
-            <img
-              className="cartItem__image"
-              src={selectedImage}
-              alt={`${brand} - ${name}`}
-            />
+            {size === 'small' ? (
+              <Link
+                to={linkToProductPage}
+                onClick={this.props.onLinkClick}
+                className="cartItem__imageLink"
+              >
+                <img
+                  className="cartItem__image"
+                  src={selectedImage}
+                  alt={`${brand} - ${name}`}
+                />
+              </Link>
+            ) : (
+              <img
+                className="cartItem__image"
+                src={selectedImage}
+                alt={`${brand} - ${name}`}
+              />
+            )}
             {size === 'big' && gallery.length > 1 && (
               <>
                 <button

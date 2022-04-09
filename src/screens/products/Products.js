@@ -12,7 +12,6 @@ import {
   categorySelected,
   selectedCategoryCleared,
 } from '../../features/categories/categoriesSlice';
-import { getParameterByName } from '../../utils';
 import { withRouter } from '../../hoc';
 
 class ProductsComp extends Component {
@@ -51,16 +50,23 @@ class ProductsComp extends Component {
   // Because we get selectedCategory from URL,
   // even after reloading, our app can hold its old selectedCategory,
   getSelectedCategoryFromUrl() {
-    const selectedCategoryFromQueryString = getParameterByName('category');
-    const categories = this.props.categories;
+    const {
+      categories,
+      router: { searchParams },
+      dispatchCategorySelected,
+    } = this.props;
+
+    // Get the selected category from URL
+    const selectedCategoryFromQueryString = searchParams.get('category');
+
     // If the category from URL exists in the store, we can use it as the selected category
     if (categories.includes(selectedCategoryFromQueryString)) {
-      this.props.dispatchCategorySelected(selectedCategoryFromQueryString);
+      dispatchCategorySelected(selectedCategoryFromQueryString);
     }
     // Otherwise we select the first category Item in store as the selected category
     else if (categories.length) {
       const defaultCategory = categories[0];
-      this.props.dispatchCategorySelected(defaultCategory);
+      dispatchCategorySelected(defaultCategory);
     }
   }
 

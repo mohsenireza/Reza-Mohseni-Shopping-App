@@ -33,6 +33,11 @@
         width: rem(105px);
         height: rem(137px);
         margin-left: rem(10px);
+        .cartItem__imageLink {
+          display: inline-block;
+          height: 100%;
+          width: 100%;
+        }
       }
     }
   }

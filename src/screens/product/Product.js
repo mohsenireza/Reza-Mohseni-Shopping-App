@@ -92,6 +92,7 @@ class ProductComp extends Component {
                 <ProductInfo
                   product={product}
                   className="product__productInfo"
+                  shouldAddAttributesToUrl={true}
                 />
               </section>
             </main>

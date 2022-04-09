@@ -1,4 +1,5 @@
 import ReactDOM from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { ModalContainer } from '../components';
 import { store } from '../config/store';
@@ -65,15 +66,17 @@ class ModalController {
     // we should wrap modals inside separate contexts,
     // like redux Provider
     ReactDOM.render(
-      <Provider store={store}>
-        <this.ModalContainerComponent
-          className={modalContainerClassName}
-          onModalClose={() => this.closeModal(modalId)}
-          title={title}
-        >
-          <Component {...props} modalId={modalId} />
-        </this.ModalContainerComponent>
-      </Provider>,
+      <BrowserRouter>
+        <Provider store={store}>
+          <this.ModalContainerComponent
+            className={modalContainerClassName}
+            onModalClose={() => this.closeModal(modalId)}
+            title={title}
+          >
+            <Component {...props} modalId={modalId} />
+          </this.ModalContainerComponent>
+        </Provider>
+      </BrowserRouter>,
       modalParent
     );
 

@@ -20,7 +20,7 @@ class HeaderComp extends Component {
     );
 
     const renderCategories = (onLinkClick = () => {}) =>
-      this.props.categories.map((category) => {
+      this.props.categories.map((category, index) => {
         // If the selected category from store is equal to this category Item
         // then it means this category is the selected one
         // so we add '-selected' className to make it highlighted
@@ -28,7 +28,7 @@ class HeaderComp extends Component {
         return (
           <li key={category} className="header__category">
             <Link
-              to={`/products?category=${category}`}
+              to={index === 0 ? '/products' : `/products?category=${category}`}
               onClick={onLinkClick}
               className={`header__categoryLink ${
                 isCategorySelected ? '-selected' : ''
