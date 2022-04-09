@@ -10,6 +10,7 @@ import {
   selectOrderItemByProduct,
 } from '../../features/cart/cartSlice';
 import { selectSelectedCurrency } from '../../features/currencies/currenciesSlice';
+import { withRouter } from '../../hoc';
 import { jsonDeepClone } from '../../utils';
 
 class ProductInfoComp extends Component {
@@ -28,6 +29,7 @@ class ProductInfoComp extends Component {
     // Bind methods
     this.initializeAttributes = this.initializeAttributes.bind(this);
     this.handleAttributeSelect = this.handleAttributeSelect.bind(this);
+    this.addAttributeToUrl = this.addAttributeToUrl.bind(this);
     this.getAttributeSelectedItemId =
       this.getAttributeSelectedItemId.bind(this);
     this.handleOrderItemAdd = this.handleOrderItemAdd.bind(this);
@@ -36,6 +38,7 @@ class ProductInfoComp extends Component {
       this.handleOrderItemQuantityEdit.bind(this);
   }
 
+  // Initialize state.selectedAttributes when component mounts
   componentDidMount() {
     this.initializeAttributes();
   }
@@ -44,18 +47,40 @@ class ProductInfoComp extends Component {
     this.props.onComponentDidUpdate();
   }
 
-  // Initialize state.selectedAttributes
   initializeAttributes() {
-    // If a product is out of stock, then attributes should not be selected
-    if (!this.props.product.inStock) return;
+    const {
+      shouldAddAttributesToUrl,
+      product,
+      router: { searchParams },
+    } = this.props;
 
-    // For each attribute, select the first item as default
-    const selectedAttributes = this.props.product.attributes.map(
-      (attribute) => ({
+    // If a product is out of stock, then attributes should not be selected
+    if (!product.inStock) return;
+
+    const selectedAttributes = product.attributes.map((attribute) => {
+      // Check if attributes are saved in URL and the attribute exists in the URL
+      if (shouldAddAttributesToUrl && searchParams.has(attribute.id)) {
+        const attributeItemIdFromUrl = searchParams.get(attribute.id);
+        const isAttributeItemIdFromUrlValid = attribute.items.some(
+          (item) => item.id === attributeItemIdFromUrl
+        );
+        // If the attributeItemId from URL is valid, then get it as the selected attribute item
+        if (isAttributeItemIdFromUrlValid) {
+          return {
+            id: attribute.id,
+            selectedItemId: attributeItemIdFromUrl,
+          };
+        }
+      }
+      // If attributes are not saved in URL or
+      // attribute doesn't exist in URL or
+      // attributeSelectedItemId from URL is not valid,
+      // then get the first attributeItem as the selected attribute item
+      return {
         id: attribute.id,
         selectedItemId: attribute.items[0].id,
-      })
-    );
+      };
+    });
 
     // Set selectedAttributes in the state
     this.setState({ selectedAttributes });
@@ -69,6 +94,48 @@ class ProductInfoComp extends Component {
     );
     modifiedAttribute.selectedItemId = attributeSelectedItemId;
     this.setState({ selectedAttributes });
+
+    // If shouldAddAttributesToUrl is true, then add the attribute to the URL
+    if (this.props.shouldAddAttributesToUrl) {
+      this.addAttributeToUrl({ attributeId, attributeSelectedItemId });
+    }
+  }
+
+  addAttributeToUrl({ attributeId, attributeSelectedItemId }) {
+    const {
+      product,
+      router: { searchParams, setSearchParams },
+    } = this.props;
+
+    searchParams.set(attributeId, attributeSelectedItemId);
+
+    // Sort search params
+    let sortedSearchParams = [];
+    [...searchParams.entries()].forEach(([key, value]) => {
+      // Remove items from the searchParams object, to make it clear,
+      // and fill it with sorted search params after the loop
+      searchParams.delete(key);
+      const attributeIndex = product.attributes.findIndex(
+        (attribute) => attribute.id === key
+      );
+      const attribute = product.attributes.find(
+        (attribute) => attribute.id === key
+      );
+      // If the first attributeItem is selected, don't add it to URL
+      if (attribute.items[0].id === value) return;
+      sortedSearchParams[attributeIndex] = { key, value };
+    });
+
+    // Remove empty array items
+    sortedSearchParams = sortedSearchParams.filter(Boolean);
+
+    // Add sortedSearchParams to the searchParams object
+    sortedSearchParams.forEach((searchParam) => {
+      searchParams.set(searchParam.key, searchParam.value);
+    });
+
+    // Change the URL's search params
+    setSearchParams(searchParams, { replace: true });
   }
 
   // Return selected item id for a specific attribute
@@ -189,6 +256,7 @@ class ProductInfoComp extends Component {
 
 ProductInfoComp.propTypes = {
   className: PropTypes.string,
+  shouldAddAttributesToUrl: PropTypes.bool,
   product: PropTypes.object.isRequired,
   isVerbose: PropTypes.bool,
   onComponentDidUpdate: PropTypes.func,
@@ -197,10 +265,12 @@ ProductInfoComp.propTypes = {
   dispatchOrderItemAdded: PropTypes.func.isRequired,
   dispatchOrderItemQuantityEdited: PropTypes.func.isRequired,
   dispatchOrderItemRemoved: PropTypes.func.isRequired,
+  router: PropTypes.object.isRequired,
 };
 
 ProductInfoComp.defaultProps = {
   className: '',
+  shouldAddAttributesToUrl: false,
   isVerbose: true,
   onComponentDidUpdate: () => {},
 };
@@ -216,9 +286,8 @@ const mapDispatchToProps = {
   dispatchOrderItemRemoved: orderItemRemoved,
 };
 
-const ProductInfo = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ProductInfoComp);
+const ProductInfo = withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(ProductInfoComp)
+);
 
 export { ProductInfo };
