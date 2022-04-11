@@ -20,6 +20,8 @@ class Drawer extends Component {
     this.handleDrawerOpen = this.handleDrawerOpen.bind(this);
     this.handleDrawerClose = this.handleDrawerClose.bind(this);
     this.handleEscapeKeyDown = this.handleEscapeKeyDown.bind(this);
+    this.disableBodyScrolling = this.disableBodyScrolling.bind(this);
+    this.enableBodyScrolling = this.enableBodyScrolling.bind(this);
   }
 
   componentDidMount() {
@@ -44,6 +46,7 @@ class Drawer extends Component {
   }
 
   componentWillUnmount() {
+    this.enableBodyScrolling();
     // Delete focus trapper when viewport's width becomes bigger and <Drawer /> gets unmounted
     this.focusTrapper.delete();
     // Remove event listener for handleEscapeKeyDown when viewport's width becomes bigger and <Drawer /> gets unmounted
@@ -52,10 +55,12 @@ class Drawer extends Component {
 
   handleDrawerOpen() {
     this.setState({ isDrawerOpen: true });
+    this.disableBodyScrolling();
   }
 
   handleDrawerClose() {
     this.setState({ isDrawerOpen: false });
+    this.enableBodyScrolling();
   }
 
   // Close drawer when escape key is pressed
@@ -63,6 +68,16 @@ class Drawer extends Component {
     if (e.key === 'Escape') {
       this.handleDrawerClose();
     }
+  }
+
+  disableBodyScrolling() {
+    // Disable scrolling of body
+    document.querySelector('body').style.overflow = 'hidden';
+  }
+
+  enableBodyScrolling() {
+    // Enable scrolling of body
+    document.querySelector('body').style.overflow = 'auto';
   }
 
   render() {
