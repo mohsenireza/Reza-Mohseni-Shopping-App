@@ -3,8 +3,10 @@
   "jest": {
     "collectCoverageFrom": [
       "src/**/*.{js,jsx}",
+      "!src/index.js",
       "!src/reportWebVitals.js",
-      "!src/index.js"
+      "!src/service-worker.js",
+      "!src/serviceWorkerRegistration.js"
     ]
   },
   "version": "0.1.0",

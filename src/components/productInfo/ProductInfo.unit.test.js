@@ -223,3 +223,105 @@ test('dont show description isVerbose prop is false', async () => {
   const descriptionElement = screen.queryByTestId('productInfoDescription');
   expect(descriptionElement).not.toBeInTheDocument();
 });
+
+test('selected attributes should be added to URL when shouldAddAttributesToUrl prop is true', async () => {
+  // Prepare initial data and render the component
+  const product = fakeShoesProduct;
+  const selectedCurrency = fakeCurrencies[0];
+  // selectOrderItemByProduct returns null, means the product is not added to cart yet
+  const selectOrderItemByProduct = () => null;
+  const dispatchOrderItemAdded = jest.fn();
+  const dispatchOrderItemQuantityEdited = jest.fn();
+  const dispatchOrderItemRemoved = jest.fn();
+  const { user } = await render(
+    <ProductInfo
+      shouldAddAttributesToUrl={true}
+      product={product}
+      selectedCurrency={selectedCurrency}
+      selectOrderItemByProduct={selectOrderItemByProduct}
+      dispatchOrderItemAdded={dispatchOrderItemAdded}
+      dispatchOrderItemQuantityEdited={dispatchOrderItemQuantityEdited}
+      dispatchOrderItemRemoved={dispatchOrderItemRemoved}
+      isVerbose={false}
+    />
+  );
+
+  // Click on an attribute item
+  const attribute = fakeShoesProduct.attributes[0];
+  const attributeItem = attribute.items[1];
+  const attributeItemElement = screen.getByRole('button', {
+    name: attributeItem.value,
+  });
+  await user.click(attributeItemElement);
+
+  // Selected attribute item id should be in the URL
+  expect(window.location.search).toBe(`?${attribute.id}=${attributeItem.id}`);
+});
+
+test('the first attribute item should not be added to URL if gets selected', async () => {
+  // Prepare initial data and render the component
+  const product = fakeShoesProduct;
+  const selectedCurrency = fakeCurrencies[0];
+  // selectOrderItemByProduct returns null, means the product is not added to cart yet
+  const selectOrderItemByProduct = () => null;
+  const dispatchOrderItemAdded = jest.fn();
+  const dispatchOrderItemQuantityEdited = jest.fn();
+  const dispatchOrderItemRemoved = jest.fn();
+  const { user } = await render(
+    <ProductInfo
+      shouldAddAttributesToUrl={true}
+      product={product}
+      selectedCurrency={selectedCurrency}
+      selectOrderItemByProduct={selectOrderItemByProduct}
+      dispatchOrderItemAdded={dispatchOrderItemAdded}
+      dispatchOrderItemQuantityEdited={dispatchOrderItemQuantityEdited}
+      dispatchOrderItemRemoved={dispatchOrderItemRemoved}
+      isVerbose={false}
+    />
+  );
+
+  // Click on the first attribute item
+  const attribute = fakeShoesProduct.attributes[0];
+  const attributeItem = attribute.items[0];
+  const attributeItemElement = screen.getByRole('button', {
+    name: attributeItem.value,
+  });
+  await user.click(attributeItemElement);
+
+  // Selected attribute item id should not be in the URL
+  expect(window.location.search).toBe('');
+});
+
+test('selected attributes should not be added to URL when shouldAddAttributesToUrl prop is false', async () => {
+  // Prepare initial data and render the component
+  const product = fakeShoesProduct;
+  const selectedCurrency = fakeCurrencies[0];
+  // selectOrderItemByProduct returns null, means the product is not added to cart yet
+  const selectOrderItemByProduct = () => null;
+  const dispatchOrderItemAdded = jest.fn();
+  const dispatchOrderItemQuantityEdited = jest.fn();
+  const dispatchOrderItemRemoved = jest.fn();
+  const { user } = await render(
+    <ProductInfo
+      shouldAddAttributesToUrl={false}
+      product={product}
+      selectedCurrency={selectedCurrency}
+      selectOrderItemByProduct={selectOrderItemByProduct}
+      dispatchOrderItemAdded={dispatchOrderItemAdded}
+      dispatchOrderItemQuantityEdited={dispatchOrderItemQuantityEdited}
+      dispatchOrderItemRemoved={dispatchOrderItemRemoved}
+      isVerbose={false}
+    />
+  );
+
+  // Click on an attribute item
+  const attribute = fakeShoesProduct.attributes[0];
+  const attributeItem = attribute.items[1];
+  const attributeItemElement = screen.getByRole('button', {
+    name: attributeItem.value,
+  });
+  await user.click(attributeItemElement);
+
+  // Selected attribute item id should not be in the URL
+  expect(window.location.search).toBe('');
+});

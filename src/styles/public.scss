@@ -16,6 +16,11 @@ button {
   color: $firstDark-color;
 }
 
+// Add space to create placeholder for header (because header has position: fixed)
+body {
+  padding-top: rem(78px);
+}
+
 // Set default styles
 * {
   box-sizing: border-box;
