@@ -64,8 +64,10 @@ workflows:
       - build
       - unit_test
       - integration_test
+      - cypress/install:
+          build: 'yarn run build'
       - cypress/run:
-        requires:
-          - build
+          requires:
+            - cypress/install
       # For running simple node tests, you could optionally instead use the node/test job from the orb to replicate and replace the manually defined "test" job above in fewer lines.
       # - node/test
