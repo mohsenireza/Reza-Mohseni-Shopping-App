@@ -67,6 +67,7 @@ workflows:
       - cypress/install:
           install-command: yarn install --frozen-lockfile --ignore-engines
       - cypress/run:
+          yarn: true
           requires:
             - cypress/install
       # For running simple node tests, you could optionally instead use the node/test job from the orb to replicate and replace the manually defined "test" job above in fewer lines.
