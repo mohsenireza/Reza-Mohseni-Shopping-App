@@ -65,7 +65,7 @@ workflows:
       - unit_test
       - integration_test
       - cypress/install:
-          build: 'yarn run build'
+          install-command: yarn install --frozen-lockfile
       - cypress/run:
           requires:
             - cypress/install
