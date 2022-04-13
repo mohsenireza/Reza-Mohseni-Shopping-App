@@ -53,6 +53,14 @@ jobs:
       - run:
           name: Run integration tests
           command: yarn run test:integration
+  end_to_end_test:
+    docker:
+      - image: cimg/node:16.14.0
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: yarn
+      - cypress/run
 
 workflows:
   # Below is the definition of your workflow.
@@ -64,4 +72,6 @@ workflows:
       - build
       - unit_test
       - integration_test
-      - cypress/run
+      - end_to_end_test
+      # For running simple node tests, you could optionally instead use the node/test job from the orb to replicate and replace the manually defined "test" job above in fewer lines.
+      # - node/test
