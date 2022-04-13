@@ -1,0 +1,119 @@
+@import '../../styles/config.scss';
+
+.attribute {
+  &.-small {
+    .attribute__items {
+      .attribute__itemContainer {
+        margin-right: rem(8px);
+        .attribute__item {
+          &.-text {
+            height: rem(24px);
+            min-width: rem(24px);
+          }
+          &.-color {
+            height: rem(24px);
+            width: rem(24px);
+          }
+        }
+      }
+    }
+  }
+  &.-big {
+    .attribute__items {
+      .attribute__itemContainer {
+        margin-right: rem(12px);
+        .attribute__item {
+          &.-text {
+            height: rem(45px);
+            min-width: rem(63px);
+          }
+          &.-color {
+            height: rem(45px);
+            width: rem(45px);
+          }
+        }
+      }
+    }
+  }
+  .attribute__name {
+    font-family: roboto-condensed;
+    font-weight: 700;
+    font-size: rem(18px);
+  }
+  .attribute__items {
+    display: flex;
+    flex-wrap: wrap;
+    .attribute__itemContainer {
+      position: relative;
+      margin-top: rem(6px);
+      &:last-child {
+        margin-right: 0;
+      }
+      &.-disabled {
+        .attribute__item {
+          cursor: default;
+        }
+      }
+      &.-fade {
+        opacity: 40%;
+      }
+      .attribute__item {
+        &.-text {
+          padding: 0 rem(3px);
+        }
+        &.-color {
+          padding: 0;
+          border-radius: rem(3px);
+          border: 0 none;
+          box-shadow: 0 rem(5px) rem(10px) 0 rgba(0, 0, 0, 0.3);
+          .attribute__itemCheckMark {
+            transition: 0.2s;
+            opacity: 0;
+            &.-show {
+              opacity: 100%;
+            }
+          }
+        }
+        @include ifDeviceCanHover() {
+          &:hover {
+            + .attribute__itemTooltip {
+              opacity: 100%;
+            }
+          }
+        }
+        &:focus-visible {
+          + .attribute__itemTooltip {
+            opacity: 100%;
+          }
+        }
+      }
+      .attribute__itemTooltip {
+        position: absolute;
+        bottom: rem(-35px);
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1;
+        padding: rem(5px) rem(10px);
+        background-color: $firstDark-color;
+        color: $white-color;
+        font-size: rem(14px);
+        border-radius: rem(16px);
+        opacity: 0;
+        transition: 0.2s;
+        backface-visibility: hidden;
+        white-space: nowrap;
+        &::before {
+          content: '';
+          height: rem(10px);
+          width: rem(10px);
+          position: absolute;
+          top: rem(-5px);
+          left: 50%;
+          transform: translateX(-50%) rotate(45deg);
+          background-color: $firstDark-color;
+          z-index: -1;
+        }
+      }
+    }
+  }
+}

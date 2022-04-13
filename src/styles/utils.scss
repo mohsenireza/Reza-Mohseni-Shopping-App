@@ -1,0 +1,53 @@
+// Convert px to em
+@function em($target, $context: 16px) {
+  @return ($target / $context) * 1em;
+}
+
+// Convert px to rem
+@function rem($target, $context: 16px) {
+  @return ($target / $context) * 1rem;
+}
+
+// Use breakpoint mixin for media query and responsive purposes
+@mixin breakpoint($point) {
+  @if $point == xl {
+    @media (min-width: $xl-width) {
+      @content;
+    }
+  } @else if $point == lg {
+    @media (max-width: $lg-width) {
+      @content;
+    }
+  } @else if $point == tablet {
+    @media (max-width: $tablet-width) {
+      @content;
+    }
+  } @else if $point == md {
+    @media (max-width: $md-width) {
+      @content;
+    }
+  } @else if $point == sm {
+    @media (max-width: $sm-width) {
+      @content;
+    }
+  } @else if $point == xsm {
+    @media (max-width: $xsm-width) {
+      @content;
+    }
+  } @else if $point == xxsm {
+    @media (max-width: $xxsm-width) {
+      @content;
+    }
+  } @else if $point == xxxsm {
+    @media (max-width: $xxxsm-width) {
+      @content;
+    }
+  }
+}
+
+// If a device can hover
+@mixin ifDeviceCanHover {
+  @media (hover: hover) {
+    @content;
+  }
+}

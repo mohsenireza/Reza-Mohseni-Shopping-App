@@ -1,0 +1,61 @@
+@import '../../styles/config.scss';
+
+.modalContainer {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  .modalContainer__overlay {
+    height: 100%;
+    width: 100%;
+    background-color: rgba(57, 55, 72, 0.22);
+    cursor: pointer;
+  }
+  .modalContainer__content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90vw;
+    height: 90vh;
+    background-color: $white-color;
+    border-radius: rem(10px);
+    .modalContainer__contentHeader {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: rem(50px);
+      .modalContainer__contentHeaderCloseButton {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 100%;
+        padding: 0 rem(15px);
+        color: $red-color;
+        .modalContainer__contentHeaderCloseButtonImage {
+          height: rem(16px);
+          width: rem(16px);
+        }
+      }
+      .modalContainer__contentHeaderTitle {
+        font-weight: 600;
+      }
+    }
+    .modalContainer__contentBody {
+      height: calc(100% - rem(50px));
+      overflow-y: auto;
+      /* Hide scrollbar for IE and Edge */
+      -ms-overflow-style: none;
+      /* Hide scrollbar for Firefox */
+      scrollbar-width: none;
+      /* Hide scrollbar for Chrome, Safari and Opera */
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+  }
+}
