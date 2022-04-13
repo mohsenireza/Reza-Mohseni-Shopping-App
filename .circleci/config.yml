@@ -7,6 +7,11 @@ orbs:
   # Orbs reduce the amount of configuration required for common tasks.
   # See the orb documentation here: https://circleci.com/developer/orbs/orb/circleci/node
   node: circleci/node@5.0.1
+  # "cypress-io/cypress@1" installs the latest published
+  # version "1.x.y" of the orb. We recommend you then use
+  # the strict explicit version "cypress-io/cypress@1.x.y"
+  # to lock the version and prevent unexpected CI changes
+  cypress: cypress-io/cypress@1
 
 jobs:
   build:
@@ -55,9 +60,8 @@ jobs:
       - checkout
       - node/install-packages:
           pkg-manager: yarn
-      - run:
-          name: Run end to end tests
-          command: yarn run cypress:run
+      - cypress/install
+      - cypress/run
 
 workflows:
   # Below is the definition of your workflow.
