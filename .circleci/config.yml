@@ -7,11 +7,6 @@ orbs:
   # Orbs reduce the amount of configuration required for common tasks.
   # See the orb documentation here: https://circleci.com/developer/orbs/orb/circleci/node
   node: circleci/node@5.0.1
-  # "cypress-io/cypress@1" installs the latest published
-  # version "1.x.y" of the orb. We recommend you then use
-  # the strict explicit version "cypress-io/cypress@1.x.y"
-  # to lock the version and prevent unexpected CI changes
-  cypress: cypress-io/cypress@1
 
 jobs:
   build:
@@ -64,11 +59,5 @@ workflows:
       - build
       - unit_test
       - integration_test
-      - cypress/install:
-          install-command: yarn install --frozen-lockfile --ignore-engines
-      - cypress/run:
-          yarn: true
-          requires:
-            - cypress/install
       # For running simple node tests, you could optionally instead use the node/test job from the orb to replicate and replace the manually defined "test" job above in fewer lines.
       # - node/test
