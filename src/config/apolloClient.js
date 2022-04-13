@@ -1,4 +1,5 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { API_BASE_URL } from '../constants';
 
 const cache = new InMemoryCache({
   typePolicies: {
@@ -15,7 +16,7 @@ const cache = new InMemoryCache({
 });
 
 const client = new ApolloClient({
-  uri: 'http://localhost:4000/',
+  uri: API_BASE_URL,
   cache,
 });
 

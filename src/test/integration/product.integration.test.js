@@ -41,9 +41,9 @@ test('should load product data', async () => {
 });
 
 test('show error when product doesnt get loaded', async () => {
-  // Handle 'product' query to response with an error
+  // Handle 'Product' query to response with an error
   server.use(
-    graphql.query('product', (req, res, ctx) => {
+    graphql.query('Product', (req, res, ctx) => {
       return res(ctx.errors);
     })
   );

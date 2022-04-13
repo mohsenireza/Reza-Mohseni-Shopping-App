@@ -68,9 +68,9 @@ test('should fetch currencies and show them in the UI', async () => {
 });
 
 test('show error when products dont get loaded', async () => {
-  // Handle 'products' query to response with an error
+  // Handle 'Products' query to response with an error
   server.use(
-    graphql.query('products', (req, res, ctx) => {
+    graphql.query('Products', (req, res, ctx) => {
       return res(ctx.errors);
     })
   );
