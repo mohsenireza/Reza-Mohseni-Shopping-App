@@ -10,8 +10,8 @@ import {
 } from './fakeData';
 
 export const handlers = [
-  // Handle a 'categories' query
-  graphql.query('categories', (req, res, ctx) => {
+  // Handle a 'Categories' query
+  graphql.query('Categories', (req, res, ctx) => {
     return res(
       ctx.data({
         categories: fakeCategories,
@@ -19,8 +19,8 @@ export const handlers = [
     );
   }),
 
-  // Handle a 'currencies' query
-  graphql.query('currencies', (req, res, ctx) => {
+  // Handle a 'Currencies' query
+  graphql.query('Currencies', (req, res, ctx) => {
     return res(
       ctx.data({
         currencies: fakeCurrencies,
@@ -28,8 +28,8 @@ export const handlers = [
     );
   }),
 
-  // Handle a 'products' query
-  graphql.query('products', (req, res, ctx) => {
+  // Handle a 'Products' query
+  graphql.query('Products', (req, res, ctx) => {
     // Return products based on the category found in request body
     let products = [];
     const category = req.body.variables.category;
@@ -46,8 +46,8 @@ export const handlers = [
     );
   }),
 
-  // Handle a 'product' query
-  graphql.query('product', (req, res, ctx) => {
+  // Handle a 'Product' query
+  graphql.query('Product', (req, res, ctx) => {
     const requestedProduct = fakeProducts.find(
       (fakeProduct) => fakeProduct.id === req.variables.id
     );
@@ -58,8 +58,8 @@ export const handlers = [
     );
   }),
 
-  // Handle a 'cart' query
-  graphql.query('cart', (req, res, ctx) => {
+  // Handle a 'Cart' query
+  graphql.query('Cart', (req, res, ctx) => {
     // Send products which their ids are inside localStorage
     const data = {};
     const orderList = storage.load('orderList');

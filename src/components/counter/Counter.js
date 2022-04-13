@@ -38,6 +38,7 @@ class Counter extends Component {
     return (
       <div className={`counter -${alignment} -${size} ${className}`}>
         <button
+          data-testid="counterIncreaseButton"
           disabled={!canIncrease}
           onClick={this.handleCountIncrease}
           className={`counter__button ${canIncrease ? '' : '-disabled'}`}
