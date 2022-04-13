@@ -33,6 +33,7 @@
     "test:unit": "react-scripts test unit.test.js",
     "test:integration": "react-scripts test integration.test.js",
     "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
     "eject": "react-scripts eject",
     "lint": "eslint .",
     "format": "prettier --write ."
