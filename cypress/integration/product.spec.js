@@ -16,7 +16,7 @@ describe('product', () => {
   beforeEach(() => {
     // Alias queries
     cy.intercept('POST', API_BASE_URL, (req) => {
-      aliasQuery(req, 'Currencies');
+      aliasQuery(req, 'GlobalData');
     });
   });
 
@@ -31,7 +31,7 @@ describe('product', () => {
 
   it('should show price based on the selected category', () => {
     cy.visit(`/product/${testProduct.id}`);
-    cy.wait('@gqlCurrenciesQuery').then(({ response }) => {
+    cy.wait('@gqlGlobalDataQuery').then(({ response }) => {
       const selectedCurrency = response.body.data.currencies[1];
       cy.findByTestId('currencySwitcherHeader').click();
       cy.contains(

@@ -9,7 +9,7 @@ import {
   orderItemRemoved,
   selectOrderItemByProduct,
 } from '../../features/cart/cartSlice';
-import { selectSelectedCurrency } from '../../features/currencies/currenciesSlice';
+import { selectSelectedCurrency } from '../../features/global/globalSlice';
 import { withRouter } from '../../hoc';
 import { jsonDeepClone } from '../../utils';
 

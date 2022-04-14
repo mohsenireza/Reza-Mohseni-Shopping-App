@@ -11,7 +11,7 @@ import {
 import {
   categorySelected,
   selectedCategoryCleared,
-} from '../../features/categories/categoriesSlice';
+} from '../../features/global/globalSlice';
 import { withRouter } from '../../hoc';
 
 class ProductsComp extends Component {
@@ -110,8 +110,8 @@ ProductsComp.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  categories: state.categories.categories,
-  selectedCategory: state.categories.selectedCategory,
+  categories: state.global.categories,
+  selectedCategory: state.global.selectedCategory,
   productIds: selectProductIds(state),
   fetchProductsStatus: state.products.status,
 });

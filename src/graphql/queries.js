@@ -1,15 +1,10 @@
 import { gql } from '@apollo/client';
 
-export const categoriesQuery = () => gql`
-  query Categories {
+export const globalDataQuery = () => gql`
+  query GlobalData {
     categories {
       name
     }
-  }
-`;
-
-export const currenciesQuery = () => gql`
-  query Currencies {
     currencies {
       label
       symbol

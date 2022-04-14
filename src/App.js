@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Routes } from './Routes';
 import { Header, PageWrapper } from './components';
-import { fetchCategories } from './features/categories/categoriesSlice';
-import { fetchCurrencies } from './features/currencies/currenciesSlice';
+import { fetchGlobalData } from './features/global/globalSlice';
 import { fetchOrderList } from './features/cart/cartSlice';
 
 class App extends Component {
@@ -21,21 +20,15 @@ class App extends Component {
   }
 
   fetchInitialData() {
-    this.props.dispatchFetchCategories();
-    this.props.dispatchFetchCurrencies();
+    this.props.dispatchFetchGlobalData();
     this.props.dispatchFetchOrderList();
   }
 
   render() {
-    const {
-      fetchCategoriesStatus,
-      fetchCurrenciesStatus,
-      fetchOrderListStatus,
-    } = this.props;
+    const { fetchGlobalDataStatus, fetchOrderListStatus } = this.props;
 
     const fetchInitialDataStatuses = [
-      fetchCategoriesStatus,
-      fetchCurrenciesStatus,
+      fetchGlobalDataStatus,
       fetchOrderListStatus,
     ];
 
@@ -59,24 +52,20 @@ class App extends Component {
 }
 
 App.propTypes = {
-  fetchCategoriesStatus: PropTypes.string.isRequired,
-  fetchCurrenciesStatus: PropTypes.string.isRequired,
+  fetchGlobalDataStatus: PropTypes.string.isRequired,
   fetchOrderListStatus: PropTypes.string.isRequired,
-  dispatchFetchCategories: PropTypes.func.isRequired,
-  dispatchFetchCurrencies: PropTypes.func.isRequired,
+  dispatchFetchGlobalData: PropTypes.func.isRequired,
   dispatchFetchOrderList: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  fetchCategoriesStatus: state.categories.status,
-  fetchCurrenciesStatus: state.currencies.status,
+  fetchGlobalDataStatus: state.global.status,
   fetchOrderListStatus: state.cart.status,
 });
 
 const mapDispatchToProps = {
-  dispatchFetchCategories: fetchCategories,
-  dispatchFetchCurrencies: fetchCurrencies,
   dispatchFetchOrderList: fetchOrderList,
+  dispatchFetchGlobalData: fetchGlobalData,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

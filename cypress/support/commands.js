@@ -1,5 +1,5 @@
 import { print } from 'graphql';
-import { categoriesQuery, productsQuery } from '../../src/graphql/queries';
+import { globalDataQuery, productsQuery } from '../../src/graphql/queries';
 import { storage } from '../../src/utils/storage';
 import { API_BASE_URL } from '../../src/constants';
 
@@ -40,7 +40,7 @@ Cypress.Commands.add('fetchProducts', () => {
   cy.request({
     url: API_BASE_URL,
     method: 'POST',
-    body: { query: print(categoriesQuery()) },
+    body: { query: print(globalDataQuery()) },
   }).then(({ body }) => {
     const category = body.data.categories[0].name;
     // Fetch products of selected category and get one of them to use in tests

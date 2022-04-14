@@ -8,15 +8,14 @@ describe('products', () => {
   beforeEach(() => {
     // Alias queries
     cy.intercept('POST', API_BASE_URL, (req) => {
-      aliasQuery(req, 'Categories');
-      aliasQuery(req, 'Currencies');
+      aliasQuery(req, 'GlobalData');
       aliasQuery(req, 'Products');
     });
   });
 
   it('should load categories', () => {
     cy.visit('/');
-    cy.wait('@gqlCategoriesQuery').then(({ response }) => {
+    cy.wait('@gqlGlobalDataQuery').then(({ response }) => {
       const { categories } = response.body.data;
       categories.forEach((category) => {
         cy.contains(category.name);
@@ -26,7 +25,7 @@ describe('products', () => {
 
   it('should load currencies', () => {
     cy.visit('/');
-    cy.wait('@gqlCurrenciesQuery').then(({ response }) => {
+    cy.wait('@gqlGlobalDataQuery').then(({ response }) => {
       const { currencies } = response.body.data;
       cy.findByTestId('currencySwitcherHeader').click();
       currencies.forEach((currency) => {
@@ -47,7 +46,7 @@ describe('products', () => {
 
   it('should show prices based on the selected currency', () => {
     cy.visit('/');
-    cy.wait('@gqlCurrenciesQuery').then(({ response }) => {
+    cy.wait('@gqlGlobalDataQuery').then(({ response }) => {
       const selectedCurrency = response.body.data.currencies[1];
       cy.findByTestId('currencySwitcherHeader').click();
       cy.contains(
@@ -69,7 +68,7 @@ describe('products', () => {
 
   it('should load new products when category changes', () => {
     cy.visit('/');
-    cy.wait('@gqlCategoriesQuery').then(({ response }) => {
+    cy.wait('@gqlGlobalDataQuery').then(({ response }) => {
       cy.wait('@gqlProductsQuery');
       const categoryToSelect = response.body.data.categories[1];
       cy.contains(categoryToSelect.name).click();

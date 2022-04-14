@@ -21,6 +21,7 @@ class ProductComp extends Component {
 
   // Fetch product data when component mounts
   componentDidMount() {
+    window.scrollTo(0, 0);
     this.fetchProduct();
   }
 
