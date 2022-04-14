@@ -10,19 +10,11 @@ import {
 } from './fakeData';
 
 export const handlers = [
-  // Handle a 'Categories' query
-  graphql.query('Categories', (req, res, ctx) => {
+  // Handle a 'GlobalData' query
+  graphql.query('GlobalData', (req, res, ctx) => {
     return res(
       ctx.data({
         categories: fakeCategories,
-      })
-    );
-  }),
-
-  // Handle a 'Currencies' query
-  graphql.query('Currencies', (req, res, ctx) => {
-    return res(
-      ctx.data({
         currencies: fakeCurrencies,
       })
     );

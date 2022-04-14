@@ -97,8 +97,8 @@ HeaderComp.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  categories: state.categories.categories,
-  selectedCategory: state.categories.selectedCategory,
+  categories: state.global.categories,
+  selectedCategory: state.global.selectedCategory,
 });
 
 const Header = withBreakpoint(connect(mapStateToProps)(HeaderComp));

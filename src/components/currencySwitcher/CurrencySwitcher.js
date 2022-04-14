@@ -7,7 +7,7 @@ import { DetectClickOutside } from '..';
 import {
   currencySelected,
   selectSelectedCurrency,
-} from '../../features/currencies/currenciesSlice';
+} from '../../features/global/globalSlice';
 import { storage } from '../../utils';
 
 class CurrencySwitcherComp extends Component {
@@ -112,7 +112,7 @@ CurrencySwitcherComp.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  currencies: state.currencies.currencies,
+  currencies: state.global.currencies,
   selectedCurrency: selectSelectedCurrency(state),
 });
 

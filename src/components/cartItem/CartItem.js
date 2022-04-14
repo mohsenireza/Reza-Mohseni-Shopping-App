@@ -9,7 +9,7 @@ import {
   orderItemQuantityEdited,
   selectOrderItemById,
 } from '../../features/cart/cartSlice';
-import { selectSelectedCurrency } from '../../features/currencies/currenciesSlice';
+import { selectSelectedCurrency } from '../../features/global/globalSlice';
 import arrowLeft from '../../assets/images/arrowLeft.svg';
 import arrowRight from '../../assets/images/arrowRight.svg';
 

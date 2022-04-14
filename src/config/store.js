@@ -1,14 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
-import categoriesReducer from '../features/categories/categoriesSlice';
-import currenciesReducer from '../features/currencies/currenciesSlice';
+import globalReducer from '../features/global/globalSlice';
 import productsReducer from '../features/products/productsSlice';
 import productReducer from '../features/product/productSlice';
 import cartReducer from '../features/cart/cartSlice';
 
 const configureStoreOptions = {
   reducer: {
-    categories: categoriesReducer,
-    currencies: currenciesReducer,
+    global: globalReducer,
     products: productsReducer,
     product: productReducer,
     cart: cartReducer,

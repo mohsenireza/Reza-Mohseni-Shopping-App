@@ -7,7 +7,7 @@ import {
 import { client } from '../../config';
 import { cartQuery } from '../../graphql/queries';
 import { storage } from '../../utils/storage';
-import { selectSelectedCurrency } from '../currencies/currenciesSlice';
+import { selectSelectedCurrency } from '../global/globalSlice';
 
 const orderListApadter = createEntityAdapter({
   sortComparer: (a, b) =>

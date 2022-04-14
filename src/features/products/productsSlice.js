@@ -17,7 +17,7 @@ export const fetchProducts = createAsyncThunk(
   'products/fetchProducts',
   async (arg, { getState }) => {
     try {
-      const selectedCategory = getState().categories.selectedCategory;
+      const selectedCategory = getState().global.selectedCategory;
       const response = await client.query({
         query: productsQuery(),
         variables: { category: selectedCategory },

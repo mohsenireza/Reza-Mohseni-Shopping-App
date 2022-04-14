@@ -7,7 +7,7 @@ import cartWithBackground from '../../assets/images/cartWithBackground.svg';
 import { selectProductById } from '../../features/products/productsSlice';
 import { modalController } from '../../utils';
 import { ProductInfoModal } from '../../modals';
-import { selectSelectedCurrency } from '../../features/currencies/currenciesSlice';
+import { selectSelectedCurrency } from '../../features/global/globalSlice';
 
 class ProductCardComp extends Component {
   constructor(props) {
