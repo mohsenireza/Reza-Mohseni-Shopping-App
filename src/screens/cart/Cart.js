@@ -7,10 +7,15 @@ import {
   selectTotalPrice,
 } from '../../features/cart/cartSlice';
 import { Button, CartItem } from '../../components';
+import { domHelper } from '../../utils';
 
 class CartComp extends Component {
   constructor(props) {
     super(props);
+  }
+
+  componentDidMount() {
+    domHelper.resetWindowScroll();
   }
 
   render() {

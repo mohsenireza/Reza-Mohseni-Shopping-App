@@ -13,6 +13,7 @@ import {
   selectedCategoryCleared,
 } from '../../features/global/globalSlice';
 import { withRouter } from '../../hoc';
+import { domHelper } from '../../utils';
 
 class ProductsComp extends Component {
   constructor(props) {
@@ -24,6 +25,7 @@ class ProductsComp extends Component {
   }
 
   componentDidMount() {
+    domHelper.resetWindowScroll();
     // Get selectedCategory from URL when component mounts
     this.getSelectedCategoryFromUrl();
   }
