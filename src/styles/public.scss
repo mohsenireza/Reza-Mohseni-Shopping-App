@@ -21,6 +21,12 @@ body {
   padding-top: rem(78px);
 }
 
+// Hide focus outline if it is not needed, for example,
+// when an element receives focus via the mouse.
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
 // Set default styles
 * {
   box-sizing: border-box;
