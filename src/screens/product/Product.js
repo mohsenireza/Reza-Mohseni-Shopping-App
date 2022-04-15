@@ -9,6 +9,7 @@ import {
   imageSelected,
   productStateCleared,
 } from '../../features/product/productSlice';
+import { domHelper } from '../../utils';
 
 class ProductComp extends Component {
   constructor(props) {
@@ -21,7 +22,7 @@ class ProductComp extends Component {
 
   // Fetch product data when component mounts
   componentDidMount() {
-    window.scrollTo(0, 0);
+    domHelper.resetWindowScroll();
     this.fetchProduct();
   }
 
