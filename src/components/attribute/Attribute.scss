@@ -58,6 +58,7 @@
         opacity: 40%;
       }
       .attribute__item {
+        margin: 0;
         &.-text {
           padding: 0 rem(3px);
         }
@@ -102,6 +103,7 @@
         transition: 0.2s;
         backface-visibility: hidden;
         white-space: nowrap;
+        pointer-events: none;
         &::before {
           content: '';
           height: rem(10px);
