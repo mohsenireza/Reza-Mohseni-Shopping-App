@@ -1,5 +1,5 @@
 {
-  "name": "ecommerce-app",
+  "name": "ecommerce-store",
   "jest": {
     "collectCoverageFrom": [
       "src/**/*.{js,jsx}",
@@ -32,6 +32,7 @@
     "test": "react-scripts test",
     "test:unit": "react-scripts test unit.test.js",
     "test:integration": "react-scripts test integration.test.js",
+    "test:e2e": "cypress run",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "eject": "react-scripts eject",
