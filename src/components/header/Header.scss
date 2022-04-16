@@ -18,10 +18,6 @@
       &.header__categoriesContainer {
         .header__drawerToggler {
           padding-right: rem(11px);
-          .header__drawerTogglerImage {
-            position: relative;
-            top: rem(4px);
-          }
         }
         .header__categories {
           @include breakpoint(sm) {
@@ -72,11 +68,13 @@
         padding: 0 rem(16px);
         .header__logo {
           position: relative;
-          top: rem(5px);
+          top: rem(5.5px);
+          right: rem(0.4px);
           width: rem(33px);
           height: rem(31px);
           @include breakpoint(sm) {
-            top: rem(3.5px);
+            top: 0;
+            right: 0;
           }
         }
       }

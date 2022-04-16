@@ -56,10 +56,7 @@ class HeaderComp extends Component {
                       onDrawerOpen();
                     }}
                   >
-                    <Menu
-                      className="header__drawerTogglerImage"
-                      fill="#1d1f22"
-                    />
+                    <Menu fill="#1d1f22" />
                   </button>
                 )}
                 renderDrawerBody={(onDrawerClose) => (

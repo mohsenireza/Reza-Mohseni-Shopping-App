@@ -21,6 +21,9 @@
       margin-right: rem(9.5px);
       font-weight: 500;
       font-size: rem(18px);
+      @include breakpoint(sm) {
+        top: rem(-1px);
+      }
     }
     .currencySwitcher__arrowIcon {
       position: relative;
@@ -28,16 +31,22 @@
       transition: 0.3s;
       width: rem(8px);
       height: rem(4px);
+      @include breakpoint(sm) {
+        top: rem(2px);
+      }
     }
   }
   .currencySwitcher__content {
     position: absolute;
     top: 84%;
-    left: -20%;
+    right: rem(-65px);
     width: rem(114px);
     box-shadow: 0 rem(5px) rem(40px) 0 rgba(0, 0, 0, 0.07);
     background-color: $white-color;
     z-index: 100;
+    @media (max-width: 1300px) {
+      right: rem(-55px);
+    }
     .currencySwitcher__currencyItem {
       &:first-child {
         .currencySwitcher__currency {
