@@ -101,17 +101,21 @@ class CartItemComp extends Component {
       gallery.length && gallery[this.state.selectedImageIndex];
 
     // Generate a link to corresponding product page with selected attributes
-    let linkToProductPage = `/product/${productId}`;
-    selectedAttributes.forEach((attribute, index) => {
-      let queryString = '';
-      const isTheFirstAttribute = index === 0;
-      const isTheLastAttribute = index === selectedAttributes.length - 1;
-      if (isTheFirstAttribute) queryString += '?';
-      queryString += `${attribute.id}=${attribute.selectedItemId}`;
-      if (!isTheLastAttribute) queryString += '&';
-      linkToProductPage += queryString;
+    const searchParams = [];
+    selectedAttributes.forEach((selectedAttribute) => {
+      // If selected attribute item is not the first item in array, then add it to searchParams array
+      const attribute = attributes.find(
+        (attribute) => attribute.id === selectedAttribute.id
+      );
+      if (attribute.items[0].id !== selectedAttribute.selectedItemId) {
+        searchParams.push(
+          `${selectedAttribute.id}=${selectedAttribute.selectedItemId}`
+        );
+      }
     });
-    linkToProductPage = encodeURI(linkToProductPage);
+    let linkToProductPage = `/product/${productId}`;
+    const search = searchParams.join('&');
+    if (search) linkToProductPage += `?${search}`;
 
     return (
       <article className={`cartItem -${size}`}>

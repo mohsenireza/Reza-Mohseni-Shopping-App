@@ -1,9 +1,9 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import './Product.scss';
 import { PageWrapper, ProductInfo } from '../../components';
-import { withRouter } from '../../hoc';
 import {
   fetchProduct,
   imageSelected,
@@ -28,7 +28,7 @@ class ProductComp extends Component {
 
   // Fetch product data when URL changes
   componentDidUpdate(prevProps) {
-    if (prevProps.router.params.id !== this.props.router.params.id) {
+    if (prevProps.match.params.id !== this.props.match.params.id) {
       this.fetchProduct();
     }
   }
@@ -40,7 +40,7 @@ class ProductComp extends Component {
 
   // Fetch product's data based on the URL
   fetchProduct() {
-    const productId = this.props.router.params.id;
+    const productId = this.props.match.params.id;
     this.props.dispatchFetchProduct(productId);
   }
 
@@ -106,7 +106,7 @@ class ProductComp extends Component {
 }
 
 ProductComp.propTypes = {
-  router: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired,
   product: PropTypes.object,
   fetchProductStatus: PropTypes.string.isRequired,
   selectedImage: PropTypes.string,

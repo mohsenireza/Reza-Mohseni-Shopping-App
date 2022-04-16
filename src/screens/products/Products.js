@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import './Products.scss';
 import { PageWrapper, ProductCard } from '../../components';
 import {
@@ -12,8 +13,7 @@ import {
   categorySelected,
   selectedCategoryCleared,
 } from '../../features/global/globalSlice';
-import { withRouter } from '../../hoc';
-import { domHelper } from '../../utils';
+import { domHelper, getSearchParam } from '../../utils';
 
 class ProductsComp extends Component {
   constructor(props) {
@@ -32,7 +32,7 @@ class ProductsComp extends Component {
 
   componentDidUpdate(prevProps) {
     // Get selectedCategory from URL when URL change
-    if (prevProps.router.location !== this.props.router.location) {
+    if (prevProps.location !== this.props.location) {
       this.getSelectedCategoryFromUrl();
     }
     // Fetch products when category changes
@@ -52,14 +52,10 @@ class ProductsComp extends Component {
   // Because we get selectedCategory from URL,
   // even after reloading, our app can hold its old selectedCategory,
   getSelectedCategoryFromUrl() {
-    const {
-      categories,
-      router: { searchParams },
-      dispatchCategorySelected,
-    } = this.props;
+    const { categories, dispatchCategorySelected } = this.props;
 
     // Get the selected category from URL
-    const selectedCategoryFromQueryString = searchParams.get('category');
+    const selectedCategoryFromQueryString = getSearchParam('category');
 
     // If the category from URL exists in the store, we can use it as the selected category
     if (categories.includes(selectedCategoryFromQueryString)) {
@@ -100,7 +96,7 @@ class ProductsComp extends Component {
 }
 
 ProductsComp.propTypes = {
-  router: PropTypes.object,
+  location: PropTypes.object.isRequired,
   categories: PropTypes.array.isRequired,
   selectedCategory: PropTypes.string,
   productIds: PropTypes.array.isRequired,
