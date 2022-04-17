@@ -148,6 +148,21 @@
   .cartItem__infoContainer {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
+    .cartItem__brand {
+      transition: 0.2s;
+      &:hover,
+      &:focus-visible {
+        color: $firstLight-color;
+      }
+    }
+    .cartItem__name {
+      transition: 0.2s;
+      &:hover,
+      &:focus-visible {
+        color: $firstLight-color;
+      }
+    }
   }
   .cartItem__imageAndCounterContainer {
     display: flex;
