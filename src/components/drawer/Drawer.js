@@ -65,7 +65,8 @@ class Drawer extends Component {
 
   // Close drawer when escape key is pressed
   handleEscapeKeyDown(e) {
-    if (e.key === 'Escape') {
+    // 'Esc' is for IE, 'Escape' is for other browsers
+    if (e.key === 'Escape' || e.key === 'Esc') {
       this.handleDrawerClose();
     }
   }
