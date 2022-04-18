@@ -189,6 +189,7 @@ class CartItemComp extends Component {
               <img
                 className="cartItem__image"
                 src={selectedImage}
+                key={selectedImage}
                 alt={`${brand} - ${name}`}
               />
             )}
