@@ -51,3 +51,10 @@
     @content;
   }
 }
+
+// Apply styles only in IE 10 & 11
+@mixin internetExplorerStyle {
+  @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    @content;
+  }
+}

@@ -22,7 +22,7 @@
         font-size: rem(16px);
         margin-bottom: rem(25px);
       }
-      .cartItem__attribute {
+      .cartItem__attributeContainer {
         &:not(:last-child) {
           margin-bottom: rem(16px);
         }
@@ -74,14 +74,16 @@
         font-size: rem(24px);
         margin-bottom: rem(17px);
       }
-      .cartItem__attribute {
-        .attribute__items {
-          @include breakpoint(sm) {
-            justify-content: center;
-          }
-        }
+      .cartItem__attributeContainer {
         &:not(:last-child) {
           margin-bottom: rem(20px);
+        }
+        .cartItem__attribute {
+          .attribute__items {
+            @include breakpoint(sm) {
+              justify-content: center;
+            }
+          }
         }
       }
     }
@@ -148,6 +150,73 @@
   .cartItem__infoContainer {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
+    .cartItem__brand {
+      transition: 0.2s;
+      &:hover {
+        color: $firstLight-color;
+      }
+      &:focus-visible {
+        color: $firstLight-color;
+      }
+    }
+    .cartItem__name {
+      transition: 0.2s;
+      &:hover {
+        color: $firstLight-color;
+      }
+      &:focus-visible {
+        color: $firstLight-color;
+      }
+    }
+    .cartItem__attributeContainer {
+      position: relative;
+      &:hover {
+        .cartItem__attributeTooltip {
+          opacity: 1;
+        }
+      }
+      &:focus-visible {
+        .cartItem__attributeTooltip {
+          opacity: 1;
+        }
+      }
+      .cartItem__attributeTooltip {
+        position: absolute;
+        bottom: rem(-35px);
+        left: 0;
+        z-index: 1;
+        padding: rem(5px) rem(10px);
+        background-color: $firstDark-color;
+        color: $white-color;
+        font-size: rem(14px);
+        border-radius: rem(3px);
+        opacity: 0;
+        transition: 0.2s;
+        backface-visibility: hidden;
+        white-space: nowrap;
+        pointer-events: none;
+        @include breakpoint(sm) {
+          left: 50%;
+          transform: translateX(-50%);
+        }
+        &::before {
+          content: '';
+          height: rem(10px);
+          width: rem(10px);
+          position: absolute;
+          top: rem(-5px);
+          left: rem(7px);
+          transform: rotate(45deg);
+          background-color: $firstDark-color;
+          z-index: -1;
+          @include breakpoint(sm) {
+            left: 50%;
+            transform: translateX(-50%) rotate(45deg);
+          }
+        }
+      }
+    }
   }
   .cartItem__imageAndCounterContainer {
     display: flex;

@@ -25,6 +25,12 @@
           color: $green-color;
         }
       }
+      @include internetExplorerStyle() {
+        &:hover {
+          background-color: $white-color;
+          color: $green-color;
+        }
+      }
       &:focus-visible {
         background-color: $white-color;
         color: $green-color;
@@ -37,6 +43,12 @@
     color: $white-color;
     &:not(.-hoverDisabled) {
       @include ifDeviceCanHover() {
+        &:hover {
+          background-color: $white-color;
+          color: $red-color;
+        }
+      }
+      @include internetExplorerStyle() {
         &:hover {
           background-color: $white-color;
           color: $red-color;
@@ -59,6 +71,12 @@
           color: $firstDark-color;
         }
       }
+      @include internetExplorerStyle() {
+        &:hover {
+          background-color: $white-color;
+          color: $firstDark-color;
+        }
+      }
       &:focus-visible {
         background-color: $white-color;
         color: $firstDark-color;
@@ -76,6 +94,12 @@
           color: $white-color;
         }
       }
+      @include internetExplorerStyle() {
+        &:hover {
+          background-color: $firstLight-color;
+          color: $white-color;
+        }
+      }
       &:focus-visible {
         background-color: $firstLight-color;
         color: $white-color;
@@ -88,6 +112,12 @@
     color: $firstDark-color;
     &:not(.-hoverDisabled) {
       @include ifDeviceCanHover() {
+        &:hover {
+          background-color: $firstDark-color;
+          color: $white-color;
+        }
+      }
+      @include internetExplorerStyle() {
         &:hover {
           background-color: $firstDark-color;
           color: $white-color;

@@ -1,6 +1,7 @@
 import { Component, createRef } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import './MiniCart.scss';
 import cartImage from '../../assets/images/cart.svg';
 import { CartItem, DetectClickOutside, Button } from '../index';
@@ -9,7 +10,7 @@ import {
   selectTotalCartItemQuantity,
   selectTotalPrice,
 } from '../../features/cart/cartSlice';
-import { withBreakpoint, withRouter } from '../../hoc';
+import { withBreakpoint } from '../../hoc';
 import { FocusTrapper } from '../../utils';
 
 class MiniCartComp extends Component {
@@ -94,7 +95,7 @@ class MiniCartComp extends Component {
 
   handleCartPageNavigate() {
     // Navigate to /cart
-    this.props.router.navigate('/cart');
+    this.props.history.push('/cart');
     // Close miniCart
     this.handleToggle(false);
   }
@@ -110,13 +111,14 @@ class MiniCartComp extends Component {
       this.handleToggle(!this.state.isOpen);
     } else {
       // Navigate to /cart
-      this.props.router.navigate('/cart');
+      this.props.history.push('/cart');
     }
   }
 
   // Close <MiniCart />'s overlay when escape key is pressed
   handleEscapeKeyDown(e) {
-    if (e.key === 'Escape') {
+    // 'Esc' is for IE, 'Escape' is for other browsers
+    if (e.key === 'Escape' || e.key === 'Esc') {
       this.handleToggle(false);
     }
   }
@@ -208,10 +210,10 @@ class MiniCartComp extends Component {
 }
 
 MiniCartComp.propTypes = {
+  history: PropTypes.object.isRequired,
   orderItemIds: PropTypes.array.isRequired,
   totalCartItemQuantity: PropTypes.number.isRequired,
   totalPrice: PropTypes.string.isRequired,
-  router: PropTypes.object.isRequired,
   breakpoint: PropTypes.string,
 };
 

@@ -14,12 +14,12 @@
     box-shadow: 0 rem(4px) rem(35px) rem(10px) rgba(168, 172, 176, 0.19);
     .productCard__imageContainer {
       .productCard__addToCart {
-        opacity: 100%;
+        opacity: 1;
       }
     }
   }
   &.-outOfStock {
-    opacity: 45%;
+    opacity: 0.45;
   }
   .productCard__imageContainer {
     width: 100%;
@@ -58,10 +58,10 @@
       cursor: pointer;
       transition: 0.3s;
       @include breakpoint(sm) {
-        opacity: 100%;
+        opacity: 1;
       }
       &:focus-visible {
-        opacity: 100%;
+        opacity: 1;
       }
       .productCard__addToCartImage {
         height: 100%;
