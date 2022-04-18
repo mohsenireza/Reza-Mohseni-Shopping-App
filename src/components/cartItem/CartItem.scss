@@ -153,14 +153,18 @@
     align-items: flex-start;
     .cartItem__brand {
       transition: 0.2s;
-      &:hover,
+      &:hover {
+        color: $firstLight-color;
+      }
       &:focus-visible {
         color: $firstLight-color;
       }
     }
     .cartItem__name {
       transition: 0.2s;
-      &:hover,
+      &:hover {
+        color: $firstLight-color;
+      }
       &:focus-visible {
         color: $firstLight-color;
       }
