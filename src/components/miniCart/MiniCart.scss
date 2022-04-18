@@ -63,8 +63,7 @@
         .miniCart__cartItems {
           max-height: rem(440px);
           overflow-y: auto;
-          padding: 0 rem(16px);
-          margin-bottom: rem(34px);
+          padding: 0 rem(16px) rem(34px);
           // Fix showing vertical lines after scrolling due to GPU rasterization problem
           transform: translateZ(0);
           /* Hide scrollbar for IE and Edge */

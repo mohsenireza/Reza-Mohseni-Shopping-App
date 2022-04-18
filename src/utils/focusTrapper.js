@@ -15,7 +15,7 @@ class FocusTrapper {
     if (!this.elementToTrapFocusIn) return;
     const focusableElements = Array.from(
       this.elementToTrapFocusIn.querySelectorAll(
-        'a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input[type="text"]:not([disabled]), input[type="radio"]:not([disabled]), input[type="checkbox"]:not([disabled]), select:not([disabled])'
+        'a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input[type="text"]:not([disabled]), input[type="radio"]:not([disabled]), input[type="checkbox"]:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex^="-"]):not([disabled])'
       )
     );
     const firstFocusableEl = focusableElements[0];

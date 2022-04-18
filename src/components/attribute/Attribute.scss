@@ -13,6 +13,7 @@
           &.-color {
             height: rem(24px);
             width: rem(24px);
+            font-size: rem(12px);
           }
         }
       }
@@ -30,6 +31,7 @@
           &.-color {
             height: rem(45px);
             width: rem(45px);
+            font-size: rem(16px);
           }
         }
       }
@@ -98,7 +100,7 @@
         background-color: $firstDark-color;
         color: $white-color;
         font-size: rem(14px);
-        border-radius: rem(16px);
+        border-radius: rem(3px);
         opacity: 0;
         transition: 0.2s;
         backface-visibility: hidden;

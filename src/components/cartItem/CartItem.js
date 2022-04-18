@@ -136,22 +136,32 @@ class CartItemComp extends Component {
           </Link>
           <span className="cartItem__price">{`${price.currency.symbol}${price.amount}`}</span>
           {attributes.map((attribute) => (
-            <Attribute
+            <div
               key={attribute.id}
-              className="cartItem__attribute"
-              selectedTextAttributeItemTheme={size === 'big' ? 'dark' : 'light'}
-              size={size}
-              hasAttributeName={false}
-              hasTooltip={size === 'big'}
-              {...attribute}
-              selectedItemId={
-                selectedAttributes.find(
-                  (selectedAttribute) => selectedAttribute.id === attribute.id
-                ).selectedItemId
-              }
-              isDisabled={true}
-              shouldFadeWhenDisabled={false}
-            />
+              tabIndex="0"
+              className="cartItem__attributeContainer"
+            >
+              <Attribute
+                className="cartItem__attribute"
+                selectedTextAttributeItemTheme={
+                  size === 'big' ? 'dark' : 'light'
+                }
+                size={size}
+                hasAttributeName={false}
+                hasTooltip={false}
+                {...attribute}
+                selectedItemId={
+                  selectedAttributes.find(
+                    (selectedAttribute) => selectedAttribute.id === attribute.id
+                  ).selectedItemId
+                }
+                isDisabled={true}
+                shouldFadeWhenDisabled={false}
+              />
+              <span className="cartItem__attributeTooltip">
+                {attribute.name}
+              </span>
+            </div>
           ))}
         </div>
         <div className="cartItem__imageAndCounterContainer">
