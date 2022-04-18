@@ -32,7 +32,7 @@
   .counter__button {
     transition: 0.3s;
     &.-disabled {
-      opacity: 30%;
+      opacity: 0.3;
     }
     .counter__buttonImage {
       height: 100%;

@@ -33,7 +33,7 @@ class ModalController {
 
   deleteModalRoot() {
     if (!this.modalRoot) return;
-    this.modalRoot.remove();
+    this.modalRoot.parentNode.removeChild(this.modalRoot);
     this.modalRoot = null;
     // Enable scrolling of body
     document.querySelector('body').style.overflow = 'auto';
@@ -91,7 +91,7 @@ class ModalController {
     // Close the modal
     const modalParent = document.getElementById(modalId);
     ReactDOM.unmountComponentAtNode(modalParent);
-    modalParent.remove();
+    modalParent.parentNode.removeChild(modalParent);
 
     // If there isn't any modal, then delete the modalRoot
     if (this.modalRoot.innerHTML === '') this.deleteModalRoot();

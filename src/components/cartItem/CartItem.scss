@@ -173,12 +173,12 @@
       position: relative;
       &:hover {
         .cartItem__attributeTooltip {
-          opacity: 100%;
+          opacity: 1;
         }
       }
       &:focus-visible {
         .cartItem__attributeTooltip {
-          opacity: 100%;
+          opacity: 1;
         }
       }
       .cartItem__attributeTooltip {
