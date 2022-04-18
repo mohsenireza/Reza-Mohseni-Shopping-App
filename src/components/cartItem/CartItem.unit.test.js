@@ -226,7 +226,7 @@ test('show next and prev product image', async () => {
   await user.click(nextImageButtonElement);
 
   // the 2 image of product should be visible
-  const imageElement = screen.getByRole('img', {
+  let imageElement = screen.getByRole('img', {
     name: `${orderItem.brand} - ${orderItem.name}`,
   });
   expect(imageElement.src).toBe(orderItem.gallery[1]);
@@ -238,6 +238,9 @@ test('show next and prev product image', async () => {
   await user.click(prevImageButtonElement);
 
   // the 1 image of product should be visible
+  imageElement = screen.getByRole('img', {
+    name: `${orderItem.brand} - ${orderItem.name}`,
+  });
   expect(imageElement.src).toBe(orderItem.gallery[0]);
 });
 
@@ -265,7 +268,7 @@ test('loop through images when reaches to the first or last image', async () => 
   await user.click(prevImageButtonElement);
 
   // the last image of product should be visible
-  const imageElement = screen.getByRole('img', {
+  let imageElement = screen.getByRole('img', {
     name: `${orderItem.brand} - ${orderItem.name}`,
   });
   expect(imageElement.src).toBe(
@@ -279,5 +282,8 @@ test('loop through images when reaches to the first or last image', async () => 
   await user.click(nextImageButtonElement);
 
   // the 1 image of product should be visible
+  imageElement = screen.getByRole('img', {
+    name: `${orderItem.brand} - ${orderItem.name}`,
+  });
   expect(imageElement.src).toBe(orderItem.gallery[0]);
 });
