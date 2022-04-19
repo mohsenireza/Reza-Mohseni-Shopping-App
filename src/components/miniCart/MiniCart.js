@@ -33,7 +33,9 @@ class MiniCartComp extends Component {
 
   componentDidMount() {
     // Initialize focusTrapper
-    this.focusTrapper = new FocusTrapper(this.miniCartRef.current);
+    this.focusTrapper = new FocusTrapper({
+      elementToTrapFocusIn: this.miniCartRef.current,
+    });
   }
 
   componentDidUpdate(prevProps, prevState) {
