@@ -135,7 +135,11 @@ class MiniCartComp extends Component {
           className="miniCart__icon"
         />
         {totalCartItemQuantity > 0 && (
-          <span className="miniCart__badge">{totalCartItemQuantity}</span>
+          <div className="miniCart__badge">
+            <span className="miniCart__badgeQuantity">
+              {totalCartItemQuantity}
+            </span>
+          </div>
         )}
       </div>
     );

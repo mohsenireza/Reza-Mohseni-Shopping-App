@@ -20,9 +20,6 @@
         height: rem(19px);
       }
       .miniCart__badge {
-        display: flex;
-        justify-content: center;
-        align-items: center;
         position: absolute;
         top: rem(-9px);
         right: rem(-13px);
@@ -30,10 +27,16 @@
         min-width: rem(20px);
         border-radius: 100%;
         background-color: $firstDark-color;
-        color: $white-color;
-        font-family: roboto;
-        font-weight: bold;
-        font-size: rem(14px);
+        .miniCart__badgeQuantity {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          color: $white-color;
+          font-family: roboto;
+          font-weight: bold;
+          font-size: rem(14px);
+        }
       }
     }
   }
