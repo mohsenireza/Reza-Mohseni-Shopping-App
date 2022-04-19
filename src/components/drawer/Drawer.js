@@ -26,7 +26,9 @@ class Drawer extends Component {
 
   componentDidMount() {
     // Initialize focusTrapper
-    this.focusTrapper = new FocusTrapper(this.drawerRef.current);
+    this.focusTrapper = new FocusTrapper({
+      elementToTrapFocusIn: this.drawerRef.current,
+    });
   }
 
   componentDidUpdate(prevProps, prevState) {
