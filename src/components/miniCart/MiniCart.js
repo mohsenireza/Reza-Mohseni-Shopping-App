@@ -33,9 +33,7 @@ class MiniCartComp extends Component {
 
   componentDidMount() {
     // Initialize focusTrapper
-    this.focusTrapper = new FocusTrapper({
-      elementToTrapFocusIn: this.miniCartRef.current,
-    });
+    this.focusTrapper = new FocusTrapper(this.miniCartRef.current);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -172,7 +170,7 @@ class MiniCartComp extends Component {
                   </span>
                 </h3>
 
-                <div className="miniCart__cartItems">
+                <div className="miniCart__cartItems" tabIndex="-1">
                   {orderItemIds.map((orderItemId) => (
                     <CartItem
                       key={orderItemId}

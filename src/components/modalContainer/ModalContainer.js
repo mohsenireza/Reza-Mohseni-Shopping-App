@@ -56,6 +56,7 @@ class ModalContainer extends Component {
               <Cross
                 fill="#ff0000"
                 className="modalContainer__contentHeaderCloseButtonImage"
+                focusable="false"
               />
             </button>
             <h1 className="modalContainer__contentHeaderTitle">

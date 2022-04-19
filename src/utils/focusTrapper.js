@@ -1,12 +1,6 @@
-import { isInternetExplerer } from './utils';
-
 class FocusTrapper {
-  constructor({
-    elementToTrapFocusIn,
-    shouldAddEventListener = !isInternetExplerer(),
-  }) {
+  constructor(elementToTrapFocusIn) {
     this.elementToTrapFocusIn = elementToTrapFocusIn;
-    this.shouldAddEventListener = shouldAddEventListener;
     this.elementToRevertFocusTo = null;
     this.untrapFocus = null;
 
@@ -51,14 +45,10 @@ class FocusTrapper {
       }
     };
 
-    if (this.shouldAddEventListener) {
-      document.addEventListener('focus', handleFocus, true);
-    }
+    document.addEventListener('focus', handleFocus, true);
 
     const removeTrapFocus = ({ shouldRevertFocusedElement }) => {
-      if (this.shouldAddEventListener) {
-        document.removeEventListener('focus', handleFocus, true);
-      }
+      document.removeEventListener('focus', handleFocus, true);
       shouldRevertFocusedElement && this.elementToRevertFocusTo.focus();
     };
 
