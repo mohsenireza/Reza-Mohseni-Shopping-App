@@ -25,14 +25,3 @@ export const getSearchParam = (name) => {
   );
   return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
 };
-
-export const isInternetExplerer = () => {
-  // Check the userAgent property of the window.navigator object
-  const { userAgent } = window.navigator;
-  // IE 10 or older
-  const msieIndex = userAgent.indexOf('MSIE ');
-  // IE 11
-  const tridentIndex = userAgent.indexOf('Trident/');
-
-  return msieIndex > 0 || tridentIndex > 0;
-};

@@ -10,9 +10,7 @@ class ProductInfoModal extends Component {
 
     // Initialize focusTrapper
     const modalParent = document.getElementById(this.props.modalId);
-    this.focusTrapper = new FocusTrapper({
-      elementToTrapFocusIn: modalParent,
-    });
+    this.focusTrapper = new FocusTrapper(modalParent);
   }
 
   componentDidMount() {

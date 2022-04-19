@@ -59,7 +59,11 @@ class Counter extends Component {
           className="counter__button"
         >
           {count === 1 ? (
-            <Trash fill="#1d1f22" className="counter__buttonImage" />
+            <Trash
+              fill="#1d1f22"
+              className="counter__buttonImage"
+              focusable="false"
+            />
           ) : (
             <img
               src={minus}
