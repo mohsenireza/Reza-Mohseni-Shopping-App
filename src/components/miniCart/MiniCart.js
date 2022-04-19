@@ -172,7 +172,7 @@ class MiniCartComp extends Component {
                   </span>
                 </h3>
 
-                <div className="miniCart__cartItems">
+                <div className="miniCart__cartItems" tabIndex="-1">
                   {orderItemIds.map((orderItemId) => (
                     <CartItem
                       key={orderItemId}
