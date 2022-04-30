@@ -43,10 +43,6 @@
   }
   &.-big {
     border-top: 1px solid $secondLight-color;
-    margin-right: rem(143px);
-    @include breakpoint(lg) {
-      margin-right: 0;
-    }
     @include breakpoint(sm) {
       flex-direction: column;
       align-items: center;
