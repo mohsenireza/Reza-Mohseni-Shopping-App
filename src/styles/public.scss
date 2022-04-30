@@ -23,7 +23,7 @@ body {
 
 // Hide focus outline if it is not needed, for example,
 // when an element receives focus via the mouse.
-*:focus:not(:focus-visible) {
+*:focus:not(.focus-visible) {
   outline: none;
 }
 

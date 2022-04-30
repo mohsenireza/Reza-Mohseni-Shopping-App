@@ -60,7 +60,7 @@
       @include breakpoint(sm) {
         opacity: 1;
       }
-      &:focus-visible {
+      &.focus-visible {
         opacity: 1;
       }
       .productCard__addToCartImage {

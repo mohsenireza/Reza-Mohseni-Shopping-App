@@ -107,7 +107,7 @@
           position: absolute;
           top: 0;
           height: 100%;
-          &:focus-visible {
+          &.focus-visible {
             .cartItem__arrowContainer {
               background-color: $firstDark-color;
             }
@@ -153,30 +153,22 @@
     align-items: flex-start;
     .cartItem__brand {
       transition: 0.2s;
-      &:hover {
-        color: $firstLight-color;
-      }
-      &:focus-visible {
+      &:hover,
+      &.focus-visible {
         color: $firstLight-color;
       }
     }
     .cartItem__name {
       transition: 0.2s;
-      &:hover {
-        color: $firstLight-color;
-      }
-      &:focus-visible {
+      &:hover,
+      &.focus-visible {
         color: $firstLight-color;
       }
     }
     .cartItem__attributeContainer {
       position: relative;
-      &:hover {
-        .cartItem__attributeTooltip {
-          opacity: 1;
-        }
-      }
-      &:focus-visible {
+      &:hover,
+      &.focus-visible {
         .cartItem__attributeTooltip {
           opacity: 1;
         }

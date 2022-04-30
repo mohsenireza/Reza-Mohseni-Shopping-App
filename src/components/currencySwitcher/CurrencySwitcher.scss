@@ -69,10 +69,8 @@
         font-size: rem(18px);
         transition: 0.3s;
         margin: 0;
-        &:hover {
-          background-color: rgba(0, 0, 0, 0.03);
-        }
-        &:focus-visible {
+        &:hover,
+        &.focus-visible {
           background-color: rgba(0, 0, 0, 0.03);
         }
       }
