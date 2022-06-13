@@ -1,4 +1,3 @@
-import { Component } from 'react';
 import { render, screen } from '../../test/utils';
 import { ErrorBoundary } from './ErrorBoundary';
 
@@ -17,14 +16,10 @@ test('should render children if there is not any error', async () => {
 
 test('should show an error message if there is an error', async () => {
   // Prepare initial data and render the component
-  class ThrowError extends Component {
-    constructor(props) {
-      super(props);
-    }
-    render() {
-      throw new Error('Test');
-    }
-  }
+  const ThrowError = () => {
+    throw new Error('Test');
+  };
+
   await render(
     <ErrorBoundary>
       <h1>content</h1>
