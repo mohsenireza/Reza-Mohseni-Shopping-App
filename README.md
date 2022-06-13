@@ -1,8 +1,19 @@
-Ecommerce Store is a web app built with React to see and buy products. users can filter products based on categories and choose what currency to use when showing prices.
+[Ecommerce Store](https://ecommerce-store-web-app.herokuapp.com/) is a shopping web app that I developed with React. users can filter products based on categories and choose what currency to be used for prices. meanwhile users can add products to their cart with specific features like size, color, quantity, etc...
+
+In the development process I have made the web app keyboard accessible specially when it comes to modals. the web app has reasonable code coverage in terms of testing (unit, integration and end to end) and after each commit/push I was confident enough about it thanks to CircleCI. the UI is responsive enough for mobile users. also the PWA version is worth trying because it feels like a native app.
 
 Check out the [Ecommerce Store](https://ecommerce-store-web-app.herokuapp.com/) web app from here.
 
-## Test Scripts
+<br/>
+
+https://user-images.githubusercontent.com/49490512/173395677-8f8537e8-345d-41f1-a4cc-66b80be09634.mov
+
+<br/>
+
+## Available Scripts
+
+### `yarn start`
+Runs the app in the development mode.
 
 ### `yarn test:unit`
 Runs unit tests.
@@ -12,5 +23,3 @@ Runs integration tests.
 
 ### `yarn test:e2e`
 Runs end to end tests.
-
-https://user-images.githubusercontent.com/49490512/163583294-55d9732e-38c6-4271-bbfe-db5c15b93480.mov
