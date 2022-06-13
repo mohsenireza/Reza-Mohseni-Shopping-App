@@ -91,7 +91,7 @@
             }
           }
         }
-        &:focus-visible {
+        &.focus-visible {
           + .attribute__itemTooltip {
             opacity: 1;
           }

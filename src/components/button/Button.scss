@@ -31,7 +31,7 @@
           color: $green-color;
         }
       }
-      &:focus-visible {
+      &.focus-visible {
         background-color: $white-color;
         color: $green-color;
       }
@@ -54,7 +54,7 @@
           color: $red-color;
         }
       }
-      &:focus-visible {
+      &.focus-visible {
         background-color: $white-color;
         color: $red-color;
       }
@@ -77,7 +77,7 @@
           color: $firstDark-color;
         }
       }
-      &:focus-visible {
+      &.focus-visible {
         background-color: $white-color;
         color: $firstDark-color;
       }
@@ -100,7 +100,7 @@
           color: $white-color;
         }
       }
-      &:focus-visible {
+      &.focus-visible {
         background-color: $firstLight-color;
         color: $white-color;
       }
@@ -123,7 +123,7 @@
           color: $white-color;
         }
       }
-      &:focus-visible {
+      &.focus-visible {
         background-color: $firstDark-color;
         color: $white-color;
       }
