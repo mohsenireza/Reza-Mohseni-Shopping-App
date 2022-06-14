@@ -1,8 +1,8 @@
 [Ecommerce Store](https://ecommerce-store-web-app.herokuapp.com/) is a shopping web app that I developed with React. users can filter products based on categories and choose what currency to be used for prices. meanwhile users can add products to their cart with specific features like size, color, quantity, etc...
 
-In the development process I have made the web app keyboard accessible specially when it comes to modals. the web app has reasonable code coverage in terms of testing (unit, integration and end to end) and after each commit/push I was confident enough about it thanks to CircleCI. the UI is responsive enough for mobile users. also the PWA version is worth trying because it feels like a native app.
+In the development process I have made the web app keyboard accessible specially when it comes to modals. due to some tools like Jest, React Testing Library and Cypress, the web app has reasonable code coverage in terms of unit, integration and end to end testing. and after each commit/push I was confident enough about it thanks to CI tools such as CircleCI. for state management even though I have been using MobX-State-Tree for my previous projects, but for this one I have used Redux Toolkit to see how it works in a project like this and to be honest the result was quite pleasing thanks to its clean and expectable structure. Sass has been used for styling and the UI is responsive for mobile users. also the PWA is worth installing as it feels like a native app.
 
-Check out the [Ecommerce Store](https://ecommerce-store-web-app.herokuapp.com/) web app from here.
+Check out the published [Ecommerce Store](https://ecommerce-store-web-app.herokuapp.com/) web app from [here](https://ecommerce-store-web-app.herokuapp.com/).
 
 <br/>
 
